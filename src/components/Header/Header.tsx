@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
-import IconButton from '@mui/material/IconButton';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LoginIcon from '@mui/icons-material/Login';
 import Container from '@mui/material/Container';
@@ -14,6 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import HomeIcon from '@mui/icons-material/Home';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
+import HeaderLink from 'components/buttons/HeaderLink';
 
 const headerBgColor = indigo[900];
 
@@ -29,30 +28,16 @@ export default function Header() {
       <Container maxWidth="xl">
         <Toolbar>
           <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
-            <IconButton size="large" aria-label="home link" aria-haspopup="true" color="inherit">
+            <HeaderLink linkAddr="/index" text="На главную">
               <HomeIcon />
-              <Typography variant="button" sx={{ pl: 1 }}>
-                На главную
-              </Typography>
-            </IconButton>
+            </HeaderLink>
             <Stack direction="row">
-              <IconButton
-                size="large"
-                aria-label="register user"
-                aria-haspopup="true"
-                color="inherit"
-              >
+              <HeaderLink linkAddr="/registration" text="Регистрация">
                 <AccountCircle />
-                <Typography variant="button" sx={{ pl: 1 }}>
-                  Регистрация
-                </Typography>
-              </IconButton>
-              <IconButton size="large" aria-label="login" aria-haspopup="true" color="inherit">
+              </HeaderLink>
+              <HeaderLink linkAddr="/login" text="Войти">
                 <LoginIcon />
-                <Typography variant="button" sx={{ pl: 1 }}>
-                  Войти
-                </Typography>
-              </IconButton>
+              </HeaderLink>
               <Paper elevation={0}>
                 <FormControl>
                   <InputLabel id="label-language"></InputLabel>

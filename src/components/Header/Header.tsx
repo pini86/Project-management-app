@@ -28,7 +28,7 @@ export default function Header() {
       <Container maxWidth="xl">
         <Toolbar>
           <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
-            <HeaderLink linkAddr="/index" text="На главную">
+            <HeaderLink linkAddr="/" text="На главную">
               <HomeIcon />
             </HeaderLink>
             <Stack direction="row">

@@ -41,8 +41,8 @@ const columnsApi = api.injectEndpoints({
     getColumnsByIdsListOrUserId: builder.query<IColumn[], { userId?: string; listIds?: string[] }>({
       query: ({ userId, listIds }) => ({
         url: `columnsSet?
-        ${listIds?.length ? `ids=${[...listIds]}` : ''}
-        ${listIds?.length && userId ? `&` : ''}
+        ${listIds ? `ids=${[...listIds]}` : ''}
+        ${listIds && userId ? `&` : ''}
         ${userId ? `userId=${userId}` : ''}`,
         method: 'GET',
       }),

@@ -2,28 +2,8 @@ import { Box, Button, TextField, Typography, Link } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { red } from '@mui/material/colors';
 import './TextInputForm.css';
+import { FormProps, InputAttributes, FormData } from './types';
 
-interface FormData {
-  name: string;
-  login: string;
-  password: string;
-}
-interface InputAttributes {
-  name: 'name' | 'login' | 'password';
-  label: string;
-  rules: {
-    required?: boolean | string;
-    minLength?: { value: number; message: string };
-    maxLength?: { value: number; message: string };
-  };
-}
-interface FormProps {
-  inputAttributes: InputAttributes[];
-  className: string;
-  formData: FormData;
-  submitBtnText: string;
-  additionalText: { mainText: string; linkText: string; linkHref: string };
-}
 export default function TextInputForm({
   inputAttributes,
   className,
@@ -58,10 +38,9 @@ export default function TextInputForm({
     >
       {inputAttributes.map((input: InputAttributes) => {
         return (
-          <>
+          <div key={input.name}>
             <Controller
               render={({ field }) => <TextField {...field} label={input.label} />}
-              key={input.name}
               name={input.name}
               control={control}
               rules={input.rules}
@@ -69,7 +48,7 @@ export default function TextInputForm({
             <Typography variant="caption" sx={{ color: red[500], display: 'block' }}>
               {errors[input.name]?.message}
             </Typography>
-          </>
+          </div>
         );
       })}
       <Button type="submit" variant="contained">

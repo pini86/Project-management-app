@@ -1,6 +1,7 @@
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
 import { FunctionComponent } from 'react';
-import { useSignInQuery, useSignUpQuery } from '../api/AuthApi';
-import { ISignIn, ISignUp } from '../interfaces/Interfaces';
+import { useSignInQuery } from '../api/AuthApi';
+import { ISignIn, IErrorResponse } from '../interfaces/Interfaces';
 
 const TestAuth2: FunctionComponent = () => {
   const currUser: ISignIn = {
@@ -8,14 +9,19 @@ const TestAuth2: FunctionComponent = () => {
     password: 'Tesla4ever',
   };
 
-  const { data, isLoading, isError } = useSignInQuery(currUser);
+  const { data, isLoading, isError, error } = useSignInQuery(currUser);
 
   if (isLoading) {
-    return <div>Wait !</div>;
+    return <div>Wait !</div>; // Place here nice spinner
   }
 
   if (isError || !data) {
-    return <div>Something went wrong !</div>;
+    return (
+      <div>
+        Error code: {(error as FetchBaseQueryError).status}{' '}
+        {((error as FetchBaseQueryError).data as IErrorResponse).message}
+      </div>
+    );
   }
 
   return (

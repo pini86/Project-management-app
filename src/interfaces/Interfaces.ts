@@ -46,7 +46,7 @@ export interface IPoint {
 }
 
 export interface IErrorResponse {
-  statusCode: number;
+  status: number;
   message: string;
 }
 

@@ -1,7 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { authApi } from '../api/AuthApi';
+import { api } from '../api/Api';
 import { setupListeners } from '@reduxjs/toolkit/query';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 export const InitStore = () => {
   return configureStore({ reducer: () => {} });
@@ -9,19 +8,9 @@ export const InitStore = () => {
 
 export const store = configureStore({
   reducer: {
-    [authApi.reducerPath]: authApi.reducer,
+    [api.reducerPath]: api.reducer,
   },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(authApi.middleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),
 });
 
 setupListeners(store.dispatch);
-
-/* export const store = configureStore({
-  reducer: {},
-});
-
-export type RootState = ReturnType<typeof store.getstate>;
-export type AppDispatch = typeof store.dispatch;
-
-export const useAppDispatch = () => useDispatch<appdispatch>();
-export const useAppSelector: TypedUseSelectorHook<rootstate> = useSelector; */

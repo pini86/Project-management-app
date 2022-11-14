@@ -1,4 +1,3 @@
-import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import TestAuth from './testAuth/TestAuth';
 import TestAuth2 from './testAuth/TestAuth2';
@@ -12,3 +11,5 @@ const App = () => (
 );
 
 export default App;
+
+// TestAuth & TestAuth2 only for example for use api

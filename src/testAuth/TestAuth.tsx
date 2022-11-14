@@ -1,23 +1,30 @@
-import { FunctionComponent } from 'react';
-import { useSignInQuery, useSignUpQuery } from '../api/AuthApi';
-import { ISignIn, ISignUp } from '../interfaces/Interfaces';
+import { useSignUpQuery } from '../api/AuthApi';
+import { IUser, IErrorResponse } from '../interfaces/Interfaces';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
 
-const TestAuth: FunctionComponent = () => {
+const TestAuth = () => {
   const newUser = {
     name: 'Ilon Mask',
     login: 'IMask',
     password: 'Tesla4ever',
   };
-  const { data, isLoading, isError } = useSignUpQuery(newUser);
+  const { data, isLoading, isError, error } = useSignUpQuery(newUser);
 
   if (isLoading) {
-    return <div>Wait !</div>;
+    return <div>Wait !</div>; // Place here nice spinner
   }
 
   if (isError || !data) {
-    return <div>Something went wrong !</div>;
+    return (
+      <div>
+        Error code: {(error as FetchBaseQueryError).status}{' '}
+        {((error as FetchBaseQueryError).data as IErrorResponse).message}
+      </div>
+    );
   }
-  const { _id, name, login } = data;
+
+  const { _id, name, login } = data as IUser;
+
   return (
     <div>
       <p>ID: {_id}</p>
@@ -26,5 +33,4 @@ const TestAuth: FunctionComponent = () => {
     </div>
   );
 };
-
 export default TestAuth;

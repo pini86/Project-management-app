@@ -14,11 +14,22 @@ export interface IBoard extends INewBoard {
   _id: string;
 }
 
-export interface IColumn {
-  _id: string;
+export interface INewColumn {
   title: string;
   order: number;
+}
+
+export interface INewSetColumn extends INewColumn {
   boardId: string;
+}
+
+export interface IColumn extends INewSetColumn {
+  _id: string;
+}
+
+export interface IUpdateColumn {
+  _id: string;
+  order: number;
 }
 
 export interface ITask {
@@ -30,22 +41,6 @@ export interface ITask {
   description: string;
   userId: number;
   users: string[];
-}
-
-export interface IFile {
-  _id: string;
-  name: string;
-  taskId: string;
-  boardId: string;
-  path: string;
-}
-
-export interface IPoint {
-  _id: string;
-  title: string;
-  taskId: number;
-  boardId: string;
-  done: boolean;
 }
 
 export interface IErrorResponse {

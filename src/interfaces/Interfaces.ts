@@ -4,11 +4,14 @@ export interface IUser {
   login: string;
 }
 
-export interface IBoard {
-  _id: string;
+export interface INewBoard {
   title: string;
   owner: string;
   users: string[];
+}
+
+export interface IBoard extends INewBoard {
+  _id: string;
 }
 
 export interface IColumn {

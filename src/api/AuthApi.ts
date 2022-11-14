@@ -1,7 +1,7 @@
 import { IUser, ISignIn, ISignUp } from 'interfaces/Interfaces';
 import { api } from './Api';
 
-export const authApi = api.injectEndpoints({
+const authApi = api.injectEndpoints({
   endpoints: (builder) => ({
     signIn: builder.query<{ token: string }, ISignIn>({
       query: ({ login, password }) => ({

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import style from './HeaderLink.module.css';
+import styles from './HeaderLink.module.css';
 
 interface IProps {
   linkAddr: string;
@@ -11,7 +11,7 @@ interface IProps {
 
 function HeaderLink({ linkAddr, text, children }: IProps) {
   return (
-    <Link to={linkAddr} className={style.headerLink}>
+    <Link to={linkAddr} className={styles.headerLink}>
       <IconButton size="large" aria-haspopup="true" color="inherit" sx={{ p: '16px 12px' }}>
         {children}
         <Typography variant="button" sx={{ pl: 1 }}>

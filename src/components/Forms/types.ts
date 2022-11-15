@@ -1,3 +1,5 @@
+import { ISignIn, ISignUp } from '../../models/User';
+
 export interface FormData {
   name: string;
   login: string;
@@ -12,6 +14,7 @@ export interface InputAttributes {
     minLength?: { value: number; message: string };
     maxLength?: { value: number; message: string };
   };
+  type?: string;
 }
 
 export interface FormProps {
@@ -20,4 +23,5 @@ export interface FormProps {
   formData: FormData;
   submitBtnText: string;
   additionalText: { mainText: string; linkText: string; linkHref: string };
+  getUserFromForm: ((user: ISignIn) => void) | ((user: ISignUp) => void);
 }

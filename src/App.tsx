@@ -1,4 +1,3 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import WelcomePage from 'pages/WelcomePage';
 import LoginPage from 'pages/LoginPage';
@@ -26,3 +25,5 @@ function App() {
 }
 
 export default App;
+
+// TestAuth & TestAuth2 only for example for use api

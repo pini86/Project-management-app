@@ -10,6 +10,7 @@ export default function TextInputForm({
   formData,
   submitBtnText,
   additionalText,
+  getUserFromForm,
 }: FormProps) {
   const {
     control,
@@ -22,7 +23,7 @@ export default function TextInputForm({
   });
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
+    getUserFromForm(data);
     reset();
   };
 
@@ -40,7 +41,7 @@ export default function TextInputForm({
         return (
           <div key={input.name}>
             <Controller
-              render={({ field }) => <TextField {...field} label={input.label} />}
+              render={({ field }) => <TextField {...field} label={input.label} type={input.type} />}
               name={input.name}
               control={control}
               rules={input.rules}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -20,39 +20,39 @@ const headerBgColor = indigo[900];
 
 export default function Header() {
   const isAuth = false;
-  const [language, setlanguage] = useState('RU');
+  const [language, setLanguage] = useState('RU');
 
   const handleChange = (event: SelectChangeEvent) => {
-    setlanguage(event.target.value as string);
+    setLanguage(event.target.value as string);
   };
 
   return (
-    <AppBar sx={{ backgroundColor: headerBgColor }}>
+    <AppBar sx={{ backgroundColor: headerBgColor, marginBottom: 2 }}>
       <Container maxWidth="xl">
         <Toolbar>
           <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
-            <HeaderLink linkAddr="/" text="На главную">
+            <HeaderLink path="/" text="На главную">
               <HomeIcon />
             </HeaderLink>
             <Stack direction="row">
               {isAuth ? (
                 <>
-                  <HeaderLink linkAddr="/main" text="Доски">
+                  <HeaderLink path="/main" text="Доски">
                     <DashboardIcon />
                   </HeaderLink>
-                  <HeaderLink linkAddr="/profile" text="Профиль">
+                  <HeaderLink path="/profile" text="Профиль">
                     <AccountCircle />
                   </HeaderLink>
-                  <HeaderLink linkAddr="/" text="Выйти">
+                  <HeaderLink path="/" text="Выйти">
                     <LogoutIcon />
                   </HeaderLink>
                 </>
               ) : (
                 <>
-                  <HeaderLink linkAddr="/registration" text="Регистрация">
+                  <HeaderLink path="/registration" text="Регистрация">
                     <AccountCircle />
                   </HeaderLink>
-                  <HeaderLink linkAddr="/login" text="Войти">
+                  <HeaderLink path="/login" text="Войти">
                     <LoginIcon />
                   </HeaderLink>
                 </>

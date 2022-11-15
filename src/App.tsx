@@ -6,9 +6,12 @@ import RegisterPage from 'pages/RegisterPage';
 import MainPage from 'pages/MainPage';
 import Page404 from 'pages/Page404';
 import Layout from 'components/Layout';
+import { Provider } from 'react-redux';
+import { store } from './store/Store';
 
 function App() {
   return (
+   <Provider store={store}>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -21,7 +24,10 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
+   </Provider>
   );
 }
 
 export default App;
+
+// TestAuth & TestAuth2 only for example for use api

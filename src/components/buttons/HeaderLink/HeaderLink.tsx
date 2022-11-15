@@ -11,7 +11,7 @@ interface IProps {
 
 function HeaderLink({ path, text, children }: IProps) {
   return (
-    <Link to={path} className={styles.headerLink}>
+    <Link to={linkAddr} className={styles.headerLink}>
       <IconButton size="large" aria-haspopup="true" color="inherit" sx={{ p: '16px 12px' }}>
         {children}
         <Typography variant="button" sx={{ pl: 1 }}>

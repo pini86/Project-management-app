@@ -1,7 +1,8 @@
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
 import { FunctionComponent } from 'react';
 import { useSignInQuery } from '../api/AuthApi';
-import { ISignIn, IErrorResponse } from '../interfaces/Interfaces';
+import { ISignIn } from '../models/User';
+import { IErrorResponse } from '../models/ErrorResponse';
 
 const TestAuth2: FunctionComponent = () => {
   const currUser: ISignIn = {

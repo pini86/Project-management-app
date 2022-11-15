@@ -27,7 +27,7 @@ export default function Header() {
   };
 
   return (
-    <AppBar sx={{ backgroundColor: headerBgColor, marginBottom: 2 }}>
+    <AppBar sx={{ backgroundColor: headerBgColor, marginBottom: 2, position: 'sticky' }}>
       <Container maxWidth="xl">
         <Toolbar>
           <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>

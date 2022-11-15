@@ -1,4 +1,4 @@
-import { IColumn, INewColumn, IUpdateColumn, INewSetColumn } from 'interfaces/Interfaces';
+import { IColumn, INewColumn, IUpdateColumn, INewSetColumn } from '../models/Column';
 import { api } from './Api';
 
 const columnsApi = api.injectEndpoints({

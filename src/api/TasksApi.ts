@@ -1,4 +1,4 @@
-import { ITask, INewTask, IUpdateTask, INewSetTask } from 'interfaces/Interfaces';
+import { ITask, INewTask, IUpdateTask, INewSetTask } from '../models/Task';
 import { api } from './Api';
 
 const tasksApi = api.injectEndpoints({

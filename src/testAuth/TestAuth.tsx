@@ -1,5 +1,5 @@
 import { useSignUpQuery } from '../api/AuthApi';
-import { IUser, IErrorResponse } from '../interfaces/Interfaces';
+import { IErrorResponse } from '../models/ErrorResponse';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
 
 const TestAuth = () => {
@@ -23,7 +23,7 @@ const TestAuth = () => {
     );
   }
 
-  const { _id, name, login } = data as IUser;
+  const { _id, name, login } = data;
 
   return (
     <div>

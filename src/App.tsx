@@ -1,7 +1,7 @@
 import { Provider } from 'react-redux';
 import TestAuth from './testAuth/TestAuth';
 import TestAuth2 from './testAuth/TestAuth2';
-import { store } from './store/Index';
+import { store } from './store/Store';
 
 const App = () => (
   <Provider store={store}>

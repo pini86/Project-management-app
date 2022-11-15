@@ -1,4 +1,4 @@
-import { IBoard, INewBoard } from 'interfaces/Interfaces';
+import { IBoard, INewBoard } from '../models/Board';
 import { api } from './Api';
 
 const boardsApi = api.injectEndpoints({
@@ -11,7 +11,7 @@ const boardsApi = api.injectEndpoints({
     }),
     createBoard: builder.query<IBoard, { data: INewBoard }>({
       query: ({ data }) => ({
-        url: `boards/`,
+        url: `boards`,
         method: 'POST',
         body: data,
       }),

@@ -1,4 +1,4 @@
-import { IUser, ISignIn, ISignUp } from 'interfaces/Interfaces';
+import { IUser, ISignIn, ISignUp } from '../models/User';
 import { api } from './Api';
 
 const authApi = api.injectEndpoints({

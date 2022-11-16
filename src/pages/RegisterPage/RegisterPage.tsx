@@ -10,6 +10,8 @@ import './RegisterPage.css';
 import { useNavigate } from 'react-router-dom';
 import { userSlice } from '../../store/reducers/userSlice';
 import { useAppDispatch } from '../../store/hooks/redux';
+import { useGetUserByIdQuery } from '../../api/UsersApi';
+import { useSignInQuery } from '../../api/AuthApi';
 
 function RegisterPage() {
   const [user, setUser] = useState<ISignUp>({
@@ -18,24 +20,44 @@ function RegisterPage() {
     password: '',
   });
 
+  const [userId, setUserId] = useState('');
+
   const getUserFromForm = (userData: ISignUp) => {
     setUser(userData);
   };
 
-  const { data, isLoading, isError, error } = useSignUpQuery(user, {
+  const {
+    data: userData,
+    isLoading,
+    isError,
+    error,
+  } = useSignUpQuery(user, {
     skip: !user.login,
   });
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { upgradeUser } = userSlice.actions;
+  const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
+
+  const { data: tokenData } = useSignInQuery(
+    { login: user.login, password: user.password },
+    {
+      skip: !userId,
+    }
+  );
 
   useEffect(() => {
-    if (data) {
-      dispatch(upgradeUser(data));
+    if (userData) {
+      setUserId(userData._id);
+      dispatch(updateUser(userData));
+    }
+    if (tokenData) {
+      const { token } = tokenData;
+      dispatch(updateToken(token));
+      dispatch(changeIsLoggedIn(true));
       navigate('/main');
     }
-  }, [data]);
+  }, [userData, tokenData]);
 
   return (
     <Box className="register-page__wrapper">

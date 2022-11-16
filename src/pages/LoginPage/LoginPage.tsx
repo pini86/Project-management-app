@@ -10,31 +10,53 @@ import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import { userSlice } from '../../store/reducers/userSlice';
 import { useAppDispatch } from '../../store/hooks/redux';
+import { extractUserIdFromToken } from '../../utils/authUtils';
+import { useGetUserByIdQuery } from '../../api/UsersApi';
 
 function LoginPage() {
-  const [user, setUser] = useState({
+  const [user, setUser] = useState<ISignIn>({
     login: '',
     password: '',
   });
+
+  const [userId, setUserId] = useState('');
 
   const getUserFromForm = (userData: ISignIn) => {
     setUser(userData);
   };
 
-  const { data, isLoading, isError, error } = useSignInQuery(user, {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
+
+  const {
+    data: tokenData,
+    isLoading,
+    isError,
+    error,
+  } = useSignInQuery(user, {
     skip: !user.login,
   });
 
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { changeIsLoggedIn } = userSlice.actions;
+  const { data: userData } = useGetUserByIdQuery(
+    { userId },
+    {
+      skip: !userId,
+    }
+  );
 
   useEffect(() => {
-    if (data) {
+    if (tokenData) {
       dispatch(changeIsLoggedIn(true));
+      const { token } = tokenData;
+      dispatch(updateToken(token));
+      setUserId(extractUserIdFromToken(token));
+    }
+    if (userData) {
+      dispatch(updateUser(userData));
       navigate('/main');
     }
-  }, [data]);
+  }, [tokenData, userData]);
 
   return (
     <Box className="login-page__wrapper">

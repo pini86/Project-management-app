@@ -4,6 +4,7 @@ import { IUser } from '../../models/User';
 interface UserState {
   isLoggedIn: boolean;
   user: IUser;
+  token: null | string;
 }
 const initialState: UserState = {
   isLoggedIn: false,
@@ -12,6 +13,7 @@ const initialState: UserState = {
     name: '',
     login: '',
   },
+  token: null,
 };
 
 export const userSlice = createSlice({
@@ -21,8 +23,11 @@ export const userSlice = createSlice({
     changeIsLoggedIn(state, action: PayloadAction<boolean>) {
       state.isLoggedIn = action.payload;
     },
-    upgradeUser(state, action: PayloadAction<IUser>) {
+    updateUser(state, action: PayloadAction<IUser>) {
       state.user = action.payload;
+    },
+    updateToken(state, action: PayloadAction<string | null>) {
+      state.token = action.payload;
     },
   },
 });

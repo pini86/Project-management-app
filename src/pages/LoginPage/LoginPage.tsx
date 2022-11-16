@@ -1,12 +1,15 @@
-import { useSignInQuery } from 'api/AuthApi';
-import { useState } from 'react';
-import { ISignIn } from 'models/User';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useSignInQuery } from '../../api/AuthApi';
+import { useState, useEffect } from 'react';
+import { ISignIn } from '../../models/User';
 import TextInputForm from '../../components/Forms';
 import { IErrorResponse } from '../../models/ErrorResponse';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
 import { Box, CircularProgress } from '@mui/material';
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
+import { userSlice } from '../../store/reducers/userSlice';
+import { useAppDispatch } from '../../store/hooks/redux';
 
 function LoginPage() {
   const [user, setUser] = useState({
@@ -14,25 +17,24 @@ function LoginPage() {
     password: '',
   });
 
-  const [isUser, setIsUser] = useState(false);
-
   const getUserFromForm = (userData: ISignIn) => {
-    console.log(userData);
     setUser(userData);
-    setIsUser(true);
   };
 
   const { data, isLoading, isError, error } = useSignInQuery(user, {
-    skip: !isUser,
+    skip: !user.login,
   });
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { changeIsLoggedIn } = userSlice.actions;
 
-  if (data) {
-    const { token } = data;
-    console.log(token);
-    navigate('/main');
-  }
+  useEffect(() => {
+    if (data) {
+      dispatch(changeIsLoggedIn(true));
+      navigate('/main');
+    }
+  }, [data]);
 
   return (
     <Box className="login-page__wrapper">

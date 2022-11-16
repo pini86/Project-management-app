@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useSignUpQuery } from 'api/AuthApi';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import TextInputForm from '../../components/Forms';
 import { ISignUp } from '../../models/User';
 import { IErrorResponse } from '../../models/ErrorResponse';
@@ -7,6 +8,8 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery'
 import { Box, CircularProgress } from '@mui/material';
 import './RegisterPage.css';
 import { useNavigate } from 'react-router-dom';
+import { userSlice } from '../../store/reducers/userSlice';
+import { useAppDispatch } from '../../store/hooks/redux';
 
 function RegisterPage() {
   const [user, setUser] = useState<ISignUp>({
@@ -15,25 +18,24 @@ function RegisterPage() {
     password: '',
   });
 
-  const [isUser, setIsUser] = useState(false);
-
   const getUserFromForm = (userData: ISignUp) => {
-    console.log(userData);
     setUser(userData);
-    setIsUser(true);
   };
 
   const { data, isLoading, isError, error } = useSignUpQuery(user, {
-    skip: !isUser,
+    skip: !user.login,
   });
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { upgradeUser } = userSlice.actions;
 
-  if (data) {
-    const { _id, name, login } = data;
-    console.log(_id, name, login);
-    navigate('/main');
-  }
+  useEffect(() => {
+    if (data) {
+      dispatch(upgradeUser(data));
+      navigate('/main');
+    }
+  }, [data]);
 
   return (
     <Box className="register-page__wrapper">

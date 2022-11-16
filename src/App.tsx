@@ -25,5 +25,3 @@ function App() {
 }
 
 export default App;
-
-// TestAuth & TestAuth2 only for example for use api

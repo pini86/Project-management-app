@@ -9,11 +9,17 @@ import { Box, CircularProgress } from '@mui/material';
 import './RegisterPage.css';
 import { useNavigate } from 'react-router-dom';
 import { userSlice } from '../../store/reducers/userSlice';
-import { useAppDispatch } from '../../store/hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
 import { useGetUserByIdQuery } from '../../api/UsersApi';
 import { useSignInQuery } from '../../api/AuthApi';
 
 function RegisterPage() {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAppSelector((state) => state.userReducer);
+  if (isLoggedIn) {
+    navigate('/main');
+  }
+
   const [user, setUser] = useState<ISignUp>({
     name: '',
     login: '',
@@ -35,7 +41,6 @@ function RegisterPage() {
     skip: !user.login,
   });
 
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
 

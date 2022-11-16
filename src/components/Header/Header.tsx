@@ -15,11 +15,12 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import HeaderLink from 'components/buttons/HeaderLink';
+import { useAppSelector } from '../../store/hooks/redux';
 
 const headerBgColor = indigo[900];
 
 export default function Header() {
-  const isAuth = false;
+  const { isLoggedIn } = useAppSelector((state) => state.userReducer);
   const [language, setLanguage] = useState('RU');
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -35,7 +36,7 @@ export default function Header() {
               <HomeIcon />
             </HeaderLink>
             <Stack direction="row">
-              {isAuth ? (
+              {isLoggedIn ? (
                 <>
                   <HeaderLink path="/main" text="Доски">
                     <DashboardIcon />

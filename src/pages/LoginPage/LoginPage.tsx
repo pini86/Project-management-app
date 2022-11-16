@@ -9,11 +9,12 @@ import { Box, CircularProgress } from '@mui/material';
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import { userSlice } from '../../store/reducers/userSlice';
-import { useAppDispatch } from '../../store/hooks/redux';
+import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
 import { extractUserIdFromToken } from '../../utils/authUtils';
 import { useGetUserByIdQuery } from '../../api/UsersApi';
 
 function LoginPage() {
+  const navigate = useNavigate();
   const [user, setUser] = useState<ISignIn>({
     login: '',
     password: '',
@@ -25,7 +26,6 @@ function LoginPage() {
     setUser(userData);
   };
 
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
 

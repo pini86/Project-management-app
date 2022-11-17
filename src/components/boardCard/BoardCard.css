@@ -1,0 +1,15 @@
+.board-card__wrapper {
+  width: 275px;
+  height: 180px;
+  border: 1px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+}

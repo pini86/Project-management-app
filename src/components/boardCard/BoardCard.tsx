@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -13,56 +13,91 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import './BoardCard.css';
+import {
+  useGetBoardByIdQuery,
+  useUpdateBoardByIdQuery,
+  useDeleletBoardByIdQuery,
+} from '../../api/BoardsApi';
+import { IBoard } from '../../models/Board';
+import { IErrorResponse } from '../../models/ErrorResponse';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
+
+// import TextInputForm
 
 interface IProps {
-  title: string;
-  description: string;
-  _id: string;
+  boardId: string;
 }
 
-export default function BoardCard(props: IProps) {
-  const { title, description, _id } = props;
-  const [openDel, setOpenDel] = React.useState(false);
-  const [openEdit, setOpenEdit] = React.useState(false);
+const defaultBoard: IBoard = {
+  id: 'Board id',
+  description: 'Board description',
+  title: 'Board title',
+  owner: 'userId of owner',
+  users: ['userId of invited user #1', 'userId of invited user #2'],
+};
 
-  const handleClickOpenDel = (event: React.SyntheticEvent) => {
+export default function BoardCard(props: IProps) {
+  const { boardId } = props;
+  const {
+    data = defaultBoard,
+    isError = false,
+    error = undefined,
+  } = useGetBoardByIdQuery({ boardId });
+
+  if (isError || !data) {
+    //throw new Error(
+    console.log(
+      'Error code: ' +
+        (error as FetchBaseQueryError).status +
+        '' +
+        ((error as FetchBaseQueryError).data as IErrorResponse).message
+    );
+  }
+
+  const [boardCard, setBoardCard] = useState(data as IBoard);
+  const { title, description } = boardCard;
+
+  const [openDel, setOpenDel] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+
+  const handleOpenModalDel = (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
     setOpenDel(true);
   };
 
-  const handleCloseDel = (event: React.SyntheticEvent) => {
+  const handleCloseModalDel = (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
     setOpenDel(false);
   };
 
-  const handleClickOpenEdit = (event: React.SyntheticEvent) => {
+  const handleOpenModalEdit = (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
     setOpenEdit(true);
   };
 
-  const handleCloseEdit = (event: React.SyntheticEvent) => {
+  const handleCancelEdit = (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
     setOpenEdit(false);
   };
 
+  const handleSaveEdit = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setOpenEdit(false);
+    handleCancelEdit(event);
+  };
+
   return (
     <Card
-      sx={{
-        width: 275,
-        height: 180,
-        border: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        cursor: 'pointer',
-      }}
+      className="board-card__wrapper"
       variant="elevation"
       onClick={() => {
-        console.log('click');
+        console.log('click on board');
       }}
     >
       <CardContent>
@@ -71,30 +106,25 @@ export default function BoardCard(props: IProps) {
         </Typography>
         <Typography variant="body2">{description}</Typography>
       </CardContent>
-      <CardActions
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Tooltip title="Edit board">
-          <IconButton aria-label="edit">
-            <EditIcon onClick={handleClickOpenEdit} />
+      <CardActions className="card-actions">
+        <Tooltip title="Редактировать доску">
+          <IconButton aria-label="edit" onClick={handleOpenModalEdit}>
+            <EditIcon />
           </IconButton>
         </Tooltip>
         <Dialog
           open={openEdit}
-          onClose={handleCloseEdit}
+          onClose={handleCancelEdit}
           aria-labelledby="edit-dialog-title"
           aria-describedby="edit-dialog-description"
         >
-          <DialogTitle id="edit-dialog-title">{'Edit board '}</DialogTitle>
+          <DialogTitle id="edit-dialog-title">{'Редактировать доску '}</DialogTitle>
           <DialogContent>
             <TextField
               autoFocus
               margin="dense"
               id="new_title"
-              label="New title"
+              label="Название доски"
               type="text"
               fullWidth
               defaultValue={title}
@@ -103,49 +133,39 @@ export default function BoardCard(props: IProps) {
               autoFocus
               margin="dense"
               id="new_desc"
-              label="New description"
+              label="Описание доски"
               type="text"
               fullWidth
               defaultValue={description}
             />
           </DialogContent>
-          <DialogActions
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Button onClick={handleCloseEdit} color="primary">
-              Save
+          <DialogActions sx={{ justifyContent: 'space-between' }}>
+            <Button onClick={handleSaveEdit} color="primary">
+              Сохранить
             </Button>
-            <Button onClick={handleCloseEdit} color="primary" autoFocus>
-              Cancel
+            <Button onClick={handleCancelEdit} color="primary" autoFocus>
+              Отмена
             </Button>
           </DialogActions>
         </Dialog>
-        <Tooltip title="Delete board">
-          <IconButton aria-label="delete">
-            <DeleteForeverIcon onClick={handleClickOpenDel} />
+        <Tooltip title="Удалить доску">
+          <IconButton aria-label="delete" onClick={handleOpenModalDel}>
+            <DeleteForeverIcon />
           </IconButton>
         </Tooltip>
         <Dialog
           open={openDel}
-          onClose={handleCloseDel}
+          onClose={handleCloseModalDel}
           aria-labelledby="delete-dialog-title"
           aria-describedby="delete-dialog-description"
         >
-          <DialogTitle id="delete-dialog-title">{'Delete board ?'}</DialogTitle>
-          <DialogActions
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-            }}
-          >
-            <Button onClick={handleCloseDel} color="primary">
-              Yes
+          <DialogTitle id="delete-dialog-title">{'Удалить доску ?'}</DialogTitle>
+          <DialogActions sx={{ justifyContent: 'space-between' }}>
+            <Button onClick={handleCloseModalDel} color="primary">
+              Да
             </Button>
-            <Button onClick={handleCloseDel} color="primary" autoFocus>
-              No
+            <Button onClick={handleCloseModalDel} color="primary" autoFocus>
+              Нет
             </Button>
           </DialogActions>
         </Dialog>

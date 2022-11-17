@@ -10,7 +10,7 @@ export interface ISignUp {
 }
 
 export interface IUser {
-  _id: string;
+  id: string;
   name: string;
   login: string;
 }

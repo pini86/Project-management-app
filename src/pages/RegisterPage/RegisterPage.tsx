@@ -9,16 +9,12 @@ import { Box, CircularProgress } from '@mui/material';
 import './RegisterPage.css';
 import { useNavigate } from 'react-router-dom';
 import { userSlice } from '../../store/reducers/userSlice';
-import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
+import { useAppDispatch } from '../../store/hooks/redux';
 import { useSignInQuery } from '../../api/AuthApi';
 import SnackBar from '../../components/bars/SnackBar';
 
 function RegisterPage() {
   const navigate = useNavigate();
-  const { isLoggedIn } = useAppSelector((state) => state.userReducer);
-  if (isLoggedIn) {
-    navigate('/main');
-  }
 
   const [user, setUser] = useState<ISignUp>({
     name: '',

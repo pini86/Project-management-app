@@ -7,6 +7,9 @@ import { setupListeners } from '@reduxjs/toolkit/dist/query';
 
 const store = setupStore();
 setupListeners(store.dispatch);
+store.subscribe(() => {
+  localStorage.setItem('reduxState', JSON.stringify(store.getState().userReducer));
+});
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

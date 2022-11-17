@@ -6,10 +6,10 @@ import RegisterPage from 'pages/RegisterPage';
 import MainPage from 'pages/MainPage';
 import Page404 from 'pages/Page404';
 import Layout from 'components/Layout';
-import { useAppSelector } from 'store/hooks/redux';
+import { getUserStateFromLocalStorage } from 'utils/authUtils';
 
 function App() {
-  const { isLoggedIn } = useAppSelector((state) => state.userReducer);
+  const { isLoggedIn } = getUserStateFromLocalStorage();
 
   return (
     <BrowserRouter>
@@ -17,11 +17,11 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<WelcomePage />} />
           <Route path="main" element={<MainPage />} />
-          <Route path="login" element={isLoggedIn ? <Navigate to="main" /> : <LoginPage />} />
+          <Route path="login" element={isLoggedIn ? <Navigate to="../" /> : <LoginPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route
             path="registration"
-            element={isLoggedIn ? <Navigate to="main" /> : <RegisterPage />}
+            element={isLoggedIn ? <Navigate to="../" /> : <RegisterPage />}
           />
           <Route path="*" element={<Page404 />} />
         </Route>

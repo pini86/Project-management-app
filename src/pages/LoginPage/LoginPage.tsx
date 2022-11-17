@@ -13,9 +13,11 @@ import { useAppDispatch } from '../../store/hooks/redux';
 import { extractUserIdFromToken } from '../../utils/authUtils';
 import { useGetUserByIdQuery } from '../../api/UsersApi';
 import SnackBar from '../../components/bars/SnackBar';
+import { getUserStateFromLocalStorage } from '../../utils/authUtils';
 
 function LoginPage() {
   const navigate = useNavigate();
+
   const [user, setUser] = useState<ISignIn>({
     login: '',
     password: '',

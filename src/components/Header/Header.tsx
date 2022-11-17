@@ -16,11 +16,13 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import HeaderLink from 'components/buttons/HeaderLink';
 import { useAppSelector } from '../../store/hooks/redux';
+import { getUserStateFromLocalStorage } from 'utils/authUtils';
 
 const headerBgColor = indigo[900];
 
 export default function Header() {
-  const { isLoggedIn } = useAppSelector((state) => state.userReducer);
+  const { isLoggedIn } =
+    useAppSelector((state) => state.userReducer) || getUserStateFromLocalStorage();
   const [language, setLanguage] = useState('RU');
 
   const handleChange = (event: SelectChangeEvent) => {

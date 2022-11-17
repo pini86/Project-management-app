@@ -9,9 +9,10 @@ import { Box, CircularProgress } from '@mui/material';
 import './LoginPage.css';
 import { useNavigate } from 'react-router-dom';
 import { userSlice } from '../../store/reducers/userSlice';
-import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
+import { useAppDispatch } from '../../store/hooks/redux';
 import { extractUserIdFromToken } from '../../utils/authUtils';
 import { useGetUserByIdQuery } from '../../api/UsersApi';
+import SnackBar from '../../components/bars/SnackBar';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -102,14 +103,14 @@ function LoginPage() {
         />
       )}
       {!isLoading && isError && (
-        <Box
-          sx={{
-            textAlign: 'center',
-          }}
-        >
-          Error code: {(error as FetchBaseQueryError).status}{' '}
-          {((error as FetchBaseQueryError).data as IErrorResponse).message}
-        </Box>
+        <SnackBar
+          open={true}
+          message={`${(error as FetchBaseQueryError).status} error. ${
+            ((error as FetchBaseQueryError).data as IErrorResponse).message
+          }
+          Проверьте правильность написания логина и пароля`}
+          buttonText={'закрыть'}
+        />
       )}
     </Box>
   );

@@ -10,8 +10,8 @@ import './RegisterPage.css';
 import { useNavigate } from 'react-router-dom';
 import { userSlice } from '../../store/reducers/userSlice';
 import { useAppDispatch, useAppSelector } from '../../store/hooks/redux';
-import { useGetUserByIdQuery } from '../../api/UsersApi';
 import { useSignInQuery } from '../../api/AuthApi';
+import SnackBar from '../../components/bars/SnackBar';
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -111,14 +111,14 @@ function RegisterPage() {
         />
       )}
       {!isLoading && isError && (
-        <Box
-          sx={{
-            textAlign: 'center',
-          }}
-        >
-          Error code: {(error as FetchBaseQueryError).status}{' '}
-          {((error as FetchBaseQueryError).data as IErrorResponse).message}
-        </Box>
+        <SnackBar
+          open={true}
+          message={`${(error as FetchBaseQueryError).status} error. ${
+            ((error as FetchBaseQueryError).data as IErrorResponse).message
+          }
+          Пользователь с данным логином уже существует`}
+          buttonText={'закрыть'}
+        />
       )}
     </Box>
   );

@@ -61,6 +61,9 @@ export default function BoardCard(props: IProps) {
   const [openDel, setOpenDel] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
 
+  const defaultValuesEditForm = { title, description };
+  const [formValues, setFormValues] = useState(defaultValuesEditForm);
+
   const handleOpenModalDel = (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -73,6 +76,13 @@ export default function BoardCard(props: IProps) {
     setOpenDel(false);
   };
 
+  const handleModalDelConfirm = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setOpenDel(false);
+    useDeleletBoardByIdQuery({ boardId });
+  };
+
   const handleOpenModalEdit = (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
@@ -80,24 +90,38 @@ export default function BoardCard(props: IProps) {
   };
 
   const handleCancelEdit = (event: React.SyntheticEvent) => {
+    setFormValues(defaultValuesEditForm);
     event.preventDefault();
     event.stopPropagation();
     setOpenEdit(false);
   };
 
   const handleSaveEdit = (event: React.SyntheticEvent) => {
+    setBoardCard({ ...boardCard, title: formValues.title, description: formValues.description });
     event.preventDefault();
     event.stopPropagation();
     setOpenEdit(false);
-    handleCancelEdit(event);
   };
+
+  const handleInputChange = (e: { target: { name: string; value: string } }) => {
+    const { name, value } = e.target;
+    setFormValues({
+      ...formValues,
+      [name]: value,
+    });
+  };
+
+  useUpdateBoardByIdQuery({
+    boardId,
+    data: { ...boardCard, title: boardCard.title, description: boardCard.description },
+  });
 
   return (
     <Card
       className="board-card__wrapper"
       variant="elevation"
       onClick={() => {
-        console.log('click on board');
+        console.log('click on board - call board view');
       }}
     >
       <CardContent>
@@ -127,7 +151,9 @@ export default function BoardCard(props: IProps) {
               label="Название доски"
               type="text"
               fullWidth
-              defaultValue={title}
+              defaultValue={formValues.title}
+              onChange={handleInputChange}
+              name="title"
             />
             <TextField
               autoFocus
@@ -136,7 +162,9 @@ export default function BoardCard(props: IProps) {
               label="Описание доски"
               type="text"
               fullWidth
-              defaultValue={description}
+              defaultValue={formValues.description}
+              name="description"
+              onChange={handleInputChange}
             />
           </DialogContent>
           <DialogActions sx={{ justifyContent: 'space-between' }}>
@@ -161,7 +189,7 @@ export default function BoardCard(props: IProps) {
         >
           <DialogTitle id="delete-dialog-title">{'Удалить доску ?'}</DialogTitle>
           <DialogActions sx={{ justifyContent: 'space-between' }}>
-            <Button onClick={handleCloseModalDel} color="primary">
+            <Button onClick={handleModalDelConfirm} color="primary">
               Да
             </Button>
             <Button onClick={handleCloseModalDel} color="primary" autoFocus>

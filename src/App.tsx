@@ -6,10 +6,33 @@ import RegisterPage from 'pages/RegisterPage';
 import MainPage from 'pages/MainPage';
 import Page404 from 'pages/Page404';
 import Layout from 'components/Layout';
-import { getUserStateFromLocalStorage } from 'utils/authUtils';
+import { extractUserIdFromToken, getUserStateFromLocalStorage } from 'utils/authUtils';
+import { useGetUserByIdQuery } from 'api/UsersApi';
+import { useState, useEffect } from 'react';
+import { useAppDispatch } from 'store/hooks/redux';
+import { userSlice } from 'store/reducers/userSlice';
 
 function App() {
-  const { isLoggedIn } = getUserStateFromLocalStorage();
+  const { isLoggedIn, token } = getUserStateFromLocalStorage();
+  const [userId, setUserId] = useState('');
+  const dispatch = useAppDispatch();
+  const { updateUser } = userSlice.actions;
+
+  const { data: userData } = useGetUserByIdQuery(
+    { userId },
+    {
+      skip: !userId,
+    }
+  );
+  if (isLoggedIn && token && userId === '') {
+    setUserId(extractUserIdFromToken(token));
+  }
+
+  useEffect(() => {
+    if (userData) {
+      dispatch(updateUser(userData));
+    }
+  }, [dispatch, updateUser, userData]);
 
   return (
     <BrowserRouter>

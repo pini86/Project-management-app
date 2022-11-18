@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getUserStateFromLocalStorage } from 'utils/authUtils';
 import { IUser } from '../../models/User';
 
 export interface IUserState {
@@ -6,7 +7,8 @@ export interface IUserState {
   user: IUser;
   token: null | string;
 }
-const initialState: IUserState = {
+
+export const defaultState: IUserState = {
   isLoggedIn: false,
   user: {
     _id: '',
@@ -15,6 +17,8 @@ const initialState: IUserState = {
   },
   token: null,
 };
+
+const initialState: IUserState = getUserStateFromLocalStorage();
 
 export const userSlice = createSlice({
   name: 'user',
@@ -29,6 +33,7 @@ export const userSlice = createSlice({
     updateToken(state, action: PayloadAction<string | null>) {
       state.token = action.payload;
     },
+    resetUser: (state) => {},
   },
 });
 export default userSlice.reducer;

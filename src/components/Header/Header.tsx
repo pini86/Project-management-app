@@ -16,7 +16,9 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import HeaderLink from 'components/buttons/HeaderLink';
 import { useAppSelector } from '../../store/hooks/redux';
-import { getUserStateFromLocalStorage } from 'utils/authUtils';
+import { getUserStateFromLocalStorage } from '../../utils/authUtils';
+import { useAppDispatch } from '../../store/hooks/redux';
+import { userSlice } from '../../store/reducers/userSlice';
 
 const headerBgColor = indigo[900];
 
@@ -27,6 +29,13 @@ export default function Header() {
 
   const handleChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value as string);
+  };
+
+  const dispatch = useAppDispatch();
+  const { resetUser } = userSlice.actions;
+
+  const logout = () => {
+    dispatch(resetUser());
   };
 
   return (
@@ -46,7 +55,7 @@ export default function Header() {
                   <HeaderLink path="/profile" text="Профиль">
                     <AccountCircle />
                   </HeaderLink>
-                  <HeaderLink path="/" text="Выйти">
+                  <HeaderLink path="/" text="Выйти" onClickFunction={logout}>
                     <LogoutIcon />
                   </HeaderLink>
                 </>

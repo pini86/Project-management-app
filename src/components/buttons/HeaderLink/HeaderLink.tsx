@@ -7,11 +7,12 @@ interface IProps {
   path: string;
   text: string;
   children?: React.ReactNode;
+  onClickFunction?: () => void;
 }
 
-function HeaderLink({ path, text, children }: IProps) {
+function HeaderLink({ path, text, children, onClickFunction }: IProps) {
   return (
-    <Link to={path} className={styles.headerLink}>
+    <Link to={path} className={styles.headerLink} onClick={onClickFunction}>
       <IconButton size="large" aria-haspopup="true" color="inherit" sx={{ p: '16px 12px' }}>
         {children}
         <Typography variant="button" sx={{ pl: 1 }}>

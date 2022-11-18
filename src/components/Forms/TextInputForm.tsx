@@ -3,6 +3,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { red } from '@mui/material/colors';
 import './TextInputForm.css';
 import { FormProps, InputAttributes, FormData } from './types';
+import { useNavigate } from 'react-router-dom';
 
 export default function TextInputForm({
   inputAttributes,
@@ -15,7 +16,6 @@ export default function TextInputForm({
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm({
     mode: 'onBlur',
@@ -24,7 +24,11 @@ export default function TextInputForm({
 
   const onSubmit = (data: FormData) => {
     getUserFromForm(data);
-    reset();
+  };
+
+  const navigate = useNavigate();
+  const redirect = (link: string) => {
+    navigate(link);
   };
 
   return (
@@ -54,13 +58,17 @@ export default function TextInputForm({
       })}
       <Button type="submit" variant="contained">
         {submitBtnText}
-      </Button>{' '}
-      {/* // TODO: redirect from "react-router-dom" on submit*/}
+      </Button>
       <Typography variant="body2" sx={{ display: 'block' }}>
         {additionalText.mainText}
-        <Link href={additionalText.linkHref} underline="hover">
+        <Button
+          onClick={() => redirect(additionalText.linkHref)}
+          variant="text"
+          color="primary"
+          size="small"
+        >
           {additionalText.linkText}
-        </Link>
+        </Button>
       </Typography>
     </Box>
   );

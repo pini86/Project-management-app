@@ -16,29 +16,41 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import HeaderLink from 'components/buttons/HeaderLink';
 import CssBaseline from '@mui/material/CssBaseline';
+import { useAppSelector } from '../../store/hooks/redux';
+import { getUserStateFromLocalStorage } from '../../utils/authUtils';
+import { useAppDispatch } from '../../store/hooks/redux';
+import { userSlice } from '../../store/reducers/userSlice';
 
 const headerBgColor = indigo[900];
 
 export default function Header() {
-  const isAuth = false;
+  const { isLoggedIn } =
+    useAppSelector((state) => state.userReducer) || getUserStateFromLocalStorage();
   const [language, setLanguage] = useState('RU');
 
   const handleChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value as string);
   };
 
+  const dispatch = useAppDispatch();
+  const { resetUser } = userSlice.actions;
+
+  const logout = () => {
+    dispatch(resetUser());
+  };
+
   return (
     <>
       <CssBaseline />
-      <AppBar sx={{ backgroundColor: headerBgColor, marginBottom: 2, p: 0, position: 'sticky' }}>
+      <AppBar sx={{ backgroundColor: headerBgColor, marginBottom: 2, position: 'sticky' }}>
         <Container maxWidth="xl">
-          <Toolbar disableGutters={true}>
+          <Toolbar>
             <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
               <HeaderLink path="/" text="На главную">
                 <HomeIcon />
               </HeaderLink>
               <Stack direction="row">
-                {isAuth ? (
+                {isLoggedIn ? (
                   <>
                     <HeaderLink path="/main" text="Доски">
                       <DashboardIcon />
@@ -46,7 +58,7 @@ export default function Header() {
                     <HeaderLink path="/profile" text="Профиль">
                       <AccountCircle />
                     </HeaderLink>
-                    <HeaderLink path="/" text="Выйти">
+                    <HeaderLink path="/" text="Выйти" onClickFunction={logout}>
                       <LogoutIcon />
                     </HeaderLink>
                   </>

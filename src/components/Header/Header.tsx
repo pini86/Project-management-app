@@ -44,8 +44,8 @@ export default function Header() {
       <CssBaseline />
       <AppBar sx={{ backgroundColor: headerBgColor, marginBottom: 2, position: 'sticky' }}>
         <Container maxWidth="xl">
-          <Toolbar>
-            <Stack direction="row" justifyContent="space-between" sx={{ width: '100%' }}>
+          <Toolbar disableGutters>
+            <Stack direction="row" justifyContent="space-between" sx={{ width: '100%', ml: -1 }}>
               <HeaderLink path="/" text="На главную">
                 <HomeIcon />
               </HeaderLink>

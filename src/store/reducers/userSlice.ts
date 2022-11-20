@@ -33,7 +33,7 @@ export const userSlice = createSlice({
     updateToken(state, action: PayloadAction<string | null>) {
       state.token = action.payload;
     },
-    resetUser: (state) => {},
+    resetUser: () => defaultState,
   },
 });
 export default userSlice.reducer;

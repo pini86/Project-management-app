@@ -31,32 +31,6 @@ function MainPage() {
   const { data = [], isLoading } = useGetBoardsByUserIdQuery({ userId });
   const [listBoardCards, setListBoardCards] = useState<IBoard[]>();
 
-  useEffect(() => {
-    if (!isLoading && data.length !== listBoardCards?.length) {
-      dispatch(resetBoards());
-
-      data.forEach((board) => {
-        dispatch(createBoard(board));
-      });
-
-      setListBoardCards(data);
-      console.log(
-        'all data',
-        data,
-        'all store',
-        Store.getState().boardReduser.boards,
-        'listBoardCards',
-        listBoardCards
-      );
-    }
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      //window.location.reload();
-    }
-  }, [data.length !== Store.getState().boardReduser.boards.length]);
-
   const [newBoardCard, setNewBoardCard] = useState<IBoard>({
     _id: userId,
     description: '',
@@ -71,44 +45,43 @@ function MainPage() {
   const [formValues, setFormValues] = useState(defaultValuesEditForm);
 
   const handleCancelEdit = (event: React.SyntheticEvent) => {
-    setFormValues(defaultValuesEditForm);
     event.preventDefault();
     event.stopPropagation();
+    setFormValues(defaultValuesEditForm);
     setOpenEdit(false);
   };
 
   const handleSaveEdit = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
     setNewBoardCard({
       ...newBoardCard,
       title: formValues.title,
       description: formValues.description,
     });
-    event.preventDefault();
-    event.stopPropagation();
     setSaveEdit(true);
     setOpenEdit(false);
   };
 
-  const handleInputChange = (e: { target: { name: string; value: string } }) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const { name, value } = event.target;
     setFormValues({
       ...formValues,
       [name]: value,
     });
   };
 
-  useEffect(() => {
-    if (saveEdit) {
-      dispatch(createBoard(newBoardCard));
-      setSaveEdit(false);
-      //window.location.reload();
-    }
-  }, [saveEdit]);
+  const handleOpenModalEdit = () => {
+    setOpenEdit(true);
+  };
 
   const createQuery = useCreateBoardQuery(
     {
       data: {
-        title: JSON.stringify({ title: newBoardCard.title, description: newBoardCard.description }),
+        title: newBoardCard.title,
+        description: newBoardCard.description,
         owner: newBoardCard.owner,
         users: [],
       },
@@ -118,17 +91,39 @@ function MainPage() {
     }
   );
 
-  console.log('createQuery.isSuccess', createQuery.isSuccess, createQuery.data);
   useEffect(() => {
-    console.log(createQuery.isSuccess);
-    if (createQuery.isSuccess) {
+    console.log('createQuery', createQuery);
+    if (createQuery.requestId) {
       //window.location.reload();
     }
-  }, [createQuery.isSuccess]);
+  }, [createQuery.requestId]);
 
-  const handleOpenModalEdit = () => {
-    setOpenEdit(true);
-  };
+  useEffect(() => {
+    console.log('saveEdit', saveEdit);
+    if (saveEdit) {
+      dispatch(createBoard(newBoardCard));
+      setSaveEdit(false);
+      //window.location.reload();
+    }
+  }, [saveEdit]);
+
+  useEffect(() => {
+    if (!isLoading && data.length !== listBoardCards?.length) {
+      dispatch(resetBoards());
+
+      data.forEach((board) => {
+        dispatch(createBoard(board));
+      });
+
+      setListBoardCards(data);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      //window.location.reload();
+    }
+  }, [data.length !== Store.getState().boardReduser.boards.length]);
 
   return (
     <div className="boards__wrapper">

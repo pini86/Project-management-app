@@ -25,7 +25,7 @@ interface IProps {
 
 export default function BoardCard(props: IProps) {
   const { board } = props;
-  const { title, description = '' } = JSON.parse(board.title);
+  const { title, description = '' } = board;
   const dispatch = useAppDispatch();
   const { updateBoard, deleteBoard } = boardSlice.actions;
 
@@ -37,6 +37,12 @@ export default function BoardCard(props: IProps) {
   const [saveEdit, setSaveEdit] = useState(false);
   const defaultValuesEditForm = { title, description };
   const [formValues, setFormValues] = useState(defaultValuesEditForm);
+
+  const handleOpenBoard = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('click on board - call board view'); //place here handler for open board !!!
+  };
 
   const handleOpenModalDel = (event: React.SyntheticEvent) => {
     event.preventDefault();
@@ -78,27 +84,23 @@ export default function BoardCard(props: IProps) {
     setOpenEdit(false);
   };
 
-  const handleInputChange = (e: { target: { name: string; value: string } }) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const { name, value } = event.target;
     setFormValues({
       ...formValues,
       [name]: value,
     });
   };
 
-  useEffect(() => {
-    if (saveEdit) {
-      dispatch(updateBoard(boardCard as IBoard));
-      window.location.reload();
-    }
-  }, [saveEdit]);
-
   const updateQuery = useUpdateBoardByIdQuery(
     {
       boardId: boardCard._id,
       data: {
         owner: boardCard.owner,
-        title: JSON.stringify({ title: boardCard.title, description: boardCard.description }),
+        description: boardCard.description,
+        title: boardCard.title,
         users: boardCard.users,
       },
     },
@@ -106,12 +108,6 @@ export default function BoardCard(props: IProps) {
       skip: !saveEdit,
     }
   );
-  console.log('updateQuery', updateQuery.isSuccess);
-  useEffect(() => {
-    if (confirmDel) {
-      dispatch(deleteBoard(boardCard));
-    }
-  }, [confirmDel]);
 
   const delQuery = useDeleletBoardByIdQuery(
     { boardId: boardCard._id },
@@ -121,19 +117,31 @@ export default function BoardCard(props: IProps) {
   );
 
   useEffect(() => {
+    if (saveEdit) {
+      dispatch(updateBoard(boardCard as IBoard));
+    }
+  }, [saveEdit]);
+
+  useEffect(() => {
+    if (confirmDel) {
+      dispatch(deleteBoard(boardCard));
+    }
+  }, [confirmDel]);
+
+  useEffect(() => {
     if (delQuery.isSuccess) {
       window.location.reload();
     }
   }, [delQuery.isSuccess]);
 
+  useEffect(() => {
+    if (updateQuery.isSuccess) {
+      window.location.reload();
+    }
+  }, [updateQuery.isSuccess]);
+
   return (
-    <Card
-      className="board-card__wrapper"
-      variant="elevation"
-      onClick={() => {
-        console.log('click on board - call board view');
-      }}
-    >
+    <Card className="board-card__wrapper" variant="elevation" onClick={handleOpenBoard}>
       <CardContent>
         <Typography variant="h4" component="div">
           {title}

@@ -9,7 +9,7 @@ const boardsApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
-    createBoard: builder.query<IBoard, { data: INewBoard }>({
+    createBoard: builder.mutation<IBoard, { data: INewBoard }>({
       query: ({ data }) => ({
         url: `boards`,
         method: 'POST',
@@ -52,7 +52,7 @@ const boardsApi = api.injectEndpoints({
 
 export const {
   useGetAllBoardsQuery,
-  useCreateBoardQuery,
+  useCreateBoardMutation,
   useGetBoardByIdQuery,
   useUpdateBoardByIdQuery,
   useDeleletBoardByIdQuery,

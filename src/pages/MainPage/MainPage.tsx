@@ -18,18 +18,21 @@ import './MainPage.scss';
 import Store from '../../store/Store';
 import { IUser } from 'models/User';
 import { Box, CircularProgress } from '@mui/material';
+import { extractUserIdFromToken } from '../../utils/authUtils';
 
 function MainPage() {
   const dispatch = useAppDispatch();
   const { createBoard, resetBoards } = boardSlice.actions;
 
-  const user = Store.getState().userReducer.user as IUser;
+  const token = Store.getState().userReducer.token;
+  const userId = extractUserIdFromToken(token as string);
+  //const user = Store.getState().userReducer.user as IUser;
 
-  const { data = [], isLoading } = useGetBoardsByUserIdQuery({ userId: user._id });
+  const { data = [], isLoading } = useGetBoardsByUserIdQuery({ userId });
   const [listBoardCards, setListBoardCards] = useState<IBoard[]>();
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && data.length !== listBoardCards?.length) {
       dispatch(resetBoards());
 
       data.forEach((board) => {
@@ -37,15 +40,28 @@ function MainPage() {
       });
 
       setListBoardCards(data);
-      console.log('data', data, ' store', Store.getState().boardReduser.boards);
+      console.log(
+        'all data',
+        data,
+        'all store',
+        Store.getState().boardReduser.boards,
+        'listBoardCards',
+        listBoardCards
+      );
     }
   }, [isLoading]);
 
-  const [newBoardCard, setNewBoardCard] = useState({
-    id: user._id,
+  useEffect(() => {
+    if (!isLoading) {
+      //window.location.reload();
+    }
+  }, [data.length !== Store.getState().boardReduser.boards.length]);
+
+  const [newBoardCard, setNewBoardCard] = useState<IBoard>({
+    _id: userId,
     description: '',
     title: '',
-    owner: user._id,
+    owner: userId,
     users: [],
   });
 
@@ -85,13 +101,14 @@ function MainPage() {
     if (saveEdit) {
       dispatch(createBoard(newBoardCard));
       setSaveEdit(false);
+      //window.location.reload();
     }
   }, [saveEdit]);
 
-  useCreateBoardQuery(
+  const createQuery = useCreateBoardQuery(
     {
       data: {
-        title: newBoardCard.title,
+        title: JSON.stringify({ title: newBoardCard.title, description: newBoardCard.description }),
         owner: newBoardCard.owner,
         users: [],
       },
@@ -100,6 +117,14 @@ function MainPage() {
       skip: !saveEdit,
     }
   );
+
+  console.log('createQuery.isSuccess', createQuery.isSuccess, createQuery.data);
+  useEffect(() => {
+    console.log(createQuery.isSuccess);
+    if (createQuery.isSuccess) {
+      //window.location.reload();
+    }
+  }, [createQuery.isSuccess]);
 
   const handleOpenModalEdit = () => {
     setOpenEdit(true);
@@ -120,7 +145,7 @@ function MainPage() {
             <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
               {listBoardCards
                 ? listBoardCards.map((board) => (
-                    <Grid key={board.id} item>
+                    <Grid key={board._id} item>
                       <BoardCard board={board} />
                     </Grid>
                   ))

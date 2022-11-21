@@ -6,5 +6,5 @@ export interface INewBoard {
 }
 
 export interface IBoard extends INewBoard {
-  id: string;
+  _id: string;
 }

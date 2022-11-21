@@ -19,11 +19,11 @@ export const boardSlice = createSlice({
     updateBoard(state, action: PayloadAction<IBoard>) {
       return {
         ...state,
-        boards: [...state.boards.filter((elem) => elem.id !== action.payload.id), action.payload],
+        boards: [...state.boards.filter((elem) => elem._id !== action.payload._id), action.payload],
       };
     },
     deleteBoard(state, action: PayloadAction<IBoard>) {
-      return { ...state, boards: state.boards.filter((elem) => elem.id !== action.payload.id) };
+      return { ...state, boards: state.boards.filter((elem) => elem._id !== action.payload._id) };
     },
     resetBoards: () => initialState,
   },

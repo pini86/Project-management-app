@@ -25,8 +25,7 @@ interface IProps {
 
 export default function BoardCard(props: IProps) {
   const { board } = props;
-  const { title, description } = board;
-
+  const { title, description = '' } = JSON.parse(board.title);
   const dispatch = useAppDispatch();
   const { updateBoard, deleteBoard } = boardSlice.actions;
 
@@ -90,28 +89,42 @@ export default function BoardCard(props: IProps) {
   useEffect(() => {
     if (saveEdit) {
       dispatch(updateBoard(boardCard as IBoard));
+      window.location.reload();
     }
   }, [saveEdit]);
 
-  useUpdateBoardByIdQuery(
-    { boardId: boardCard.id, data: boardCard },
+  const updateQuery = useUpdateBoardByIdQuery(
+    {
+      boardId: boardCard._id,
+      data: {
+        owner: boardCard.owner,
+        title: JSON.stringify({ title: boardCard.title, description: boardCard.description }),
+        users: boardCard.users,
+      },
+    },
     {
       skip: !saveEdit,
     }
   );
-
+  console.log('updateQuery', updateQuery.isSuccess);
   useEffect(() => {
     if (confirmDel) {
       dispatch(deleteBoard(boardCard));
     }
   }, [confirmDel]);
 
-  useDeleletBoardByIdQuery(
-    { boardId: boardCard.id },
+  const delQuery = useDeleletBoardByIdQuery(
+    { boardId: boardCard._id },
     {
       skip: !confirmDel,
     }
   );
+
+  useEffect(() => {
+    if (delQuery.isSuccess) {
+      window.location.reload();
+    }
+  }, [delQuery.isSuccess]);
 
   return (
     <Card

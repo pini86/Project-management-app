@@ -13,54 +13,29 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
-import './BoardCard.css';
-import {
-  useGetBoardByIdQuery,
-  useUpdateBoardByIdQuery,
-  useDeleletBoardByIdQuery,
-} from '../../api/BoardsApi';
+import './BoardCard.scss';
+import { useUpdateBoardByIdQuery, useDeleletBoardByIdQuery } from '../../api/BoardsApi';
 import { IBoard } from '../../models/Board';
-import { IErrorResponse } from '../../models/ErrorResponse';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
-
-// import TextInputForm
+import { useAppDispatch } from '../../store/hooks/redux';
+import { boardSlice } from '../../store/reducers/boardSlice';
 
 interface IProps {
-  boardId: string;
+  board: IBoard;
 }
 
-const defaultBoard: IBoard = {
-  id: 'Board id',
-  description: 'Board description',
-  title: 'Board title',
-  owner: 'userId of owner',
-  users: ['userId of invited user #1', 'userId of invited user #2'],
-};
-
 export default function BoardCard(props: IProps) {
-  const { boardId } = props;
-  const {
-    data = defaultBoard,
-    isError = false,
-    error = undefined,
-  } = useGetBoardByIdQuery({ boardId });
+  const { board } = props;
+  const { title, description } = board;
 
-  if (isError || !data) {
-    //throw new Error(
-    console.log(
-      'Error code: ' +
-        (error as FetchBaseQueryError).status +
-        '' +
-        ((error as FetchBaseQueryError).data as IErrorResponse).message
-    );
-  }
+  const dispatch = useAppDispatch();
+  const { updateBoard, deleteBoard } = boardSlice.actions;
 
-  const [boardCard, setBoardCard] = useState(data as IBoard);
-  const { title, description } = boardCard;
+  const [boardCard, setBoardCard] = useState<IBoard>(board);
 
   const [openDel, setOpenDel] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-
+  const [confirmDel, setConfirmDel] = useState(false);
+  const [saveEdit, setSaveEdit] = useState(false);
   const defaultValuesEditForm = { title, description };
   const [formValues, setFormValues] = useState(defaultValuesEditForm);
 
@@ -79,8 +54,8 @@ export default function BoardCard(props: IProps) {
   const handleModalDelConfirm = (event: React.SyntheticEvent) => {
     event.preventDefault();
     event.stopPropagation();
+    setConfirmDel(true);
     setOpenDel(false);
-    useDeleletBoardByIdQuery({ boardId });
   };
 
   const handleOpenModalEdit = (event: React.SyntheticEvent) => {
@@ -100,6 +75,7 @@ export default function BoardCard(props: IProps) {
     setBoardCard({ ...boardCard, title: formValues.title, description: formValues.description });
     event.preventDefault();
     event.stopPropagation();
+    setSaveEdit(true);
     setOpenEdit(false);
   };
 
@@ -111,10 +87,31 @@ export default function BoardCard(props: IProps) {
     });
   };
 
-  useUpdateBoardByIdQuery({
-    boardId,
-    data: { ...boardCard, title: boardCard.title, description: boardCard.description },
-  });
+  useEffect(() => {
+    if (saveEdit) {
+      dispatch(updateBoard(boardCard as IBoard));
+    }
+  }, [saveEdit]);
+
+  useUpdateBoardByIdQuery(
+    { boardId: boardCard.id, data: boardCard },
+    {
+      skip: !saveEdit,
+    }
+  );
+
+  useEffect(() => {
+    if (confirmDel) {
+      dispatch(deleteBoard(boardCard));
+    }
+  }, [confirmDel]);
+
+  useDeleletBoardByIdQuery(
+    { boardId: boardCard.id },
+    {
+      skip: !confirmDel,
+    }
+  );
 
   return (
     <Card

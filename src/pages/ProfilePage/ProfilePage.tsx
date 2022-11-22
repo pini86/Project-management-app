@@ -10,11 +10,13 @@ import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import './ProfilePage.scss';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
-import { useDeleteUserByIdQuery } from '../../api/UsersApi';
+import { useDeleteUserByIdQuery, useUpdateUserByIdQuery } from '../../api/UsersApi';
+import SnackBar from '../../components/bars/SnackBar';
 
 function ProfilePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isToDelete, setIsToDelete] = useState(false);
+  const [canBeDeleted, setCanBeDeleted] = useState(false);
+  const [canBeUpdated, setCanBeUpdated] = useState(false);
   const navigate = useNavigate();
 
   const [userToUpdate, setUserToUpdate] = useState<ISignUp>({
@@ -25,21 +27,29 @@ function ProfilePage() {
 
   const getUserFromForm = (userData: ISignUp) => {
     setUserToUpdate(userData);
+    setCanBeUpdated(true);
   };
 
   const getConfirm = (value: boolean) => {
-    setIsToDelete(value);
+    setCanBeDeleted(value);
   };
 
   const { user } = useAppSelector((state) => state.userReducer);
 
-  const { resetUser } = userSlice.actions;
+  const { resetUser, updateUser } = userSlice.actions;
   const dispatch = useAppDispatch();
 
   const { data: deletedUser } = useDeleteUserByIdQuery(
     { userId: user ? user?._id : '' },
     {
-      skip: !isToDelete,
+      skip: !canBeDeleted,
+    }
+  );
+
+  const { data: updatedUser } = useUpdateUserByIdQuery(
+    { userId: user ? user?._id : '', data: userToUpdate },
+    {
+      skip: !canBeUpdated,
     }
   );
 
@@ -48,7 +58,10 @@ function ProfilePage() {
       dispatch(resetUser());
       navigate('/');
     }
-  }, [deletedUser]);
+    if (updatedUser) {
+      dispatch(updateUser(updatedUser));
+    }
+  }, [deletedUser, dispatch, navigate, resetUser, updateUser, updatedUser]);
 
   return (
     <Box className="profile-page__wrapper">
@@ -104,13 +117,14 @@ function ProfilePage() {
             },
           ]}
           className="login-form edit-profile-form"
-          formData={{ name: '', login: '', password: '' }}
-          /* formData={{ name: user.name || '', login: user.login || '', password: '' }} */
-
+          formData={{ name: user?.name || '', login: user?.login || '', password: '' }}
           submitBtnText="Сохранить изменения"
           getUserFromForm={getUserFromForm}
         />
       </Box>
+      {updatedUser && (
+        <SnackBar open={true} message={'Данные успешно изменены'} buttonText={'закрыть'} />
+      )}
     </Box>
   );
 }

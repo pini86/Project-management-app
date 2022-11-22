@@ -5,11 +5,12 @@
 }
 
 .board-column {
-  max-width: 280px;
+  width: 280px;
+  height: fit-content;
   border-radius: 4px;
   padding: 8px;
 
-  &__title, &__delete {
+  &__delete {
     cursor: pointer;
   }
 
@@ -19,13 +20,14 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: center;
+      min-width: 265px;
       background-color: #dcebff;
     }
 
     &-input {
       width: 215px;
       padding-left: 8px;
-      font-size: 14px;
+      font-size: 16px;
       border: 1px solid #8ebcff;
     }
 
@@ -43,14 +45,27 @@
     }
   }
 
-  &__delete:hover {
+  &__delete:hover, .task-delete:hover {
     fill: rgb(194, 0, 0);
     transition: all .5s;
   }
 }
 
+.column-title__inner-wrapper.css-nen11g-MuiStack-root {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 91%;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    color: #303f9f;
+  }
+}
+
 .btn-create_task.MuiButtonBase-root {
   justify-content: start;
+  min-width: max-content;
   margin-top: 5px;
   transition: all .5s;
 
@@ -69,15 +84,17 @@
     margin: 10px 0;
     padding: 8px 3px 8px 8px;
     font-size: 14px;
+    cursor: grab;
   }
 }
 
-.task-edit {
+.task-delete {
   cursor: pointer;
 }
 
 ::-webkit-scrollbar {
   width: 5px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {

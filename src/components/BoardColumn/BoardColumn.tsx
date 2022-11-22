@@ -6,9 +6,9 @@ import Stack from '@mui/material/Stack';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
+import EditIcon from '@mui/icons-material/Edit';
 import './style.scss';
 
 interface IProps {
@@ -47,14 +47,12 @@ function BoardColumn({ columnTitle }: IProps) {
 
   const ColumnTitleText = (
     <>
-      <Typography
-        className="board-column__title"
-        variant="h6"
-        noWrap
-        onClick={() => setIsEditing(true)}
-      >
-        {columnName}
-      </Typography>
+      <Stack className="column-title__inner-wrapper" onClick={() => setIsEditing(true)}>
+        <Typography className="board-column__title" variant="h6" noWrap>
+          {columnName}
+        </Typography>
+        <EditIcon />
+      </Stack>
       <DeleteForeverIcon className="board-column__delete" />
     </>
   );
@@ -71,7 +69,7 @@ function BoardColumn({ columnTitle }: IProps) {
             corrupti sequi libero incidunt esse quod voluptatibus magnam eius temporibus alias,
             explicabo sunt provident ea nobis expedita odio!
           </Box>
-          <MoreVertIcon className="task-edit" />
+          <DeleteForeverIcon className="task-delete" />
         </Card>
       </Box>
       <Button className="btn-create_task" variant="contained" startIcon={<AddIcon />}>

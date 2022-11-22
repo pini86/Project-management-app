@@ -22,7 +22,7 @@ const usersApi = api.injectEndpoints({
         body: data,
       }),
     }),
-    deleletUserById: builder.query<IUser, { userId: string }>({
+    deleteUserById: builder.query<IUser, { userId: string }>({
       query: ({ userId }) => ({
         url: `users/${userId}`,
         method: 'DELETE',
@@ -35,5 +35,5 @@ export const {
   useGetAllUsersQuery,
   useGetUserByIdQuery,
   useUpdateUserByIdQuery,
-  useDeleletUserByIdQuery,
+  useDeleteUserByIdQuery,
 } = usersApi;

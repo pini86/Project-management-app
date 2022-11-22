@@ -22,6 +22,6 @@ export interface FormProps {
   className: string;
   formData: FormData;
   submitBtnText: string;
-  additionalText?: { mainText: string; linkText: string; linkHref: string };
+  additionalText: { mainText: string; linkText: string; linkHref: string };
   getUserFromForm: ((user: ISignIn) => void) | ((user: ISignUp) => void);
 }

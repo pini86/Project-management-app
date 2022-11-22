@@ -2,7 +2,7 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { red } from '@mui/material/colors';
 import './TextInputForm.css';
-import { FormProps, InputAttributes, FormData } from './types';
+import { FormProps, InputAttributes, FormData } from './types-profile';
 import { useNavigate } from 'react-router-dom';
 
 export default function TextInputForm({
@@ -59,21 +59,17 @@ export default function TextInputForm({
       <Button type="submit" variant="contained">
         {submitBtnText}
       </Button>
-      {additionalText ? (
-        <Typography variant="body2" sx={{ display: 'block' }}>
-          {additionalText.mainText}
-          <Button
-            onClick={() => redirect(additionalText.linkHref)}
-            variant="text"
-            color="primary"
-            size="small"
-          >
-            {additionalText.linkText}
-          </Button>
-        </Typography>
-      ) : (
-        ''
-      )}
+      <Typography variant="body2" sx={{ display: 'block' }}>
+        {additionalText.mainText}
+        <Button
+          onClick={() => redirect(additionalText.linkHref)}
+          variant="text"
+          color="primary"
+          size="small"
+        >
+          {additionalText.linkText}
+        </Button>
+      </Typography>
     </Box>
   );
 }

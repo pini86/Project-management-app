@@ -41,7 +41,10 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<WelcomePage />} />
           <Route path="main" element={<MainPage />} />
-          <Route path="board" element={<BoardPage />} />
+          <Route
+            path="boards/:boardId"
+            element={isLoggedIn ? <BoardPage /> : <Navigate to="../" />}
+          />
           <Route path="login" element={isLoggedIn ? <Navigate to="../" /> : <LoginPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
@@ -15,7 +14,7 @@ function BoardPage() {
   return (
     <Container maxWidth="xl">
       <Stack direction="row" spacing={3}>
-        <Button variant="contained" startIcon={<ArrowLeftIcon />} onClick={() => navigate('/main')}>
+        <Button variant="contained" startIcon={<ArrowLeftIcon />} onClick={() => navigate(-1)}>
           назад
         </Button>
         <Typography className="board-title" variant="h4">

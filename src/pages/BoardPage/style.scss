@@ -1,0 +1,18 @@
+.board-title.MuiTypography-h4 {
+  color: #ffffff;
+  font-size: 24px;
+  align-self: center;
+}
+
+.columns-wrapper.css-u10pvi-MuiStack-root {
+  height: calc(70vh + 20px);
+  margin-top: 16px;
+  flex-direction: row;
+  overflow-y: auto;
+}
+
+.btn-create-column.MuiButton-contained {
+  background-color: #303f9f;
+  align-self: baseline;
+  min-width: fit-content;
+}

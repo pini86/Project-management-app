@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useDeleletColumnByIdMutation } from 'api/ColumnsApi';
+import { IColumnRefetch } from 'models/Column';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
@@ -9,16 +11,31 @@ import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import Dialog from '@mui/material/Dialog';
 import './style.scss';
 
-interface IProps {
-  columnTitle: string;
-}
-
-function BoardColumn({ columnTitle }: IProps) {
-  const [columnName, setColumnName] = useState(columnTitle);
-  const [editColumnName, setEditColumnName] = useState(columnTitle);
+function BoardColumn({ title, _id, boardId, refetch }: IColumnRefetch) {
+  const [columnName, setColumnName] = useState(title);
+  const [editColumnName, setEditColumnName] = useState(title);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteColumn] = useDeleletColumnByIdMutation();
+
+  const handleClickOpen = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const onDeleteColumn = () => {
+    deleteColumn({ boardId, columnId: _id });
+    refetch();
+    setIsDeleteModalOpen(false);
+  };
 
   const ColumnTitleInput = (
     <form
@@ -53,7 +70,7 @@ function BoardColumn({ columnTitle }: IProps) {
         </Typography>
         <EditIcon />
       </Stack>
-      <DeleteForeverIcon className="board-column__delete" />
+      <DeleteForeverIcon className="board-column__delete" onClick={handleClickOpen} />
     </>
   );
 
@@ -62,6 +79,24 @@ function BoardColumn({ columnTitle }: IProps) {
       <Stack className="board-column__title-wrapper">
         {isEditing ? ColumnTitleInput : ColumnTitleText}
       </Stack>
+      <Dialog
+        open={isDeleteModalOpen}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title" color="error">
+          {'Вы уверены, что хотите удалить колонку?'}
+        </DialogTitle>
+        <DialogActions>
+          <Button variant="contained" color="error" onClick={onDeleteColumn}>
+            Да
+          </Button>
+          <Button color="error" onClick={handleClose}>
+            Нет
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Box className="task-list">
         <Card className="task-list__item">
           <Box>

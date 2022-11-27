@@ -22,7 +22,7 @@ const columnsApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
-    updateColumnById: builder.query<
+    updateColumnById: builder.mutation<
       IColumn,
       { boardId: string; columnId: string; data: INewColumn }
     >({
@@ -47,14 +47,14 @@ const columnsApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
-    updateSetOfColumns: builder.query<IColumn[], { data: IUpdateColumn[] }>({
+    updateSetOfColumns: builder.mutation<IColumn[], { data: IUpdateColumn[] }>({
       query: ({ data }) => ({
         url: `columnsSet`,
         method: 'PATCH',
         body: data,
       }),
     }),
-    createSetOfColumns: builder.query<IColumn[], { data: INewSetColumn[] }>({
+    createSetOfColumns: builder.mutation<IColumn[], { data: INewSetColumn[] }>({
       query: ({ data }) => ({
         url: `columnsSet`,
         method: 'POST',
@@ -68,9 +68,9 @@ export const {
   useGetColumnsInBoardQuery,
   useCreateColumnMutation,
   useGetColumnByIdQuery,
-  useUpdateColumnByIdQuery,
+  useUpdateColumnByIdMutation,
   useDeleletColumnByIdMutation,
   useGetColumnsByIdsListOrUserIdQuery,
-  useUpdateSetOfColumnsQuery,
-  useCreateSetOfColumnsQuery,
+  useUpdateSetOfColumnsMutation,
+  useCreateSetOfColumnsMutation,
 } = columnsApi;

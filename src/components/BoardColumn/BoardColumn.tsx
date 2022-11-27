@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useDeleletColumnByIdMutation } from 'api/ColumnsApi';
+import { useDeleletColumnByIdMutation, useUpdateColumnByIdMutation } from 'api/ColumnsApi';
 import { IColumnRefetch } from 'models/Column';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -16,12 +16,13 @@ import DialogActions from '@mui/material/DialogActions';
 import Dialog from '@mui/material/Dialog';
 import './style.scss';
 
-function BoardColumn({ title, _id, boardId, refetch }: IColumnRefetch) {
+function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
   const [columnName, setColumnName] = useState(title);
   const [editColumnName, setEditColumnName] = useState(title);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteColumn] = useDeleletColumnByIdMutation();
+  const [updateColumn] = useUpdateColumnByIdMutation();
 
   const handleClickOpen = () => {
     setIsDeleteModalOpen(true);
@@ -44,6 +45,7 @@ function BoardColumn({ title, _id, boardId, refetch }: IColumnRefetch) {
         e.preventDefault();
         setIsEditing(false);
         editColumnName.length && setColumnName(editColumnName);
+        updateColumn({ boardId, columnId: _id, data: { title: editColumnName, order } });
       }}
     >
       <input

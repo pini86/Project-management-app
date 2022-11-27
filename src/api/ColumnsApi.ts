@@ -9,7 +9,7 @@ const columnsApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
-    createColumn: builder.query<IColumn, { boardId: string; data: INewColumn }>({
+    createColumn: builder.mutation<IColumn, { boardId: string; data: INewColumn }>({
       query: ({ boardId, data }) => ({
         url: `boards/${boardId}/columns`,
         method: 'POST',
@@ -32,7 +32,7 @@ const columnsApi = api.injectEndpoints({
         body: data,
       }),
     }),
-    deleletColumnById: builder.query<IColumn, { boardId: string; columnId: string }>({
+    deleletColumnById: builder.mutation<IColumn, { boardId: string; columnId: string }>({
       query: ({ boardId, columnId }) => ({
         url: `boards/${boardId}/columns/${columnId}`,
         method: 'DELETE',
@@ -66,10 +66,10 @@ const columnsApi = api.injectEndpoints({
 
 export const {
   useGetColumnsInBoardQuery,
-  useCreateColumnQuery,
+  useCreateColumnMutation,
   useGetColumnByIdQuery,
   useUpdateColumnByIdQuery,
-  useDeleletColumnByIdQuery,
+  useDeleletColumnByIdMutation,
   useGetColumnsByIdsListOrUserIdQuery,
   useUpdateSetOfColumnsQuery,
   useCreateSetOfColumnsQuery,

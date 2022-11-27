@@ -1,4 +1,8 @@
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { IColumn, INewColumn } from 'models/Column';
+import { useCreateColumnMutation, useGetColumnsInBoardQuery } from 'api/ColumnsApi';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Controller, useForm } from 'react-hook-form';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
@@ -6,10 +10,42 @@ import AddIcon from '@mui/icons-material/Add';
 import BoardColumn from 'components/BoardColumn';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import TextField from '@mui/material/TextField';
+import DialogActions from '@mui/material/DialogActions';
 import './style.scss';
+import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress';
+
+const _id = '637e8371d20efa80401cecd4'; // dev only
 
 function BoardPage() {
+  type FormValues = {
+    title: string;
+  };
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { control, handleSubmit } = useForm<FormValues>();
   const navigate = useNavigate();
+  const { boardId } = useParams();
+  const [createColumn] = useCreateColumnMutation();
+
+  const onSubmit = (data: FormValues) => {
+    const newColumn: INewColumn = {
+      title: data.title,
+      order: 1,
+    };
+    createColumn({ boardId: _id, data: newColumn });
+    refetchGetColumns();
+    setIsModalOpen(false);
+  };
+  const {
+    data: columns,
+    refetch: refetchGetColumns,
+    isLoading: isColumnLoading,
+  } = useGetColumnsInBoardQuery({ boardId: _id });
 
   return (
     <Container maxWidth="xl">
@@ -22,10 +58,54 @@ function BoardPage() {
         </Typography>
       </Stack>
       <Stack className="columns-wrapper" direction="row" spacing={3}>
-        <BoardColumn columnTitle={'Название колонки'} />
-        <Button className="btn-create-column" variant="contained" startIcon={<AddIcon />}>
+        {isColumnLoading ? (
+          <Box sx={{ display: 'flex' }}>
+            <CircularProgress />
+          </Box>
+        ) : (
+          (columns || []).map((column: IColumn) => (
+            <BoardColumn {...column} refetch={refetchGetColumns} key={column._id} />
+          ))
+        )}
+        <Button
+          className="btn-create-column"
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setIsModalOpen(true)}
+        >
           добавить колонку
         </Button>
+        <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
+          <DialogTitle id="edit-dialog-title">{'Добавить новую колонку '}</DialogTitle>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <DialogContent>
+              <Controller
+                name="title"
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    id="new_title"
+                    label="Название колонки"
+                    type="text"
+                    fullWidth
+                    {...field}
+                  />
+                )}
+              />
+            </DialogContent>
+            <DialogActions sx={{ justifyContent: 'space-between' }}>
+              <Button type="submit" variant="contained">
+                Сохранить
+              </Button>
+              <Button onClick={() => setIsModalOpen(false)} color="primary" autoFocus>
+                Отмена
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
       </Stack>
     </Container>
   );

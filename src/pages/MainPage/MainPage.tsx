@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import BoardCard from 'components/boardCard/BoardCard';
@@ -17,6 +17,8 @@ import Store from '../../store/Store';
 import { Box, CircularProgress } from '@mui/material';
 import { extractUserIdFromToken } from '../../utils/authUtils';
 import { Controller, useForm } from 'react-hook-form';
+import { useAppDispatch } from '../../store/hooks/redux';
+import { boardSlice } from '../../store/reducers/boardSlice';
 
 type FormValues = {
   title: string;
@@ -24,6 +26,8 @@ type FormValues = {
 };
 
 function MainPage() {
+  const dispatch = useAppDispatch();
+  const { createNewBoard, resetBoards } = boardSlice.actions;
   const { control, handleSubmit } = useForm<FormValues>();
   const [createBoard] = useCreateBoardMutation();
   const token = Store.getState().userReducer.token;
@@ -34,21 +38,24 @@ function MainPage() {
     refetch: refetchGetBoards,
     isLoading: isBoardsLoading,
   } = useGetBoardsByUserIdQuery({ userId });
+
   const [openEdit, setOpenEdit] = useState(false);
   const defaultValuesEditForm = { title: '', description: '' };
 
-  const handleCancelEdit = () => {
+  const handleCancelEdit = (event: React.SyntheticEvent) => {
+    event.stopPropagation();
     setOpenEdit(false);
   };
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     const newBoard: INewBoard = {
       title: data.title,
       description: data.description,
       owner: userId,
       users: [],
     };
-    createBoard({ data: newBoard });
+
+    await createBoard({ data: newBoard });
     refetchGetBoards();
     setOpenEdit(false);
   };
@@ -56,6 +63,15 @@ function MainPage() {
   const handleOpenModalEdit = () => {
     setOpenEdit(true);
   };
+
+  useEffect(() => {
+    dispatch(resetBoards());
+    if (!isBoardsLoading && boards) {
+      boards.forEach((item) => {
+        dispatch(createNewBoard(item));
+      });
+    }
+  });
 
   return (
     <div className="boards__wrapper">
@@ -107,6 +123,7 @@ function MainPage() {
                         render={({ field }) => (
                           <TextField
                             autoFocus
+                            required
                             margin="dense"
                             id="new_title"
                             label="Название доски"
@@ -122,7 +139,6 @@ function MainPage() {
                         defaultValue={defaultValuesEditForm.description}
                         render={({ field }) => (
                           <TextField
-                            autoFocus
                             margin="dense"
                             id="new_desc"
                             label="Описание доски"

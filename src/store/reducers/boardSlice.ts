@@ -13,7 +13,7 @@ export const boardSlice = createSlice({
   name: 'board',
   initialState,
   reducers: {
-    createBoard(state, action: PayloadAction<IBoard>) {
+    createNewBoard(state, action: PayloadAction<IBoard>) {
       return { ...state, boards: [...state.boards, action.payload] };
     },
     updateBoard(state, action: PayloadAction<IBoard>) {

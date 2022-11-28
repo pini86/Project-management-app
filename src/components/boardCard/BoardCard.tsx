@@ -164,6 +164,7 @@ export default function BoardCard(props: IProps) {
           <DialogContent>
             <TextField
               autoFocus
+              required
               margin="dense"
               id="new_title"
               label="Название доски"
@@ -174,7 +175,6 @@ export default function BoardCard(props: IProps) {
               name="title"
             />
             <TextField
-              autoFocus
               margin="dense"
               id="new_desc"
               label="Описание доски"

@@ -12,6 +12,7 @@ import { useState, useEffect } from 'react';
 import { useAppDispatch } from './store/hooks/redux';
 import { userSlice } from './store/reducers/userSlice';
 import { useAppSelector } from './store/hooks/redux';
+import BoardPage from 'pages/BoardPage';
 
 function App() {
   const { token } = getUserStateFromLocalStorage();
@@ -46,6 +47,10 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<WelcomePage />} />
           <Route path="main" element={<MainPage />} />
+          <Route
+            path="boards/:boardId"
+            element={isLoggedIn ? <BoardPage /> : <Navigate to="../" />}
+          />
           <Route path="login" element={isLoggedIn ? <Navigate to="../" /> : <LoginPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route

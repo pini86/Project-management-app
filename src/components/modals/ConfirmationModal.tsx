@@ -13,7 +13,7 @@ interface IConfirmationModalProps {
   contentText: string;
   confirmText: string;
   notConfirmText: string;
-  isConfirmed: (a: boolean) => void;
+  onConfirmation: (a: boolean) => void;
 }
 
 export default function ConfirmationModal({
@@ -23,12 +23,11 @@ export default function ConfirmationModal({
   contentText,
   notConfirmText,
   confirmText,
-  isConfirmed,
+  onConfirmation,
 }: IConfirmationModalProps) {
-  const handleClose = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const target = event.target as HTMLElement;
-    target.className.includes('confirm-btn') ? isConfirmed(true) : isConfirmed(false);
-    setIsOpen(false);
+
+  const setConfirmation = (isConfirmed: boolean) => {
+    onConfirmation(isConfirmed);
   };
 
   return (
@@ -38,10 +37,10 @@ export default function ConfirmationModal({
         <DialogContentText>{contentText}</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} className="confirm-btn">
+        <Button onClick={() => setConfirmation(true)} className="confirm-btn">
           {confirmText}
         </Button>
-        <Button onClick={handleClose} autoFocus className="not-confirm-btn">
+        <Button onClick={() => setConfirmation(false)} autoFocus className="not-confirm-btn">
           {notConfirmText}
         </Button>
       </DialogActions>

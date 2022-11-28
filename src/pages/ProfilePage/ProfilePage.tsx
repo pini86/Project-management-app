@@ -83,7 +83,7 @@ function ProfilePage() {
               contentText="Вы действительно хотите удалить аккаунт?"
               notConfirmText="нет"
               confirmText="да"
-              isConfirmed={getConfirm}
+              onConfirmation={getConfirm}
             />
           )}
         </Box>

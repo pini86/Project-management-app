@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import BoardCard from 'components/boardCard/BoardCard';
@@ -17,8 +17,6 @@ import Store from '../../store/Store';
 import { Box, CircularProgress } from '@mui/material';
 import { extractUserIdFromToken } from '../../utils/authUtils';
 import { Controller, useForm } from 'react-hook-form';
-import { useAppDispatch } from '../../store/hooks/redux';
-import { boardSlice } from '../../store/reducers/boardSlice';
 
 type FormValues = {
   title: string;
@@ -26,8 +24,6 @@ type FormValues = {
 };
 
 function MainPage() {
-  const dispatch = useAppDispatch();
-  const { createNewBoard, resetBoards } = boardSlice.actions;
   const { control, handleSubmit } = useForm<FormValues>();
   const [createBoard] = useCreateBoardMutation();
   const token = Store.getState().userReducer.token;
@@ -38,6 +34,7 @@ function MainPage() {
     refetch: refetchGetBoards,
     isLoading: isBoardsLoading,
   } = useGetBoardsByUserIdQuery({ userId });
+  //console.log(Store.getState().api.queries.getBoardsByUserId.data);
 
   const [openEdit, setOpenEdit] = useState(false);
   const defaultValuesEditForm = { title: '', description: '' };
@@ -63,15 +60,6 @@ function MainPage() {
   const handleOpenModalEdit = () => {
     setOpenEdit(true);
   };
-
-  useEffect(() => {
-    dispatch(resetBoards());
-    if (!isBoardsLoading && boards) {
-      boards.forEach((item) => {
-        dispatch(createNewBoard(item));
-      });
-    }
-  });
 
   return (
     <div className="boards__wrapper">

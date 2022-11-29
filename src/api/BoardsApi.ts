@@ -22,14 +22,14 @@ const boardsApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
-    updateBoardById: builder.query<IBoard, { boardId: string; data: INewBoard }>({
+    updateBoardById: builder.mutation<IBoard, { boardId: string; data: INewBoard }>({
       query: ({ boardId, data }) => ({
         url: `boards/${boardId}`,
         method: 'PUT',
         body: data,
       }),
     }),
-    deleletBoardById: builder.query<IBoard, { boardId: string }>({
+    deleletBoardById: builder.mutation<IBoard, { boardId: string }>({
       query: ({ boardId }) => ({
         url: `boards/${boardId}`,
         method: 'DELETE',
@@ -54,8 +54,8 @@ export const {
   useGetAllBoardsQuery,
   useCreateBoardMutation,
   useGetBoardByIdQuery,
-  useUpdateBoardByIdQuery,
-  useDeleletBoardByIdQuery,
+  useUpdateBoardByIdMutation,
+  useDeleletBoardByIdMutation,
   useGetBoardsByIdsListQuery,
   useGetBoardsByUserIdQuery,
 } = boardsApi;

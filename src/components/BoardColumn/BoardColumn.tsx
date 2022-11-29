@@ -141,7 +141,7 @@ function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
       </Dialog>
       <Box className="task-list">
         {(tasks || []).map((task: ITask) => (
-          <BoardTask {...task} key={task._id} />
+          <BoardTask {...task} refetch={refetchGetTasks} key={task._id} />
         ))}
       </Box>
       <Button

@@ -1,8 +1,15 @@
 import { useState } from 'react';
-import { useDeleletColumnByIdMutation, useUpdateColumnByIdMutation } from 'api/ColumnsApi';
 import { IColumnRefetch } from 'models/Column';
+import { INewTask, ITask } from 'models/Task';
+import { useForm } from 'react-hook-form';
+import { useAppSelector } from '../../store/hooks/redux';
+import { useDeleletColumnByIdMutation, useUpdateColumnByIdMutation } from 'api/ColumnsApi';
+import { useCreateTaskMutation, useGetTasksInColumnQuery } from 'api/TasksApi';
+import { useGetAllUsersQuery } from 'api/UsersApi';
+import DialogContent from '@mui/material/DialogContent';
+import TextField from '@mui/material/TextField';
+import BoardTask from 'components/BoardTask';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -17,12 +24,45 @@ import Dialog from '@mui/material/Dialog';
 import './style.scss';
 
 function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
+  type FormValues = {
+    title: string;
+    description: string;
+  };
+
   const [columnName, setColumnName] = useState(title);
   const [editColumnName, setEditColumnName] = useState(title);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>();
   const [deleteColumn] = useDeleletColumnByIdMutation();
   const [updateColumn] = useUpdateColumnByIdMutation();
+  const [createTask] = useCreateTaskMutation();
+  const userId = useAppSelector((state) => state.userReducer.user?._id);
+  const users = useGetAllUsersQuery().data?.map((user) => user._id) || [];
+
+  const onCreateTask = (data: FormValues) => {
+    const newTask: INewTask = {
+      title: data.title,
+      order: 1,
+      description: data.description,
+      userId,
+      users,
+    };
+    createTask({ boardId, columnId: _id, data: newTask });
+    refetchGetTasks();
+    reset();
+    setIsCreateTaskModalOpen(false);
+  };
+  const { data: tasks, refetch: refetchGetTasks } = useGetTasksInColumnQuery({
+    boardId,
+    columnId: _id,
+  });
 
   const handleClickOpen = () => {
     setIsDeleteModalOpen(true);
@@ -100,18 +140,55 @@ function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
         </DialogActions>
       </Dialog>
       <Box className="task-list">
-        <Card className="task-list__item">
-          <Box>
-            Lorem ipsum dolor sit, amet cons e c t etur adipisicing elit. Adipisci quam quae ducimus
-            corrupti sequi libero incidunt esse quod voluptatibus magnam eius temporibus alias,
-            explicabo sunt provident ea nobis expedita odio!
-          </Box>
-          <DeleteForeverIcon className="task-delete" />
-        </Card>
+        {(tasks || []).map((task: ITask) => (
+          <BoardTask key={task._id} />
+        ))}
       </Box>
-      <Button className="btn-create_task" variant="contained" startIcon={<AddIcon />}>
+      <Button
+        className="btn-create_task"
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={() => setIsCreateTaskModalOpen(true)}
+      >
         добавить задачу
       </Button>
+      <Dialog open={isCreateTaskModalOpen} onClose={() => setIsCreateTaskModalOpen(false)}>
+        <DialogTitle id="create-task">{'Добавить новую задачу '}</DialogTitle>
+        <form onSubmit={handleSubmit(onCreateTask)}>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              id="new_title"
+              label="Название задачи"
+              type="text"
+              fullWidth
+              {...register('title', { required: true })}
+            />
+            {errors.title && (
+              <Typography variant="caption" color="error">
+                * Обязательное поле
+              </Typography>
+            )}
+            <TextField
+              margin="dense"
+              id="new_description"
+              label="Описание (необязательно)"
+              type="text"
+              defaultValue=" "
+              fullWidth
+              {...register('description')}
+            />
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: 'space-between' }}>
+            <Button type="submit" variant="contained">
+              Сохранить
+            </Button>
+            <Button onClick={() => setIsCreateTaskModalOpen(false)} color="primary" autoFocus>
+              Отмена
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
     </Box>
   );
 }

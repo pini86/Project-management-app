@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { IColumn, INewColumn } from 'models/Column';
 import { useCreateColumnMutation, useGetColumnsInBoardQuery } from 'api/ColumnsApi';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
@@ -15,9 +15,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import TextField from '@mui/material/TextField';
 import DialogActions from '@mui/material/DialogActions';
-import './style.scss';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
+import './style.scss';
 
 const _id = '637e8371d20efa80401cecd4'; // dev only
 
@@ -27,7 +27,12 @@ function BoardPage() {
   };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { control, handleSubmit } = useForm<FormValues>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>();
   const navigate = useNavigate();
   const { boardId } = useParams();
   const [createColumn] = useCreateColumnMutation();
@@ -39,6 +44,7 @@ function BoardPage() {
     };
     createColumn({ boardId: _id, data: newColumn });
     refetchGetColumns();
+    reset();
     setIsModalOpen(false);
   };
   const {
@@ -76,25 +82,23 @@ function BoardPage() {
           добавить колонку
         </Button>
         <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-          <DialogTitle id="edit-dialog-title">{'Добавить новую колонку '}</DialogTitle>
+          <DialogTitle id="create-column">{'Добавить новую колонку '}</DialogTitle>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <DialogContent>
-              <Controller
-                name="title"
-                control={control}
-                defaultValue=""
-                render={({ field }) => (
-                  <TextField
-                    autoFocus
-                    margin="dense"
-                    id="new_title"
-                    label="Название колонки"
-                    type="text"
-                    fullWidth
-                    {...field}
-                  />
-                )}
+            <DialogContent className="column-dialog">
+              <TextField
+                autoFocus
+                margin="dense"
+                id="new_title"
+                label="Название колонки"
+                type="text"
+                fullWidth
+                {...register('title', { required: true })}
               />
+              {errors.title && (
+                <Typography variant="caption" color="error">
+                  * Обязательное поле
+                </Typography>
+              )}
             </DialogContent>
             <DialogActions sx={{ justifyContent: 'space-between' }}>
               <Button type="submit" variant="contained">

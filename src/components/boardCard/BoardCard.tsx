@@ -22,6 +22,7 @@ import {
 import { IBoard, INewBoard } from '../../models/Board';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import ConfirmationModal from '../modals/ConfirmationModal';
 
 interface IProps {
   board: IBoard;
@@ -55,15 +56,11 @@ export default function BoardCard(props: IProps) {
     setOpenDel(true);
   };
 
-  const handleCloseModalDel = (event: React.SyntheticEvent) => {
-    event.stopPropagation();
-    setOpenDel(false);
-  };
-
-  const handleModalDelConfirm = async (event: React.SyntheticEvent) => {
-    handleCloseModalDel(event);
-    await deleteBoardById({ boardId });
-    refetchGetBoards();
+  const handleModalDelConfirmaton = async (answer: boolean) => {
+    if (answer) {
+      await deleteBoardById({ boardId });
+      refetchGetBoards();
+    }
   };
 
   const onSubmitEdit = async (data: FormValues) => {
@@ -161,22 +158,15 @@ export default function BoardCard(props: IProps) {
             <DeleteForeverIcon />
           </IconButton>
         </Tooltip>
-        <Dialog
-          open={openDel}
-          onClose={handleCloseModalDel}
-          aria-labelledby="delete-dialog-title"
-          aria-describedby="delete-dialog-description"
-        >
-          <DialogTitle id="delete-dialog-title">{'Удалить доску ?'}</DialogTitle>
-          <DialogActions sx={{ justifyContent: 'space-between' }}>
-            <Button onClick={handleModalDelConfirm} color="primary">
-              Да
-            </Button>
-            <Button onClick={handleCloseModalDel} color="primary" autoFocus>
-              Нет
-            </Button>
-          </DialogActions>
-        </Dialog>
+        <ConfirmationModal
+          isOpen={openDel}
+          setIsOpen={setOpenDel}
+          title={'Удалить доску ?'}
+          contentText={''}
+          confirmText={'Да'}
+          notConfirmText={'Нет'}
+          onConfirmation={handleModalDelConfirmaton}
+        />
       </CardActions>
     </Card>
   );

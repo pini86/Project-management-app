@@ -17,11 +17,11 @@ export interface INewSetColumn extends INewColumn {
 }
 
 export interface IColumn extends INewSetColumn {
-  _id: string;
+  id: string;
 }
 
 export interface IUpdateColumn {
-  _id: string;
+  id: string;
   order: number;
 }
 

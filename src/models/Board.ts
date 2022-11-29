@@ -1,4 +1,5 @@
 export interface INewBoard {
+  description?: string;
   title: string;
   owner: string;
   users: string[];

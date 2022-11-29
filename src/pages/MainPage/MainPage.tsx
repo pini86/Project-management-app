@@ -11,7 +11,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { INewBoard } from 'models/Board';
-import { useGetBoardsByUserIdQuery, useCreateBoardMutation } from '../../api/BoardsApi';
+import {
+  useGetBoardsByUserIdQuery,
+  useCreateBoardMutation,
+  useGetAllBoardsQuery,
+} from '../../api/BoardsApi';
 import './MainPage.scss';
 import Store from '../../store/Store';
 import { Box, CircularProgress } from '@mui/material';
@@ -24,7 +28,7 @@ type FormValues = {
 };
 
 function MainPage() {
-  const { control, handleSubmit } = useForm<FormValues>();
+  const { control, handleSubmit, reset } = useForm<FormValues>();
   const [createBoard] = useCreateBoardMutation();
   const token = Store.getState().userReducer.token;
   const userId = extractUserIdFromToken(token!);
@@ -33,14 +37,14 @@ function MainPage() {
     data: boards,
     refetch: refetchGetBoards,
     isLoading: isBoardsLoading,
-  } = useGetBoardsByUserIdQuery({ userId });
-  //console.log(Store.getState().api.queries.getBoardsByUserId.data);
+  } = useGetAllBoardsQuery();
 
   const [openEdit, setOpenEdit] = useState(false);
   const defaultValuesEditForm = { title: '', description: '' };
 
   const handleCancelEdit = (event: React.SyntheticEvent) => {
     event.stopPropagation();
+    reset(defaultValuesEditForm);
     setOpenEdit(false);
   };
 
@@ -54,6 +58,7 @@ function MainPage() {
 
     await createBoard({ data: newBoard });
     refetchGetBoards();
+    reset(defaultValuesEditForm);
     setOpenEdit(false);
   };
 

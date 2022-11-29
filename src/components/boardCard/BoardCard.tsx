@@ -38,7 +38,7 @@ export default function BoardCard(props: IProps) {
   const [openEdit, setOpenEdit] = useState(false);
   const { refetch: refetchGetBoards } = useGetBoardsByUserIdQuery({ userId: board.owner });
   const [deleteBoardById] = useDeleletBoardByIdMutation();
-  const { control, handleSubmit } = useForm<FormValues>();
+  const { control, handleSubmit, reset } = useForm<FormValues>();
   const [updateBoardById] = useUpdateBoardByIdMutation();
 
   const handleOpenBoard = (event: React.SyntheticEvent) => {
@@ -71,9 +71,10 @@ export default function BoardCard(props: IProps) {
       title: data.title,
       users: board.users,
     };
-    setOpenEdit(false);
+
     await updateBoardById({ boardId: board._id, data: newBoard });
     refetchGetBoards();
+    setOpenEdit(false);
   };
 
   const handleOpenModalEdit = (event: React.SyntheticEvent) => {
@@ -83,6 +84,7 @@ export default function BoardCard(props: IProps) {
 
   const handleCancelEdit = (event: React.SyntheticEvent) => {
     event.stopPropagation();
+    reset({ ...board });
     setOpenEdit(false);
   };
 

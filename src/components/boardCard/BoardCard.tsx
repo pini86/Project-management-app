@@ -21,6 +21,7 @@ import {
 } from '../../api/BoardsApi';
 import { IBoard, INewBoard } from '../../models/Board';
 import { Controller, useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
 interface IProps {
   board: IBoard;
@@ -33,18 +34,19 @@ type FormValues = {
 
 export default function BoardCard(props: IProps) {
   const { board } = props;
-  const { title, description = '' } = board;
+  const { title, description = '', _id: boardId } = board;
   const [openDel, setOpenDel] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const { refetch: refetchGetBoards } = useGetAllBoardsQuery();
   const [deleteBoardById] = useDeleletBoardByIdMutation();
   const { control, handleSubmit, reset } = useForm<FormValues>();
   const [updateBoardById] = useUpdateBoardByIdMutation();
+  const navigate = useNavigate();
 
   const handleOpenBoard = (event: React.SyntheticEvent) => {
     event.stopPropagation();
     if (!openDel && !openEdit) {
-      console.log('click on board - call board view'); //place here handler for open board !!!
+      navigate(`/boards/${boardId}`);
     }
   };
 
@@ -60,7 +62,7 @@ export default function BoardCard(props: IProps) {
 
   const handleModalDelConfirm = async (event: React.SyntheticEvent) => {
     handleCloseModalDel(event);
-    await deleteBoardById({ boardId: board._id });
+    await deleteBoardById({ boardId });
     refetchGetBoards();
   };
 
@@ -72,7 +74,7 @@ export default function BoardCard(props: IProps) {
       users: board.users,
     };
 
-    await updateBoardById({ boardId: board._id, data: newBoard });
+    await updateBoardById({ boardId, data: newBoard });
     refetchGetBoards();
     setOpenEdit(false);
   };

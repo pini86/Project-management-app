@@ -17,7 +17,7 @@ import './BoardCard.scss';
 import {
   useUpdateBoardByIdMutation,
   useDeleletBoardByIdMutation,
-  useGetBoardsByUserIdQuery,
+  useGetAllBoardsQuery,
 } from '../../api/BoardsApi';
 import { IBoard, INewBoard } from '../../models/Board';
 import { Controller, useForm } from 'react-hook-form';
@@ -36,7 +36,7 @@ export default function BoardCard(props: IProps) {
   const { title, description = '' } = board;
   const [openDel, setOpenDel] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const { refetch: refetchGetBoards } = useGetBoardsByUserIdQuery({ userId: board.owner });
+  const { refetch: refetchGetBoards } = useGetAllBoardsQuery();
   const [deleteBoardById] = useDeleletBoardByIdMutation();
   const { control, handleSubmit, reset } = useForm<FormValues>();
   const [updateBoardById] = useUpdateBoardByIdMutation();

@@ -11,11 +11,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { INewBoard } from 'models/Board';
-import {
-  useGetBoardsByUserIdQuery,
-  useCreateBoardMutation,
-  useGetAllBoardsQuery,
-} from '../../api/BoardsApi';
+import { useCreateBoardMutation, useGetAllBoardsQuery } from '../../api/BoardsApi';
 import './MainPage.scss';
 import Store from '../../store/Store';
 import { Box, CircularProgress } from '@mui/material';

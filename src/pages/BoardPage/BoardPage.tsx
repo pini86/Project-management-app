@@ -3,6 +3,7 @@ import { IColumn, INewColumn } from 'models/Column';
 import { useCreateColumnMutation, useGetColumnsInBoardQuery } from 'api/ColumnsApi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import Page404 from 'pages/Page404';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
@@ -19,9 +20,12 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import './style.scss';
 
-const _id = '637e8371d20efa80401cecd4'; // dev only
+const BoardPage = () => {
+  const { boardId } = useParams();
+  return !boardId ? <Page404 /> : <CorrectBoardPage boardId={boardId} />;
+};
 
-function BoardPage() {
+function CorrectBoardPage({ boardId }: { boardId: string }) {
   type FormValues = {
     title: string;
   };
@@ -34,7 +38,6 @@ function BoardPage() {
     formState: { errors },
   } = useForm<FormValues>();
   const navigate = useNavigate();
-  const { boardId } = useParams();
   const [createColumn] = useCreateColumnMutation();
 
   const onSubmit = (data: FormValues) => {
@@ -42,7 +45,7 @@ function BoardPage() {
       title: data.title,
       order: 1,
     };
-    createColumn({ boardId: _id, data: newColumn });
+    createColumn({ boardId, data: newColumn });
     refetchGetColumns();
     reset();
     setIsModalOpen(false);
@@ -51,7 +54,7 @@ function BoardPage() {
     data: columns,
     refetch: refetchGetColumns,
     isLoading: isColumnLoading,
-  } = useGetColumnsInBoardQuery({ boardId: _id });
+  } = useGetColumnsInBoardQuery({ boardId });
 
   return (
     <Container maxWidth="xl">

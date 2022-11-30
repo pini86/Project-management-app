@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useSignUpQuery } from 'api/AuthApi';
+import { useSignUpMutation } from 'api/AuthApi';
 import { useState, useEffect } from 'react';
 import TextInputForm from '../../components/Forms';
 import { ISignUp } from '../../models/User';
@@ -10,47 +10,32 @@ import './RegisterPage.css';
 import { useNavigate } from 'react-router-dom';
 import { userSlice } from '../../store/reducers/userSlice';
 import { useAppDispatch } from '../../store/hooks/redux';
-import { useSignInQuery } from '../../api/AuthApi';
+import { useSignInMutation } from '../../api/AuthApi';
 import SnackBar from '../../components/bars/SnackBar';
 
 function RegisterPage() {
   const navigate = useNavigate();
-
   const [user, setUser] = useState<ISignUp>({
     name: '',
     login: '',
     password: '',
   });
-
   const [userId, setUserId] = useState('');
-
-  const getUserFromForm = (userData: ISignUp) => {
-    setUser(userData);
-  };
-
-  const {
-    data: userData,
-    isLoading,
-    isError,
-    error,
-  } = useSignUpQuery(user, {
-    skip: !user.login,
-  });
-
+  const [signUp, { data: userSignUpData, isLoading, isError, error }] = useSignUpMutation();
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
+  const [signIn, { data: tokenData }] = useSignInMutation();
 
-  const { data: tokenData } = useSignInQuery(
-    { login: user.login, password: user.password },
-    {
-      skip: !userId,
-    }
-  );
+  const getUserFromForm = async (userData: ISignUp) => {
+    setUser(userData);
+    await signUp(userData);
+  };
 
   useEffect(() => {
-    if (userData) {
-      setUserId(userData._id);
-      dispatch(updateUser(userData));
+    if (userSignUpData) {
+      setUserId(userSignUpData._id);
+      dispatch(updateUser(userSignUpData));
+      signIn({ login: user.login, password: user.password });
     }
     if (tokenData) {
       const { token } = tokenData;
@@ -58,7 +43,7 @@ function RegisterPage() {
       dispatch(changeIsLoggedIn(true));
       navigate('/main');
     }
-  }, [userData, tokenData]);
+  }, [userSignUpData, tokenData]);
 
   return (
     <Box className="register-page__wrapper">

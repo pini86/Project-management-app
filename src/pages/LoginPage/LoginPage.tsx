@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useSignInQuery } from '../../api/AuthApi';
+import { useSignInMutation } from '../../api/AuthApi';
 import { useState, useEffect } from 'react';
 import { ISignIn } from '../../models/User';
 import TextInputForm from '../../components/Forms';
@@ -11,40 +11,26 @@ import { useNavigate } from 'react-router-dom';
 import { userSlice } from '../../store/reducers/userSlice';
 import { useAppDispatch } from '../../store/hooks/redux';
 import { extractUserIdFromToken } from '../../utils/authUtils';
-import { useGetUserByIdQuery } from '../../api/UsersApi';
+import { useGetUserByIdMutation } from '../../api/UsersApi';
 import SnackBar from '../../components/bars/SnackBar';
 
 function LoginPage() {
   const navigate = useNavigate();
-
+  const [signIn, { isError, error, data: tokenData }] = useSignInMutation();
+  const [getUserById, { data: userData }] = useGetUserByIdMutation();
   const [user, setUser] = useState<ISignIn>({
     login: '',
     password: '',
   });
-
-  const [userId, setUserId] = useState('');
-
-  const getUserFromForm = (userData: ISignIn) => {
-    setUser(userData);
-  };
-
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
+  const [userId, setUserId] = useState('');
 
-  const {
-    data: tokenData,
-    isError,
-    error,
-  } = useSignInQuery(user, {
-    skip: !user.login,
-  });
-
-  const { data: userData } = useGetUserByIdQuery(
-    { userId },
-    {
-      skip: !userId,
-    }
-  );
+  const getUserFromForm = async (userFormData: ISignIn) => {
+    setUser(userFormData);
+    await signIn(userFormData);
+    await getUserById({ userId });
+  };
 
   useEffect(() => {
     if (tokenData) {

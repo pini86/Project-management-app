@@ -9,7 +9,7 @@ const usersApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
-    getUserById: builder.query<IUser, { userId: string }>({
+    getUserById: builder.mutation<IUser, { userId: string }>({
       query: ({ userId }) => ({
         url: `users/${userId}`,
         method: 'GET',
@@ -33,7 +33,7 @@ const usersApi = api.injectEndpoints({
 
 export const {
   useGetAllUsersQuery,
-  useGetUserByIdQuery,
+  useGetUserByIdMutation,
   useUpdateUserByIdQuery,
   useDeleletUserByIdQuery,
 } = usersApi;

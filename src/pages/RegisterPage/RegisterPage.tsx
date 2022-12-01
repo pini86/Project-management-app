@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useSignUpMutation } from 'api/AuthApi';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import TextInputForm from '../../components/Forms';
 import { ISignUp } from '../../models/User';
 import { IErrorResponse } from '../../models/ErrorResponse';
@@ -15,41 +15,23 @@ import SnackBar from '../../components/bars/SnackBar';
 
 function RegisterPage() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<ISignUp>({
-    name: '',
-    login: '',
-    password: '',
-  });
   const [userId, setUserId] = useState('');
-  const [signUp, { data, isLoading, isError, error }] = useSignUpMutation();
+
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
+
+  const [signUp, { data, isLoading, isError, error }] = useSignUpMutation();
   const [signIn, { data: tokenData }] = useSignInMutation();
 
   const getUserFromForm = async (userData: ISignUp) => {
-    setUser(userData);
     const userSignUpData = await signUp(userData).unwrap();
     setUserId(userSignUpData._id);
     dispatch(updateUser(userSignUpData));
-    const { token } = await signIn({ login: user.login, password: user.password }).unwrap();
+    const { token } = await signIn({ login: userData.login, password: userData.password }).unwrap();
     dispatch(updateToken(token));
     dispatch(changeIsLoggedIn(true));
     navigate('/main');
   };
-
-  /*   useEffect(() => {
-    if (userSignUpData) {
-      setUserId(userSignUpData._id);
-      dispatch(updateUser(userSignUpData));
-      signIn({ login: user.login, password: user.password });
-    }
-    if (tokenData) {
-      const { token } = tokenData;
-      dispatch(updateToken(token));
-      dispatch(changeIsLoggedIn(true));
-      navigate('/main');
-    }
-  }, [userSignUpData, tokenData]); */
 
   return (
     <Box className="register-page__wrapper">

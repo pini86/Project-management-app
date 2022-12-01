@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useSignUpQuery } from 'api/AuthApi';
-import { useState, useEffect } from 'react';
+import { useSignUpMutation } from 'api/AuthApi';
 import TextInputForm from '../../components/Forms';
 import { ISignUp } from '../../models/User';
 import { IErrorResponse } from '../../models/ErrorResponse';
@@ -10,55 +9,25 @@ import './RegisterPage.css';
 import { useNavigate } from 'react-router-dom';
 import { userSlice } from '../../store/reducers/userSlice';
 import { useAppDispatch } from '../../store/hooks/redux';
-import { useSignInQuery } from '../../api/AuthApi';
+import { useSignInMutation } from '../../api/AuthApi';
 import SnackBar from '../../components/bars/SnackBar';
 
 function RegisterPage() {
   const navigate = useNavigate();
-
-  const [user, setUser] = useState<ISignUp>({
-    name: '',
-    login: '',
-    password: '',
-  });
-
-  const [userId, setUserId] = useState('');
-
-  const getUserFromForm = (userData: ISignUp) => {
-    setUser(userData);
-  };
-
-  const {
-    data: userData,
-    isLoading,
-    isError,
-    error,
-  } = useSignUpQuery(user, {
-    skip: !user.login,
-  });
-
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
+  const [signUp, { isLoading, isError, error }] = useSignUpMutation();
+  const [signIn] = useSignInMutation();
 
-  const { data: tokenData } = useSignInQuery(
-    { login: user.login, password: user.password },
-    {
-      skip: !userId,
-    }
-  );
+  const getUserFromForm = async (userData: ISignUp) => {
+    const userSignUpData = await signUp(userData).unwrap();
+    dispatch(updateUser(userSignUpData));
 
-  useEffect(() => {
-    if (userData) {
-      setUserId(userData._id);
-      dispatch(updateUser(userData));
-    }
-    if (tokenData) {
-      const { token } = tokenData;
-      dispatch(updateToken(token));
-      dispatch(changeIsLoggedIn(true));
-      navigate('/main');
-    }
-  }, [userData, tokenData]);
+    const { token } = await signIn({ login: userData.login, password: userData.password }).unwrap();
+    dispatch(updateToken(token));
+    dispatch(changeIsLoggedIn(true));
+    navigate('/main');
+  };
 
   return (
     <Box className="register-page__wrapper">

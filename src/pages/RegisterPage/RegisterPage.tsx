@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useSignUpMutation } from 'api/AuthApi';
-import { useState } from 'react';
 import TextInputForm from '../../components/Forms';
 import { ISignUp } from '../../models/User';
 import { IErrorResponse } from '../../models/ErrorResponse';
@@ -15,22 +14,16 @@ import SnackBar from '../../components/bars/SnackBar';
 
 function RegisterPage() {
   const navigate = useNavigate();
-  const [userId, setUserId] = useState('');
-
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
-
   const [signUp, { isLoading, isError, error }] = useSignUpMutation();
   const [signIn] = useSignInMutation();
 
   const getUserFromForm = async (userData: ISignUp) => {
     const userSignUpData = await signUp(userData).unwrap();
-
-    setUserId(userSignUpData._id);
     dispatch(updateUser(userSignUpData));
 
     const { token } = await signIn({ login: userData.login, password: userData.password }).unwrap();
-
     dispatch(updateToken(token));
     dispatch(changeIsLoggedIn(true));
     navigate('/main');

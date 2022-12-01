@@ -21,17 +21,23 @@ function RegisterPage() {
     password: '',
   });
   const [userId, setUserId] = useState('');
-  const [signUp, { data: userSignUpData, isLoading, isError, error }] = useSignUpMutation();
+  const [signUp, { data, isLoading, isError, error }] = useSignUpMutation();
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
   const [signIn, { data: tokenData }] = useSignInMutation();
 
   const getUserFromForm = async (userData: ISignUp) => {
     setUser(userData);
-    await signUp(userData);
+    const userSignUpData = await signUp(userData).unwrap();
+    setUserId(userSignUpData._id);
+    dispatch(updateUser(userSignUpData));
+    const { token } = await signIn({ login: user.login, password: user.password }).unwrap();
+    dispatch(updateToken(token));
+    dispatch(changeIsLoggedIn(true));
+    navigate('/main');
   };
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (userSignUpData) {
       setUserId(userSignUpData._id);
       dispatch(updateUser(userSignUpData));
@@ -43,7 +49,7 @@ function RegisterPage() {
       dispatch(changeIsLoggedIn(true));
       navigate('/main');
     }
-  }, [userSignUpData, tokenData]);
+  }, [userSignUpData, tokenData]); */
 
   return (
     <Box className="register-page__wrapper">

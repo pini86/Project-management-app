@@ -11,39 +11,36 @@ import { useNavigate } from 'react-router-dom';
 import { userSlice } from '../../store/reducers/userSlice';
 import { useAppDispatch } from '../../store/hooks/redux';
 import { extractUserIdFromToken } from '../../utils/authUtils';
-import { useGetUserByIdMutation } from '../../api/UsersApi';
+import { useGetUserByIdQuery } from '../../api/UsersApi';
 import SnackBar from '../../components/bars/SnackBar';
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [signIn, { isError, error, data: tokenData }] = useSignInMutation();
-  const [getUserById, { data: userData }] = useGetUserByIdMutation();
-  const [user, setUser] = useState<ISignIn>({
-    login: '',
-    password: '',
-  });
+  const [signIn, { isError, error, data }] = useSignInMutation();
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
   const [userId, setUserId] = useState('');
 
+  const { data: userData } = useGetUserByIdQuery(
+    { userId },
+    {
+      skip: !userId,
+    }
+  );
+
   const getUserFromForm = async (userFormData: ISignIn) => {
-    setUser(userFormData);
-    await signIn(userFormData);
-    await getUserById({ userId });
+    const { token } = await signIn(userFormData).unwrap();
+    dispatch(changeIsLoggedIn(true));
+    dispatch(updateToken(token));
+    setUserId(extractUserIdFromToken(token));
   };
 
   useEffect(() => {
-    if (tokenData) {
-      dispatch(changeIsLoggedIn(true));
-      const { token } = tokenData;
-      dispatch(updateToken(token));
-      setUserId(extractUserIdFromToken(token));
-    }
     if (userData) {
       dispatch(updateUser(userData));
       navigate('/main');
     }
-  }, [tokenData, userData]);
+  }, [userData]);
 
   return (
     <Box className="login-page__wrapper">

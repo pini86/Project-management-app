@@ -8,7 +8,7 @@ import BoardPage from 'pages/BoardPage';
 import Page404 from 'pages/Page404';
 import Layout from 'components/Layout';
 import { extractUserIdFromToken, getUserStateFromLocalStorage } from 'utils/authUtils';
-import { useGetUserByIdMutation } from 'api/UsersApi';
+import { useGetUserByIdQuery } from 'api/UsersApi';
 import { useState } from 'react';
 import { useAppDispatch } from 'store/hooks/redux';
 import { userSlice } from 'store/reducers/userSlice';
@@ -19,17 +19,19 @@ function App() {
   const dispatch = useAppDispatch();
   const { updateUser } = userSlice.actions;
 
-  const [getUserById, { data: userData }] = useGetUserByIdMutation();
+  const { data: userData } = useGetUserByIdQuery(
+    { userId },
+    {
+      skip: !userId,
+    }
+  );
+
+  if (userData) {
+    dispatch(updateUser(userData));
+  }
 
   if (isLoggedIn && token && userId === '') {
     setUserId(extractUserIdFromToken(token));
-  }
-
-  if (userId) {
-    (async function () {
-      await getUserById({ userId });
-    })();
-    dispatch(updateUser(userData!));
   }
 
   return (

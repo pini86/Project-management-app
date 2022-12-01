@@ -16,7 +16,7 @@ import SnackBar from '../../components/bars/SnackBar';
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [signIn, { isError, error, data }] = useSignInMutation();
+  const [signIn, { isError, error }] = useSignInMutation();
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
   const [userId, setUserId] = useState('');
@@ -30,6 +30,7 @@ function LoginPage() {
 
   const getUserFromForm = async (userFormData: ISignIn) => {
     const { token } = await signIn(userFormData).unwrap();
+
     dispatch(changeIsLoggedIn(true));
     dispatch(updateToken(token));
     setUserId(extractUserIdFromToken(token));

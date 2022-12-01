@@ -20,14 +20,17 @@ function RegisterPage() {
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
 
-  const [signUp, { data, isLoading, isError, error }] = useSignUpMutation();
-  const [signIn, { data: tokenData }] = useSignInMutation();
+  const [signUp, { isLoading, isError, error }] = useSignUpMutation();
+  const [signIn] = useSignInMutation();
 
   const getUserFromForm = async (userData: ISignUp) => {
     const userSignUpData = await signUp(userData).unwrap();
+
     setUserId(userSignUpData._id);
     dispatch(updateUser(userSignUpData));
+
     const { token } = await signIn({ login: userData.login, password: userData.password }).unwrap();
+
     dispatch(updateToken(token));
     dispatch(changeIsLoggedIn(true));
     navigate('/main');

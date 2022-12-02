@@ -9,7 +9,7 @@ import Page404 from 'pages/Page404';
 import Layout from 'components/Layout';
 import { extractUserIdFromToken, getUserStateFromLocalStorage } from 'utils/authUtils';
 import { useGetUserByIdQuery } from 'api/UsersApi';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAppDispatch } from 'store/hooks/redux';
 import { userSlice } from 'store/reducers/userSlice';
 
@@ -25,15 +25,14 @@ function App() {
       skip: !userId,
     }
   );
+
+  if (userData) {
+    dispatch(updateUser(userData));
+  }
+
   if (isLoggedIn && token && userId === '') {
     setUserId(extractUserIdFromToken(token));
   }
-
-  useEffect(() => {
-    if (userData) {
-      dispatch(updateUser(userData));
-    }
-  }, [dispatch, updateUser, userData]);
 
   return (
     <BrowserRouter>

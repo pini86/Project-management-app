@@ -23,12 +23,12 @@ import DialogActions from '@mui/material/DialogActions';
 import Dialog from '@mui/material/Dialog';
 import './style.scss';
 
-function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
-  type FormValues = {
-    title: string;
-    description: string;
-  };
+type FormValues = {
+  title: string;
+  description: string;
+};
 
+function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
   const [columnName, setColumnName] = useState(title);
   const [editColumnName, setEditColumnName] = useState(title);
   const [isEditing, setIsEditing] = useState(false);
@@ -46,7 +46,7 @@ function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
   const userId = useAppSelector((state) => state.userReducer.user?._id);
   const users = useGetAllUsersQuery().data?.map((user) => user._id) || [];
 
-  const onCreateTask = (data: FormValues) => {
+  const onCreateTask = async (data: FormValues) => {
     const newTask: INewTask = {
       title: data.title,
       order: 1,
@@ -54,7 +54,7 @@ function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
       userId,
       users,
     };
-    createTask({ boardId, columnId: _id, data: newTask });
+    await createTask({ boardId, columnId: _id, data: newTask });
     refetchGetTasks();
     reset();
     setIsCreateTaskModalOpen(false);
@@ -72,8 +72,8 @@ function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
     setIsDeleteModalOpen(false);
   };
 
-  const onDeleteColumn = () => {
-    deleteColumn({ boardId, columnId: _id });
+  const onDeleteColumn = async () => {
+    await deleteColumn({ boardId, columnId: _id });
     refetch();
     setIsDeleteModalOpen(false);
   };

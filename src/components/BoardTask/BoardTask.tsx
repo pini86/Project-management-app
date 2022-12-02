@@ -16,12 +16,12 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import './style.scss';
 
-function BoardTask({ boardId, columnId, _id, title, userId, users, refetch }: ITaskRefetch) {
-  type FormValues = {
-    title: string;
-    description: string;
-  };
+type FormValues = {
+  title: string;
+  description: string;
+};
 
+function BoardTask({ boardId, columnId, _id, title, userId, users, refetch }: ITaskRefetch) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const {
@@ -41,13 +41,13 @@ function BoardTask({ boardId, columnId, _id, title, userId, users, refetch }: IT
     setIsDeleteModalOpen(false);
   };
 
-  const onDeleteTask = () => {
-    deleteTask({ boardId, columnId, taskId: _id });
+  const onDeleteTask = async () => {
+    await deleteTask({ boardId, columnId, taskId: _id });
     refetch();
     setIsDeleteModalOpen(false);
   };
 
-  const onUpdateTask = (data: FormValues) => {
+  const onUpdateTask = async (data: FormValues) => {
     const newTask: IUpdateTask = {
       title: data.title,
       order: 1,
@@ -56,7 +56,7 @@ function BoardTask({ boardId, columnId, _id, title, userId, users, refetch }: IT
       users,
       columnId,
     };
-    updateTask({ boardId, columnId, taskId: _id, data: newTask });
+    await updateTask({ boardId, columnId, taskId: _id, data: newTask });
     refetch();
     reset();
     setIsEditModalOpen(false);

@@ -20,16 +20,16 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import './style.scss';
 
+type FormValues = {
+  title: string;
+};
+
 const BoardPage = () => {
   const { boardId } = useParams();
   return !boardId ? <Page404 /> : <CorrectBoardPage boardId={boardId} />;
 };
 
 function CorrectBoardPage({ boardId }: { boardId: string }) {
-  type FormValues = {
-    title: string;
-  };
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     register,
@@ -40,12 +40,12 @@ function CorrectBoardPage({ boardId }: { boardId: string }) {
   const navigate = useNavigate();
   const [createColumn] = useCreateColumnMutation();
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     const newColumn: INewColumn = {
       title: data.title,
       order: 1,
     };
-    createColumn({ boardId, data: newColumn });
+    await createColumn({ boardId, data: newColumn });
     refetchGetColumns();
     reset();
     setIsModalOpen(false);

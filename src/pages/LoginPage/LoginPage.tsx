@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useSignInQuery } from '../../api/AuthApi';
+import { useSignInMutation } from '../../api/AuthApi';
 import { useState, useEffect } from 'react';
 import { ISignIn } from '../../models/User';
 import TextInputForm from '../../components/Forms';
@@ -16,28 +16,10 @@ import SnackBar from '../../components/bars/SnackBar';
 
 function LoginPage() {
   const navigate = useNavigate();
-
-  const [user, setUser] = useState<ISignIn>({
-    login: '',
-    password: '',
-  });
-
-  const [userId, setUserId] = useState('');
-
-  const getUserFromForm = (userData: ISignIn) => {
-    setUser(userData);
-  };
-
+  const [signIn, { isError, error }] = useSignInMutation();
   const dispatch = useAppDispatch();
   const { changeIsLoggedIn, updateToken, updateUser } = userSlice.actions;
-
-  const {
-    data: tokenData,
-    isError,
-    error,
-  } = useSignInQuery(user, {
-    skip: !user.login,
-  });
+  const [userId, setUserId] = useState('');
 
   const { data: userData } = useGetUserByIdQuery(
     { userId },
@@ -46,18 +28,20 @@ function LoginPage() {
     }
   );
 
+  const getUserFromForm = async (userFormData: ISignIn) => {
+    const { token } = await signIn(userFormData).unwrap();
+
+    dispatch(changeIsLoggedIn(true));
+    dispatch(updateToken(token));
+    setUserId(extractUserIdFromToken(token));
+  };
+
   useEffect(() => {
-    if (tokenData) {
-      dispatch(changeIsLoggedIn(true));
-      const { token } = tokenData;
-      dispatch(updateToken(token));
-      setUserId(extractUserIdFromToken(token));
-    }
     if (userData) {
       dispatch(updateUser(userData));
       navigate('/main');
     }
-  }, [tokenData, userData]);
+  }, [userData]);
 
   return (
     <Box className="login-page__wrapper">

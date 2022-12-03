@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { ITask, IUpdateTask } from 'models/Task';
 import {
   useDeleletTaskByIdMutation,
-  useGetTasksInColumnQuery,
+  useGetTasksByBoardIdQuery,
   useUpdateTaskByIdMutation,
 } from 'api/TasksApi';
 import { useForm } from 'react-hook-form';
@@ -36,6 +36,7 @@ function BoardTask({ boardId, columnId, _id, title, userId, users }: ITask) {
   } = useForm<FormValues>();
   const [updateTask] = useUpdateTaskByIdMutation();
   const [deleteTask] = useDeleletTaskByIdMutation();
+  const { refetch: refetchGetTasks } = useGetTasksByBoardIdQuery({ boardId });
 
   const handleClickOpen = () => {
     setIsDeleteModalOpen(true);
@@ -44,11 +45,6 @@ function BoardTask({ boardId, columnId, _id, title, userId, users }: ITask) {
   const handleClose = () => {
     setIsDeleteModalOpen(false);
   };
-
-  const { refetch: refetchGetTasks } = useGetTasksInColumnQuery({
-    boardId,
-    columnId: _id,
-  });
 
   const onDeleteTask = async () => {
     await deleteTask({ boardId, columnId, taskId: _id });

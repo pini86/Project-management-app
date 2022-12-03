@@ -8,7 +8,7 @@ import {
   useGetColumnsInBoardQuery,
   useUpdateColumnByIdMutation,
 } from 'api/ColumnsApi';
-import { useCreateTaskMutation, useGetTasksInColumnQuery } from 'api/TasksApi';
+import { useCreateTaskMutation, useGetTasksByBoardIdQuery } from 'api/TasksApi';
 import { useGetAllUsersQuery } from 'api/UsersApi';
 import DialogContent from '@mui/material/DialogContent';
 import TextField from '@mui/material/TextField';
@@ -44,11 +44,13 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
     reset,
     formState: { errors },
   } = useForm<FormValues>();
+  const userId = useAppSelector((state) => state.userReducer.user?._id);
   const [deleteColumn] = useDeleletColumnByIdMutation();
   const [updateColumn] = useUpdateColumnByIdMutation();
   const [createTask] = useCreateTaskMutation();
-  const userId = useAppSelector((state) => state.userReducer.user?._id);
-  const users = useGetAllUsersQuery().data?.map((user) => user._id) || [];
+  const userIds = useGetAllUsersQuery().data?.map((user) => user._id);
+  const { refetch: refetchGetColumns } = useGetColumnsInBoardQuery({ boardId });
+  const { refetch: refetchGetTasks } = useGetTasksByBoardIdQuery({ boardId });
 
   const onCreateTask = async (data: FormValues) => {
     const newTask: INewTask = {
@@ -56,17 +58,13 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
       order: 1,
       description: data.description,
       userId,
-      users,
+      users: userIds!,
     };
     await createTask({ boardId, columnId: _id, data: newTask });
     refetchGetTasks();
     reset();
     setIsCreateTaskModalOpen(false);
   };
-  const { refetch: refetchGetTasks } = useGetTasksInColumnQuery({
-    boardId,
-    columnId: _id,
-  });
 
   const handleClickOpen = () => {
     setIsDeleteModalOpen(true);
@@ -81,8 +79,6 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
     refetchGetColumns();
     setIsDeleteModalOpen(false);
   };
-
-  const { refetch: refetchGetColumns } = useGetColumnsInBoardQuery({ boardId });
 
   const ColumnTitleInput = (
     <form

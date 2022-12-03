@@ -35,25 +35,25 @@ function BoardPage() {
     formState: { errors },
   } = useForm<FormValues>();
   const navigate = useNavigate();
-  const [createColumn] = useCreateColumnMutation();
   const { boardId } = useParams();
-  const tasksInBoard = useGetTasksByBoardIdQuery({ boardId: boardId || '' }).data || [];
+  const [createColumn] = useCreateColumnMutation();
+  const { data: tasksInBoard } = useGetTasksByBoardIdQuery({ boardId: boardId! });
+  const {
+    data: columns,
+    refetch: refetchGetColumns,
+    isLoading: isColumnLoading,
+  } = useGetColumnsInBoardQuery({ boardId: boardId! });
 
   const onSubmit = async (data: FormValues) => {
     const newColumn: INewColumn = {
       title: data.title,
       order: 1,
     };
-    await createColumn({ boardId: boardId || '', data: newColumn });
+    await createColumn({ boardId: boardId!, data: newColumn });
     refetchGetColumns();
     reset();
     setIsModalOpen(false);
   };
-  const {
-    data: columns,
-    refetch: refetchGetColumns,
-    isLoading: isColumnLoading,
-  } = useGetColumnsInBoardQuery({ boardId: boardId || '' });
 
   return !boardId ? (
     <Page404 />
@@ -73,10 +73,12 @@ function BoardPage() {
             <CircularProgress />
           </Box>
         ) : (
-          (columns || []).map((column: IColumn) => (
+          columns &&
+          tasksInBoard &&
+          columns.map((column: IColumn) => (
             <BoardColumn
               {...column}
-              tasks={tasksInBoard.filter((task: ITask) => task.columnId === column._id)}
+              tasks={tasksInBoard!.filter((task: ITask) => task.columnId === column._id)}
               key={column._id}
             />
           ))

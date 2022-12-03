@@ -5,63 +5,40 @@ import { Box, Button, Typography } from '@mui/material';
 import { ISignUp } from '../../models/User';
 import TextInputForm from '../../components/Forms/TextInputForm';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import './ProfilePage.scss';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
-import { useDeleteUserByIdQuery, useUpdateUserByIdQuery } from '../../api/UsersApi';
+import { useDeleteUserByIdMutation, useUpdateUserByIdMutation } from '../../api/UsersApi';
 import SnackBar from '../../components/bars/SnackBar';
+import { IErrorResponse } from '../../models/ErrorResponse';
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
 
 function ProfilePage() {
+  const [deleteUserById] = useDeleteUserByIdMutation();
+  const [updateUserById, { isSuccess, isError, error }] = useUpdateUserByIdMutation();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [canBeDeleted, setCanBeDeleted] = useState(false);
-  const [canBeUpdated, setCanBeUpdated] = useState(false);
   const navigate = useNavigate();
-
-  const [userToUpdate, setUserToUpdate] = useState<ISignUp>({
-    login: '',
-    password: '',
-    name: '',
-  });
-
-  const getUserFromForm = (userData: ISignUp) => {
-    setUserToUpdate(userData);
-    setCanBeUpdated(true);
-  };
-
-  const getConfirm = (value: boolean) => {
-    setCanBeDeleted(value);
-  };
-
   const { user } = useAppSelector((state) => state.userReducer);
-
   const { resetUser, updateUser } = userSlice.actions;
   const dispatch = useAppDispatch();
 
-  const { data: deletedUser } = useDeleteUserByIdQuery(
-    { userId: user ? user?._id : '' },
-    {
-      skip: !canBeDeleted,
-    }
-  );
+  const getUserFromForm = async (userData: ISignUp) => {
+    const data = await updateUserById({
+      userId: user ? user?._id : '',
+      data: userData,
+    }).unwrap();
+    dispatch(updateUser(data!));
+  };
 
-  const { data: updatedUser } = useUpdateUserByIdQuery(
-    { userId: user ? user?._id : '', data: userToUpdate },
-    {
-      skip: !canBeUpdated,
-    }
-  );
-
-  useEffect(() => {
-    if (deletedUser) {
+  const getConfirm = async (value: boolean) => {
+    if (value) {
+      await deleteUserById({ userId: user ? user?._id : '' }).unwrap();
       dispatch(resetUser());
       navigate('/');
     }
-    if (updatedUser) {
-      dispatch(updateUser(updatedUser));
-    }
-  }, [deletedUser, dispatch, navigate, resetUser, updateUser, updatedUser]);
+  };
 
   return (
     <Box className="profile-page__wrapper">
@@ -122,8 +99,21 @@ function ProfilePage() {
           getUserFromForm={getUserFromForm}
         />
       </Box>
-      {updatedUser && (
-        <SnackBar open={true} message={'Данные успешно изменены'} buttonText={'закрыть'} />
+      {isSuccess && (
+        <SnackBar
+          open={true}
+          message={'Данные успешно изменены. Войдите с новыми данными.'}
+          buttonText={'закрыть'}
+        />
+      )}
+      {isError && (
+        <SnackBar
+          open={true}
+          message={`Данные не удалось изменить. Ошибка: ${
+            ((error as FetchBaseQueryError).data as IErrorResponse).message
+          }`}
+          buttonText={'закрыть'}
+        />
       )}
     </Box>
   );

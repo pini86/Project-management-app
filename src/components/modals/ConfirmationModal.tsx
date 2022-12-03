@@ -39,7 +39,7 @@ export default function ConfirmationModal({
       <DialogContent>
         <DialogContentText>{contentText}</DialogContentText>
       </DialogContent>
-      <DialogActions>
+      <DialogActions sx={{ justifyContent: 'space-between' }}>
         <Button onClick={() => setConfirmation(true)} className="confirm-btn">
           {confirmText}
         </Button>

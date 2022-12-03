@@ -11,12 +11,12 @@ export interface IUpdateTask extends INewTask {
 }
 
 export interface ITask extends IUpdateTask {
-  _id: string;
+  id: string;
   boardId: string;
 }
 
 export interface INewSetTask {
-  _id: string;
+  id: string;
   order: number;
   columnId: string;
 }

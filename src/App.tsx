@@ -26,11 +26,9 @@ function App() {
       skip: !userId,
     }
   );
-
   if (userData) {
     dispatch(updateUser(userData));
   }
-
   if (isLoggedIn && token && userId === '') {
     setUserId(extractUserIdFromToken(token));
   }

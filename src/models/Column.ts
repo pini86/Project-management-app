@@ -1,3 +1,5 @@
+import { ITask } from './Task';
+
 export interface INewColumn {
   title: string;
   order: number;
@@ -8,10 +10,11 @@ export interface INewSetColumn extends INewColumn {
 }
 
 export interface IColumn extends INewSetColumn {
-  id: string;
+  _id: string;
+  tasks: ITask[];
 }
 
 export interface IUpdateColumn {
-  id: string;
+  _id: string;
   order: number;
 }

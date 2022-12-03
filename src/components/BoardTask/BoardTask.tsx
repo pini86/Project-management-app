@@ -20,12 +20,12 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import './style.scss';
 
-function BoardTask({ boardId, columnId, _id, title, userId, users }: ITask) {
-  type FormValues = {
-    title: string;
-    description: string;
-  };
+type FormValues = {
+  title: string;
+  description: string;
+};
 
+function BoardTask({ boardId, columnId, _id, title, userId, users }: ITask) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const {

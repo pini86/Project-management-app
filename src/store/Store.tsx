@@ -12,11 +12,7 @@ const rootReducer = combineReducers({
   persistedState,
 });
 
-export const InitStore = () => {
-  return configureStore({ reducer: () => {} });
-};
-
-export default configureStore({
+export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(api.middleware),
 });

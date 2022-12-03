@@ -13,7 +13,7 @@ import TextField from '@mui/material/TextField';
 import { INewBoard } from 'models/Board';
 import { useCreateBoardMutation, useGetAllBoardsQuery } from '../../api/BoardsApi';
 import './MainPage.scss';
-import Store from '../../store/Store';
+import { store } from '../../store/Store';
 import { Box, CircularProgress } from '@mui/material';
 import { extractUserIdFromToken } from '../../utils/authUtils';
 import { Controller, useForm } from 'react-hook-form';
@@ -26,7 +26,7 @@ type FormValues = {
 function MainPage() {
   const { control, handleSubmit, reset } = useForm<FormValues>();
   const [createBoard] = useCreateBoardMutation();
-  const token = Store.getState().userReducer.token;
+  const token = store.getState().userReducer.token;
   const userId = extractUserIdFromToken(token!);
 
   const {

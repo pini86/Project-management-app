@@ -45,12 +45,9 @@ function App() {
             path="boards/:boardId"
             element={isLoggedIn ? <BoardPage /> : <Navigate to="../" />}
           />
-          <Route path="login" element={isLoggedIn ? <Navigate to="../" /> : <LoginPage />} />
+          <Route path="login" element={isLoggedIn ? <WelcomePage /> : <LoginPage />} />
           <Route path="profile" element={<ProfilePage />} />
-          <Route
-            path="registration"
-            element={isLoggedIn ? <Navigate to="../" /> : <RegisterPage />}
-          />
+          <Route path="registration" element={isLoggedIn ? <WelcomePage /> : <RegisterPage />} />
           <Route path="*" element={<Page404 />} />
         </Route>
       </Routes>

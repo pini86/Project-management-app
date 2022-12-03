@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import { IColumnRefetch } from 'models/Column';
+import { IColumn } from 'models/Column';
 import { INewTask, ITask } from 'models/Task';
 import { useForm } from 'react-hook-form';
 import { useAppSelector } from '../../store/hooks/redux';
-import { useDeleletColumnByIdMutation, useUpdateColumnByIdMutation } from 'api/ColumnsApi';
+import {
+  useDeleletColumnByIdMutation,
+  useGetColumnsInBoardQuery,
+  useUpdateColumnByIdMutation,
+} from 'api/ColumnsApi';
 import { useCreateTaskMutation, useGetTasksInColumnQuery } from 'api/TasksApi';
 import { useGetAllUsersQuery } from 'api/UsersApi';
 import DialogContent from '@mui/material/DialogContent';
@@ -23,12 +27,12 @@ import DialogActions from '@mui/material/DialogActions';
 import Dialog from '@mui/material/Dialog';
 import './style.scss';
 
-function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
-  type FormValues = {
-    title: string;
-    description: string;
-  };
+type FormValues = {
+  title: string;
+  description: string;
+};
 
+function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
   const [columnName, setColumnName] = useState(title);
   const [editColumnName, setEditColumnName] = useState(title);
   const [isEditing, setIsEditing] = useState(false);
@@ -46,7 +50,7 @@ function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
   const userId = useAppSelector((state) => state.userReducer.user?._id);
   const users = useGetAllUsersQuery().data?.map((user) => user._id) || [];
 
-  const onCreateTask = (data: FormValues) => {
+  const onCreateTask = async (data: FormValues) => {
     const newTask: INewTask = {
       title: data.title,
       order: 1,
@@ -54,12 +58,12 @@ function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
       userId,
       users,
     };
-    createTask({ boardId, columnId: _id, data: newTask });
+    await createTask({ boardId, columnId: _id, data: newTask });
     refetchGetTasks();
     reset();
     setIsCreateTaskModalOpen(false);
   };
-  const { data: tasks, refetch: refetchGetTasks } = useGetTasksInColumnQuery({
+  const { refetch: refetchGetTasks } = useGetTasksInColumnQuery({
     boardId,
     columnId: _id,
   });
@@ -72,11 +76,13 @@ function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
     setIsDeleteModalOpen(false);
   };
 
-  const onDeleteColumn = () => {
-    deleteColumn({ boardId, columnId: _id });
-    refetch();
+  const onDeleteColumn = async () => {
+    await deleteColumn({ boardId, columnId: _id });
+    refetchGetColumns();
     setIsDeleteModalOpen(false);
   };
+
+  const { refetch: refetchGetColumns } = useGetColumnsInBoardQuery({ boardId });
 
   const ColumnTitleInput = (
     <form
@@ -140,8 +146,8 @@ function BoardColumn({ boardId, _id, title, order, refetch }: IColumnRefetch) {
         </DialogActions>
       </Dialog>
       <Box className="task-list">
-        {(tasks || []).map((task: ITask) => (
-          <BoardTask {...task} refetch={refetchGetTasks} key={task._id} />
+        {tasks.map((task: ITask) => (
+          <BoardTask {...task} key={task._id} />
         ))}
       </Box>
       <Button

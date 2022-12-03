@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { IColumn, INewColumn } from 'models/Column';
+import { ITask } from 'models/Task';
 import { useCreateColumnMutation, useGetColumnsInBoardQuery } from 'api/ColumnsApi';
+import { useGetTasksByBoardIdQuery } from 'api/TasksApi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import Page404 from 'pages/Page404';
@@ -20,16 +22,11 @@ import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import './style.scss';
 
-const BoardPage = () => {
-  const { boardId } = useParams();
-  return !boardId ? <Page404 /> : <CorrectBoardPage boardId={boardId} />;
+type FormValues = {
+  title: string;
 };
 
-function CorrectBoardPage({ boardId }: { boardId: string }) {
-  type FormValues = {
-    title: string;
-  };
-
+function BoardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     register,
@@ -39,13 +36,15 @@ function CorrectBoardPage({ boardId }: { boardId: string }) {
   } = useForm<FormValues>();
   const navigate = useNavigate();
   const [createColumn] = useCreateColumnMutation();
+  const { boardId } = useParams();
+  const tasksInBoard = useGetTasksByBoardIdQuery({ boardId: boardId || '' }).data || [];
 
-  const onSubmit = (data: FormValues) => {
+  const onSubmit = async (data: FormValues) => {
     const newColumn: INewColumn = {
       title: data.title,
       order: 1,
     };
-    createColumn({ boardId, data: newColumn });
+    await createColumn({ boardId: boardId || '', data: newColumn });
     refetchGetColumns();
     reset();
     setIsModalOpen(false);
@@ -54,9 +53,11 @@ function CorrectBoardPage({ boardId }: { boardId: string }) {
     data: columns,
     refetch: refetchGetColumns,
     isLoading: isColumnLoading,
-  } = useGetColumnsInBoardQuery({ boardId });
+  } = useGetColumnsInBoardQuery({ boardId: boardId || '' });
 
-  return (
+  return !boardId ? (
+    <Page404 />
+  ) : (
     <Container maxWidth="xl">
       <Stack direction="row" spacing={3}>
         <Button variant="contained" startIcon={<ArrowLeftIcon />} onClick={() => navigate(-1)}>
@@ -73,7 +74,11 @@ function CorrectBoardPage({ boardId }: { boardId: string }) {
           </Box>
         ) : (
           (columns || []).map((column: IColumn) => (
-            <BoardColumn {...column} refetch={refetchGetColumns} key={column._id} />
+            <BoardColumn
+              {...column}
+              tasks={tasksInBoard.filter((task: ITask) => task.columnId === column._id)}
+              key={column._id}
+            />
           ))
         )}
         <Button

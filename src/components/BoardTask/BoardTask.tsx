@@ -1,6 +1,10 @@
 import { useState } from 'react';
-import { ITaskRefetch, IUpdateTask } from 'models/Task';
-import { useDeleletTaskByIdMutation, useUpdateTaskByIdMutation } from 'api/TasksApi';
+import { ITask, IUpdateTask } from 'models/Task';
+import {
+  useDeleletTaskByIdMutation,
+  useGetTasksInColumnQuery,
+  useUpdateTaskByIdMutation,
+} from 'api/TasksApi';
 import { useForm } from 'react-hook-form';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -16,7 +20,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import './style.scss';
 
-function BoardTask({ boardId, columnId, _id, title, userId, users, refetch }: ITaskRefetch) {
+function BoardTask({ boardId, columnId, _id, title, userId, users }: ITask) {
   type FormValues = {
     title: string;
     description: string;
@@ -41,13 +45,18 @@ function BoardTask({ boardId, columnId, _id, title, userId, users, refetch }: IT
     setIsDeleteModalOpen(false);
   };
 
-  const onDeleteTask = () => {
-    deleteTask({ boardId, columnId, taskId: _id });
-    refetch();
+  const { refetch: refetchGetTasks } = useGetTasksInColumnQuery({
+    boardId,
+    columnId: _id,
+  });
+
+  const onDeleteTask = async () => {
+    await deleteTask({ boardId, columnId, taskId: _id });
+    refetchGetTasks();
     setIsDeleteModalOpen(false);
   };
 
-  const onUpdateTask = (data: FormValues) => {
+  const onUpdateTask = async (data: FormValues) => {
     const newTask: IUpdateTask = {
       title: data.title,
       order: 1,
@@ -56,8 +65,8 @@ function BoardTask({ boardId, columnId, _id, title, userId, users, refetch }: IT
       users,
       columnId,
     };
-    updateTask({ boardId, columnId, taskId: _id, data: newTask });
-    refetch();
+    await updateTask({ boardId, columnId, taskId: _id, data: newTask });
+    refetchGetTasks();
     reset();
     setIsEditModalOpen(false);
   };

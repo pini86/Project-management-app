@@ -1,11 +1,4 @@
-import { QueryActionCreatorResult } from '@reduxjs/toolkit/dist/query/core/buildInitiate';
-import { QueryDefinition } from '@reduxjs/toolkit/dist/query/endpointDefinitions';
-import {
-  FetchArgs,
-  FetchBaseQueryError,
-  FetchBaseQueryMeta,
-} from '@reduxjs/toolkit/dist/query/fetchBaseQuery';
-import { BaseQueryFn } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
+import { ITask } from './Task';
 
 export interface INewColumn {
   title: string;
@@ -18,27 +11,10 @@ export interface INewSetColumn extends INewColumn {
 
 export interface IColumn extends INewSetColumn {
   _id: string;
+  tasks: ITask[];
 }
 
 export interface IUpdateColumn {
   _id: string;
   order: number;
-}
-
-export interface IColumnRefetch extends IColumn {
-  refetch: () => QueryActionCreatorResult<
-    QueryDefinition<
-      { boardId: string },
-      BaseQueryFn<
-        string | FetchArgs,
-        unknown,
-        FetchBaseQueryError,
-        Record<string, never>,
-        FetchBaseQueryMeta
-      >,
-      never,
-      IColumn[],
-      'api'
-    >
-  >;
 }

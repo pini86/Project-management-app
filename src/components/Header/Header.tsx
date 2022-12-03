@@ -17,15 +17,13 @@ import Stack from '@mui/material/Stack';
 import HeaderLink from 'components/buttons/HeaderLink';
 import CssBaseline from '@mui/material/CssBaseline';
 import { useAppSelector } from '../../store/hooks/redux';
-import { getUserStateFromLocalStorage } from '../../utils/authUtils';
 import { useAppDispatch } from '../../store/hooks/redux';
 import { userSlice } from '../../store/reducers/userSlice';
 
 const headerBgColor = indigo[900];
 
 export default function Header() {
-  const { isLoggedIn } =
-    useAppSelector((state) => state.userReducer) || getUserStateFromLocalStorage();
+  const { isLoggedIn } = useAppSelector((state) => state.userReducer);
   const [language, setLanguage] = useState('RU');
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -46,7 +44,7 @@ export default function Header() {
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Stack direction="row" justifyContent="space-between" sx={{ width: '100%', ml: -1 }}>
-              <HeaderLink path="/" text="На главную">
+              <HeaderLink path="/" text="">
                 <HomeIcon />
               </HeaderLink>
               <Stack direction="row">

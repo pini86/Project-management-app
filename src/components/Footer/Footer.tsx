@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import './Footer.css';
+import './Footer.scss';
 
 export default function Footer() {
   return (

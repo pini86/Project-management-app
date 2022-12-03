@@ -1,12 +1,13 @@
 .footer {
   background-color: #1a237e;
   color: #ffffff;
-  padding: 1%;
-}
-.footer a {
-  color: inherit;
+  padding: 0.5rem;
+
+  &__logo {
+    width: 50px;
+  }
 }
 
-.footer__logo {
-  width: 50px;
+.footer a {
+  color: inherit;
 }

@@ -7,14 +7,15 @@ import MainPage from 'pages/MainPage';
 import BoardPage from 'pages/BoardPage';
 import Page404 from 'pages/Page404';
 import Layout from 'components/Layout';
-import { extractUserIdFromToken, getUserStateFromLocalStorage } from 'utils/authUtils';
+import { extractUserIdFromToken } from 'utils/authUtils';
 import { useGetUserByIdQuery } from 'api/UsersApi';
 import { useState, useEffect } from 'react';
-import { useAppDispatch } from 'store/hooks/redux';
+import { useAppDispatch, useAppSelector } from './store/hooks/redux';
 import { userSlice } from 'store/reducers/userSlice';
 
 function App() {
-  const { isLoggedIn, token } = getUserStateFromLocalStorage();
+  const { isLoggedIn, token } = useAppSelector((state) => state.userReducer);
+
   const [userId, setUserId] = useState('');
   const dispatch = useAppDispatch();
   const { updateUser } = userSlice.actions;

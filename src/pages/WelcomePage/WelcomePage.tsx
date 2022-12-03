@@ -1,23 +1,22 @@
-import { Box } from '@mui/material';
-import './welcomePage.scss';
+import './WelcomePage.scss';
 
 function WelcomePage() {
   return (
-    <Box className="welcome-page__wrapper">
+    <div className="welcome-page__wrapper">
       <div className="welcome-page__section">
-        <Box className="image-wrapper">
+        <div className="image-wrapper">
           <img src="/welcome-image.png" alt="Laptop" className="main-image" />
-        </Box>
-        <Box className="welcome-page__main-text">
-          <h1 className="main-heading">Project Management Application</h1>
+        </div>
+        <div className="welcome-page__main-text">
+          <h1 className="main-heading">Приложение для управления проектами</h1>
           <h2 className="sub-heading">
-            Our app&apos;s aim is to help you with workflow management. Increase productivity,
-            become more efficient and focused on tasks.
+            Наша цель - помочь вам лучше управлять рабочим процессом: увеличить продуктивность,
+            стать более эффективными и сфокусированными на задаче
           </h2>
-        </Box>
+        </div>
       </div>
       <div className="welcome-page__section team-section">
-        <h1 className="main-heading">Our team</h1>
+        <h1 className="main-heading">Наша команда</h1>
         <div className="teams">
           <div className="team__card">
             <div>
@@ -29,7 +28,7 @@ function WelcomePage() {
             </div>
             <h3>
               <a className="team__name" href="https://github.com/user0k">
-                @pini86
+                Миша
               </a>
             </h3>
             <div className="team__tasks">
@@ -50,7 +49,7 @@ function WelcomePage() {
             </div>
             <h3>
               <a className="team__name" href="https://github.com/user0k">
-                @user0k
+                Паша
               </a>
             </h3>
             <div className="team__tasks">
@@ -71,7 +70,7 @@ function WelcomePage() {
             </div>
             <h3>
               <a className="team__name" href="https://github.com/user0k">
-                @natashapridanova
+                Наташа
               </a>
             </h3>
             <div className="team__tasks">
@@ -84,7 +83,7 @@ function WelcomePage() {
           </div>
         </div>
       </div>
-    </Box>
+    </div>
   );
 }
 

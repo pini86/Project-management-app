@@ -45,7 +45,7 @@
     }
   }
 
-  &__delete:hover, .task-delete:hover {
+  &__delete:hover {
     fill: rgb(194, 0, 0);
     transition: all .5s;
   }
@@ -78,18 +78,6 @@
   max-height: 60vh;
   padding: 0;
   overflow-y: auto;
-
-  &__item {
-    display: flex;
-    margin: 10px 0;
-    padding: 8px 3px 8px 8px;
-    font-size: 14px;
-    cursor: grab;
-  }
-}
-
-.task-delete {
-  cursor: pointer;
 }
 
 ::-webkit-scrollbar {

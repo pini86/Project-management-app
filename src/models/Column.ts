@@ -12,6 +12,7 @@ export interface INewSetColumn extends INewColumn {
 export interface IColumn extends INewSetColumn {
   _id: string;
   tasks: ITask[];
+  index?: number;
 }
 
 export interface IUpdateColumn {

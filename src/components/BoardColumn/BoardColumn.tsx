@@ -46,7 +46,7 @@ interface HeaderProps {
   isDragging: boolean;
 }
 
-function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
+function BoardColumn({ boardId, _id, title, order, tasks, index }: IColumn) {
   const [columnName, setColumnName] = useState(title);
   const [editColumnName, setEditColumnName] = useState(title);
   const [isEditing, setIsEditing] = useState(false);
@@ -122,11 +122,11 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
 
   const ColumnTitleText = (
     <>
-      <Stack className="column-title__inner-wrapper" onClick={() => setIsEditing(true)}>
+      <Stack className="column-title__inner-wrapper">
         <Typography className="board-column__title" variant="h6" noWrap>
           {columnName}
         </Typography>
-        <EditIcon />
+        <EditIcon onClick={() => setIsEditing(true)} />
       </Stack>
       <DeleteForeverIcon className="board-column__delete" onClick={handleClickOpen} />
     </>
@@ -134,13 +134,19 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
 
   return (
     <>
-      <Draggable draggableId={title} index={order}>
+      <Draggable draggableId={title} index={index!}>
         {(provided, snapshot) => (
-          <Container ref={provided.innerRef} {...provided.draggableProps}>
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            style={{ display: 'inline-flex' }}
+          >
             <Box className="board-column">
-              <Stack className="board-column__title-wrapper">
-                {isEditing ? ColumnTitleInput : ColumnTitleText}
-              </Stack>
+              <div {...provided.dragHandleProps}>
+                <Stack className="board-column__title-wrapper">
+                  {isEditing ? ColumnTitleInput : ColumnTitleText}
+                </Stack>
+              </div>
               <Dialog
                 open={isDeleteModalOpen}
                 onClose={handleClose}
@@ -159,6 +165,7 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
                   </Button>
                 </DialogActions>
               </Dialog>
+
               <Box className="task-list">
                 {tasks.map((task: ITask) => (
                   <BoardTask {...task} key={task._id} />
@@ -214,7 +221,7 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
                 </form>
               </Dialog>
             </Box>
-          </Container>
+          </div>
         )}
       </Draggable>
       ;

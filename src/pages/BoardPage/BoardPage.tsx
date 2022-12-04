@@ -143,19 +143,24 @@ function BoardPage() {
             isCombineEnabled={true}
           >
             {(provided) => (
-              <Container ref={provided.innerRef} {...provided.droppableProps}>
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                style={{ display: 'inline-flex' }}
+              >
                 {!isColumnLoading &&
                   columns &&
                   tasksInBoard &&
-                  columns.map((column: IColumn) => (
+                  columns.map((column: IColumn, index) => (
                     <BoardColumn
                       {...column}
                       tasks={tasksInBoard!.filter((task: ITask) => task.columnId === column._id)}
                       key={column._id}
+                      index={index}
                     />
                   ))}
                 {provided.placeholder}
-              </Container>
+              </div>
             )}
           </Droppable>
         </DragDropContext>

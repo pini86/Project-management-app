@@ -57,9 +57,10 @@ function BoardPage() {
   } = useGetColumnsInBoardQuery({ boardId: boardId! });
 
   const [columnsDnD, setColumnsDnD] = useState(
-    columns?.reduce((acc, curr) => ({ ...acc, [curr.order]: curr.tasks }), {}) as QuoteMap
+    columns
+      ? (columns.reduce((acc, curr) => ({ ...acc, [curr.order]: curr.tasks }), {}) as QuoteMap)
+      : {}
   );
-
   const [ordered, setOrdered] = useState(Object.keys(columnsDnD!));
 
   const onSubmit = async (data: FormValues) => {
@@ -143,11 +144,7 @@ function BoardPage() {
           >
             {(provided) => (
               <Container ref={provided.innerRef} {...provided.droppableProps}>
-                {isColumnLoading ? (
-                  <Box sx={{ display: 'flex' }}>
-                    <CircularProgress />
-                  </Box>
-                ) : (
+                {!isColumnLoading &&
                   columns &&
                   tasksInBoard &&
                   columns.map((column: IColumn) => (
@@ -156,8 +153,7 @@ function BoardPage() {
                       tasks={tasksInBoard!.filter((task: ITask) => task.columnId === column._id)}
                       key={column._id}
                     />
-                  ))
-                )}
+                  ))}
                 {provided.placeholder}
               </Container>
             )}
@@ -233,3 +229,22 @@ export default BoardPage;
               })}
             />
           ))} */
+/*    {!isColumnLoading &&
+            columns &&
+            tasksInBoard &&
+            columns.map((column: IColumn) => (
+              <BoardColumn
+                {...column}
+                tasks={tasksInBoard!.filter((task: ITask) => task.columnId === column._id)}
+                key={column._id}
+              />
+            ))} */
+
+/*      {ordered.map((key: string, index: number) => (
+              <BoardColumn
+                key={index}
+                {...columns!.filter((col) => {
+                  col.order.toString() === key;
+                })[0]}
+              />
+            ))} */

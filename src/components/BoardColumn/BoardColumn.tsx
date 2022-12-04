@@ -26,11 +26,25 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Dialog from '@mui/material/Dialog';
 import './style.scss';
+import { Draggable, DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
+//import type { DraggableProvided, DraggableStateSnapshot } from '@hello-pangea/dnd';
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+  DraggableLocation,
+  DroppableProvided,
+} from '@hello-pangea/dnd';
+import { Container } from '@mui/material';
 
 type FormValues = {
   title: string;
   description: string;
 };
+
+interface HeaderProps {
+  isDragging: boolean;
+}
 
 function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
   const [columnName, setColumnName] = useState(title);
@@ -119,80 +133,118 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
   );
 
   return (
-    <Box className="board-column">
-      <Stack className="board-column__title-wrapper">
-        {isEditing ? ColumnTitleInput : ColumnTitleText}
-      </Stack>
-      <Dialog
-        open={isDeleteModalOpen}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title" color="error">
-          {'Вы уверены, что хотите удалить колонку?'}
-        </DialogTitle>
-        <DialogActions>
-          <Button variant="contained" color="error" onClick={onDeleteColumn}>
-            Да
-          </Button>
-          <Button color="error" onClick={handleClose}>
-            Нет
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Box className="task-list">
-        {tasks.map((task: ITask) => (
-          <BoardTask {...task} key={task._id} />
-        ))}
-      </Box>
-      <Button
-        className="btn-create_task"
-        variant="contained"
-        startIcon={<AddIcon />}
-        onClick={() => setIsCreateTaskModalOpen(true)}
-      >
-        добавить задачу
-      </Button>
-      <Dialog open={isCreateTaskModalOpen} onClose={() => setIsCreateTaskModalOpen(false)}>
-        <DialogTitle id="create-task">{'Добавить новую задачу '}</DialogTitle>
-        <form onSubmit={handleSubmit(onCreateTask)}>
-          <DialogContent>
-            <TextField
-              margin="dense"
-              id="new_title"
-              label="Название задачи"
-              type="text"
-              fullWidth
-              {...register('title', { required: true })}
-            />
-            {errors.title && (
-              <Typography variant="caption" color="error">
-                * Обязательное поле
-              </Typography>
-            )}
-            <TextField
-              margin="dense"
-              id="new_description"
-              label="Описание (необязательно)"
-              type="text"
-              defaultValue=" "
-              fullWidth
-              {...register('description')}
-            />
-          </DialogContent>
-          <DialogActions sx={{ justifyContent: 'space-between' }}>
-            <Button type="submit" variant="contained">
-              Сохранить
-            </Button>
-            <Button onClick={() => setIsCreateTaskModalOpen(false)} color="primary" autoFocus>
-              Отмена
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
-    </Box>
+    <>
+      <Draggable draggableId={title} index={order}>
+        {(provided, snapshot) => (
+          <Container ref={provided.innerRef} {...provided.draggableProps}>
+            <Box className="board-column">
+              <Stack className="board-column__title-wrapper">
+                {isEditing ? ColumnTitleInput : ColumnTitleText}
+              </Stack>
+              <Dialog
+                open={isDeleteModalOpen}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title" color="error">
+                  {'Вы уверены, что хотите удалить колонку?'}
+                </DialogTitle>
+                <DialogActions>
+                  <Button variant="contained" color="error" onClick={onDeleteColumn}>
+                    Да
+                  </Button>
+                  <Button color="error" onClick={handleClose}>
+                    Нет
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Box className="task-list">
+                {tasks.map((task: ITask) => (
+                  <BoardTask {...task} key={task._id} />
+                ))}
+              </Box>
+              <Button
+                className="btn-create_task"
+                variant="contained"
+                startIcon={<AddIcon />}
+                onClick={() => setIsCreateTaskModalOpen(true)}
+              >
+                добавить задачу
+              </Button>
+              <Dialog open={isCreateTaskModalOpen} onClose={() => setIsCreateTaskModalOpen(false)}>
+                <DialogTitle id="create-task">{'Добавить новую задачу '}</DialogTitle>
+                <form onSubmit={handleSubmit(onCreateTask)}>
+                  <DialogContent>
+                    <TextField
+                      margin="dense"
+                      id="new_title"
+                      label="Название задачи"
+                      type="text"
+                      fullWidth
+                      {...register('title', { required: true })}
+                    />
+                    {errors.title && (
+                      <Typography variant="caption" color="error">
+                        * Обязательное поле
+                      </Typography>
+                    )}
+                    <TextField
+                      margin="dense"
+                      id="new_description"
+                      label="Описание (необязательно)"
+                      type="text"
+                      defaultValue=" "
+                      fullWidth
+                      {...register('description')}
+                    />
+                  </DialogContent>
+                  <DialogActions sx={{ justifyContent: 'space-between' }}>
+                    <Button type="submit" variant="contained">
+                      Сохранить
+                    </Button>
+                    <Button
+                      onClick={() => setIsCreateTaskModalOpen(false)}
+                      color="primary"
+                      autoFocus
+                    >
+                      Отмена
+                    </Button>
+                  </DialogActions>
+                </form>
+              </Dialog>
+            </Box>
+          </Container>
+        )}
+      </Draggable>
+      ;
+    </>
   );
 }
 
 export default BoardColumn;
+
+{
+  /* <Draggable draggableId={title} index={order}>
+{(provided, snapshot) => (
+  <Container ref={provided.innerRef} {...provided.draggableProps}>
+    <Header isDragging={snapshot.isDragging}>
+      <Title {...provided.dragHandleProps} aria-label={`${title} quote list`}>
+        {title}
+      </Title>
+    </Header>
+    <QuoteList
+      listId={title}
+      listType="QUOTE"
+      style={{
+        backgroundColor: snapshot.isDragging ? colors.G50 : undefined,
+      }}
+      quotes={quotes}
+      internalScroll={true}
+      isCombineEnabled={true}
+      useClone={false}
+    />
+  </Container>
+)}
+</Draggable> */
+}

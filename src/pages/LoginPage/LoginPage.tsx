@@ -13,6 +13,7 @@ import { useAppDispatch } from '../../store/hooks/redux';
 import { extractUserIdFromToken } from '../../utils/authUtils';
 import { useGetUserByIdQuery } from '../../api/UsersApi';
 import SnackBar from '../../components/bars/SnackBar';
+import { useTranslation } from 'react-i18next';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -42,6 +43,8 @@ function LoginPage() {
       navigate('/main');
     }
   }, [userData]);
+
+  const { t } = useTranslation();
 
   return (
     <Box className="login-page__wrapper">

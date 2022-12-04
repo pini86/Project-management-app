@@ -1,0 +1,67 @@
+{
+  "title": "Willkommen zu react und react-i18next",
+  "description": {
+    "part1": "Um loszulegen, ändere <1>src/App(DE).js</1> und speichere um neuzuladen.",
+    "part2": "Wechsle die Sprache zwischen deutsch und englisch mit Hilfe der beiden Schalter."
+  },
+  "header": {
+    "main": "Доски",
+    "profile": "Профиль",
+    "logout": "Выйти",
+    "registration": "Регистрация",
+    "login": "Войти"
+  },
+  "errorMessages":{
+    "userExists": "Пользователь с данным логином уже существует",
+    "badRequest": "Проверьте правильность написания логина и пароля"
+  },
+  "buttonTexts":{
+    "close": "закрыть"
+  },
+  "WelcomePage": {
+    "main-heading": "Приложение для управления проектами",
+    "sub-heading": "Наша цель - помочь вам лучше управлять рабочим процессом: увеличить продуктивность, стать более эффективными и сфокусированными на задаче",
+    "team-heading": "Наша команда",
+    "team-members": {
+      "misha": {
+        "name": "Миша",
+        "work": "Работал над ..."
+      },
+      "pasha": {
+        "name": "Паша",
+        "work": "Работал над ..."
+      },
+      "natasha": {
+        "name": "Наташа",
+        "work": "Работала над ..."
+      }
+    }
+  },
+  "RegisterPage": {
+    "inputLabels": {
+      "name": "Ваше имя",
+      "login": "Логин",
+      "password": "Пароль"
+    },
+    "requiredMsg": "Поле обязательно к заполнению",
+    "passwordMsg": "Ваш пароль должен содержать не менее 6 символов",
+    "submitBtnText": "Зарегистрироваться",
+    "additionalText": {
+      "mainText": "Уже есть аккаунт? ",
+      "linkText": "Войти"
+    }
+  },
+  "LoginPage": {
+    "inputLabels": {
+      "login": "Логин",
+      "password": "Пароль"
+    },
+    "requiredMsg": "Поле обязательно к заполнению",
+    "passwordMsg": "Ваш пароль должен содержать не менее 6 символов",
+    "submitBtnText": "Войти",
+    "additionalText": {
+      "mainText": "Еще нет аккаунта? ",
+      "linkText": "Зарегистрироваться"
+    }
+  }
+}

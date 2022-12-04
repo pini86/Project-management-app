@@ -1,0 +1,67 @@
+{
+  "title": "Welcome to react using react-i18next",
+  "description": {
+    "part1": "To get started, edit <1>src/App.js</1> and save to reload.",
+    "part2": "Switch language between english and german using buttons above."
+  },
+  "header": {
+    "main": "Boards",
+    "profile": "Profile",
+    "logout": "Log out",
+    "registration": "Sign up",
+    "login": "Sign in"
+  },
+  "errorMessages": {
+    "userExists": "User with such login already exists",
+    "badRequest": "You have entered an invalid login or password"
+  },
+  "buttonTexts": {
+    "close": "close"
+  },
+  "WelcomePage": {
+    "main-heading": "Project Management Application",
+    "sub-heading": "Our app's aim is to help you with workflow management. Increase productivity, become more efficient and focused on tasks.",
+    "team-heading": "Our team",
+    "team-members": {
+      "misha": {
+        "name": "Misha",
+        "work": "Worked on ..."
+      },
+      "pasha": {
+        "name": "Pasha",
+        "work": "Worked on ..."
+      },
+      "natasha": {
+        "name": "Natasha",
+        "work": "Worked on ..."
+      }
+    }
+  },
+  "RegisterPage": {
+    "inputLabels": {
+      "name": "Your name",
+      "login": "Login",
+      "password": "Password"
+    },
+    "requiredMsg": "You should provide a value",
+    "passwordMsg": "The password length should be at least 6 characters",
+    "submitBtnText": "Sign up",
+    "additionalText": {
+      "mainText": "Already have an account? ",
+      "linkText": "Sign in"
+    }
+  },
+  "LoginPage": {
+    "inputLabels": {
+      "login": "Login",
+      "password": "Password"
+    },
+    "requiredMsg": "You should provide a value",
+    "passwordMsg": "The password length should be at least 6 characters",
+    "submitBtnText": "Sign in",
+    "additionalText": {
+      "mainText": "Don't have an account? ",
+      "linkText": "Sign up"
+    }
+  }
+}

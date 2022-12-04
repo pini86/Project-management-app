@@ -11,6 +11,7 @@ import { userSlice } from '../../store/reducers/userSlice';
 import { useAppDispatch } from '../../store/hooks/redux';
 import { useSignInMutation } from '../../api/AuthApi';
 import SnackBar from '../../components/bars/SnackBar';
+import { useTranslation } from 'react-i18next';
 
 function RegisterPage() {
   const navigate = useNavigate();
@@ -29,6 +30,8 @@ function RegisterPage() {
     navigate('/main');
   };
 
+  const { t } = useTranslation();
+
   return (
     <Box className="register-page__wrapper">
       {!isLoading && (
@@ -36,35 +39,39 @@ function RegisterPage() {
           inputAttributes={[
             {
               name: 'name',
-              label: 'Ваше имя',
+              label: t('RegisterPage.inputLabels.name'),
               rules: {
-                required: 'Поле обязательно к заполнению',
+                required: t('RegisterPage.requiredMsg'),
               },
             },
             {
               name: 'login',
-              label: 'Логин',
+              label: t('RegisterPage.inputLabels.login'),
               rules: {
-                required: 'Поле обязательно к заполнению',
+                required: t('RegisterPage.requiredMsg'),
               },
             },
             {
               name: 'password',
-              label: 'Пароль',
+              label: t('RegisterPage.inputLabels.password'),
               type: 'password',
               rules: {
-                required: 'Поле обязательно к заполнению',
+                required: t('RegisterPage.requiredMsg'),
                 minLength: {
                   value: 6,
-                  message: 'Ваш пароль должен содержать не менее 6 символов',
+                  message: t('RegisterPage.passwordMsg'),
                 },
               },
             },
           ]}
           className="register-form"
           formData={{ name: '', login: '', password: '' }}
-          submitBtnText="Зарегистрироваться"
-          additionalText={{ mainText: 'Уже есть аккаунт? ', linkText: 'Войти', linkHref: '/login' }}
+          submitBtnText={t('RegisterPage.submitBtnText')}
+          additionalText={{
+            mainText: t('RegisterPage.additionalText.mainText'),
+            linkText: t('RegisterPage.additionalText.linkText'),
+            linkHref: '/login',
+          }}
           getUserFromForm={getUserFromForm}
         />
       )}
@@ -81,8 +88,8 @@ function RegisterPage() {
           message={`${(error as FetchBaseQueryError).status} error. ${
             ((error as FetchBaseQueryError).data as IErrorResponse).message
           }
-          Пользователь с данным логином уже существует`}
-          buttonText={'закрыть'}
+          ${t('errorMessages.userExists')}`}
+          buttonText={t('buttonTexts.close') || undefined}
         />
       )}
     </Box>

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import AccountCircle from '@mui/icons-material/AccountCircle';
@@ -19,15 +18,17 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useAppSelector } from '../../store/hooks/redux';
 import { useAppDispatch } from '../../store/hooks/redux';
 import { userSlice } from '../../store/reducers/userSlice';
+import { useTranslation } from 'react-i18next';
 
 const headerBgColor = indigo[900];
 
 export default function Header() {
   const { isLoggedIn } = useAppSelector((state) => state.userReducer);
-  const [language, setLanguage] = useState('RU');
+  const { t, i18n } = useTranslation();
 
   const handleChange = (event: SelectChangeEvent) => {
-    setLanguage(event.target.value as string);
+    console.log(event.target.value);
+    i18n.changeLanguage(event.target.value as string);
   };
 
   const dispatch = useAppDispatch();
@@ -50,22 +51,22 @@ export default function Header() {
               <Stack direction="row">
                 {isLoggedIn ? (
                   <>
-                    <HeaderLink path="/main" text="Доски">
+                    <HeaderLink path="/main" text={t('header.main')}>
                       <DashboardIcon />
                     </HeaderLink>
-                    <HeaderLink path="/profile" text="Профиль">
+                    <HeaderLink path="/profile" text={t('header.profile')}>
                       <AccountCircle />
                     </HeaderLink>
-                    <HeaderLink path="/" text="Выйти" onClickFunction={logout}>
+                    <HeaderLink path="/" text={t('header.logout')} onClickFunction={logout}>
                       <LogoutIcon />
                     </HeaderLink>
                   </>
                 ) : (
                   <>
-                    <HeaderLink path="/registration" text="Регистрация">
+                    <HeaderLink path="/registration" text={t('header.registration')}>
                       <AccountCircle />
                     </HeaderLink>
-                    <HeaderLink path="/login" text="Войти">
+                    <HeaderLink path="/login" text={t('header.login')}>
                       <LoginIcon />
                     </HeaderLink>
                   </>
@@ -73,9 +74,9 @@ export default function Header() {
                 <Paper elevation={0}>
                   <FormControl>
                     <InputLabel id="label-language"></InputLabel>
-                    <Select labelId="label-language" value={language} onChange={handleChange}>
-                      <MenuItem value={'RU'}>RU</MenuItem>
-                      <MenuItem value={'EN'}>EN</MenuItem>
+                    <Select labelId="label-language" defaultValue={'ru'} onChange={handleChange}>
+                      <MenuItem value={'ru'}>ru</MenuItem>
+                      <MenuItem value={'en'}>en</MenuItem>
                     </Select>
                   </FormControl>
                 </Paper>

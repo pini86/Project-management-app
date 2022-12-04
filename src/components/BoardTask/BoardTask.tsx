@@ -18,6 +18,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import './style.scss';
 
 type FormValues = {
@@ -42,16 +43,12 @@ function BoardTask({ boardId, columnId, _id, title, description, userId, users }
     setIsDeleteModalOpen(true);
   };
 
-  const handleClose = () => {
-    setIsDeleteModalOpen(false);
-  };
-
   const onCloseEdit = () => {
     reset({ title, description });
     setIsEditModalOpen(false);
   };
 
-  const onDeleteTask = async () => {
+  const onConfirmDelete = async () => {
     await deleteTask({ boardId, columnId, taskId: _id });
     refetchGetTasks();
     setIsDeleteModalOpen(false);
@@ -80,24 +77,16 @@ function BoardTask({ boardId, columnId, _id, title, description, userId, users }
           <MoreVertIcon className="task-modify" onClick={() => setIsEditModalOpen(true)} />
         </Stack>
       </Card>
-      <Dialog
-        open={isDeleteModalOpen}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title" color="error">
-          {'Вы уверены, что хотите удалить задачу?'}
-        </DialogTitle>
-        <DialogActions>
-          <Button variant="contained" color="error" onClick={onDeleteTask}>
-            Да
-          </Button>
-          <Button color="error" onClick={handleClose}>
-            Нет
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {isDeleteModalOpen && (
+        <ConfirmationModal
+          isOpen={isDeleteModalOpen}
+          contentText="Вы уверены, что хотите удалить задачу?"
+          notConfirmText="нет"
+          confirmText="да"
+          onConfirm={onConfirmDelete}
+          onCancel={() => setIsDeleteModalOpen(false)}
+        />
+      )}
       <Dialog
         open={isEditModalOpen}
         onClose={onCloseEdit}

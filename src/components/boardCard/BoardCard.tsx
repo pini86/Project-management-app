@@ -56,11 +56,9 @@ export default function BoardCard(props: IProps) {
     setOpenDel(true);
   };
 
-  const handleModalDelConfirmaton = async (answer: boolean) => {
-    if (answer) {
-      await deleteBoardById({ boardId });
-      refetchGetBoards();
-    }
+  const onConfirmDelete = async () => {
+    await deleteBoardById({ boardId });
+    refetchGetBoards();
   };
 
   const onSubmitEdit = async (data: FormValues) => {
@@ -160,12 +158,12 @@ export default function BoardCard(props: IProps) {
         </Tooltip>
         <ConfirmationModal
           isOpen={openDel}
-          setIsOpen={setOpenDel}
           title={'Удалить доску ?'}
           contentText={''}
           confirmText={'Да'}
           notConfirmText={'Нет'}
-          onConfirmation={handleModalDelConfirmaton}
+          onConfirm={onConfirmDelete}
+          onCancel={() => setOpenDel(false)}
         />
       </CardActions>
     </Card>

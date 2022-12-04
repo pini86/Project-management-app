@@ -32,12 +32,10 @@ function ProfilePage() {
     dispatch(updateUser(data!));
   };
 
-  const getConfirm = async (value: boolean) => {
-    if (value) {
-      await deleteUserById({ userId: user ? user?._id : '' }).unwrap();
-      dispatch(resetUser());
-      navigate('/');
-    }
+  const onConfirmDelete = async () => {
+    await deleteUserById({ userId: user ? user?._id : '' }).unwrap();
+    dispatch(resetUser());
+    navigate('/');
   };
 
   return (
@@ -56,11 +54,11 @@ function ProfilePage() {
           {isModalOpen && (
             <ConfirmationModal
               isOpen={isModalOpen}
-              setIsOpen={setIsModalOpen}
               contentText="Вы действительно хотите удалить аккаунт?"
-              notConfirmText="нет"
               confirmText="да"
-              onConfirmation={getConfirm}
+              notConfirmText="нет"
+              onConfirm={onConfirmDelete}
+              onCancel={() => setIsModalOpen(false)}
             />
           )}
         </Box>

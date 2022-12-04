@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { IColumn, INewColumn } from 'models/Column';
 import { ITask } from 'models/Task';
+import { useGetBoardByIdQuery } from 'api/BoardsApi';
 import { useCreateColumnMutation, useGetColumnsInBoardQuery } from 'api/ColumnsApi';
 import { useGetTasksByBoardIdQuery } from 'api/TasksApi';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -36,6 +37,7 @@ function BoardPage() {
   } = useForm<FormValues>();
   const navigate = useNavigate();
   const { boardId } = useParams();
+  const boardTitle = useGetBoardByIdQuery({ boardId: boardId! }).data?.title;
   const [createColumn] = useCreateColumnMutation();
   const { data: tasksInBoard } = useGetTasksByBoardIdQuery({ boardId: boardId! });
   const {
@@ -64,7 +66,7 @@ function BoardPage() {
           назад
         </Button>
         <Typography className="board-title" variant="h4">
-          Название борда
+          {boardTitle}
         </Typography>
       </Stack>
       <Stack className="columns-wrapper" direction="row" spacing={3}>

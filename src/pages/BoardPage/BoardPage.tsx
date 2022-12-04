@@ -6,7 +6,6 @@ import { useCreateColumnMutation, useGetColumnsInBoardQuery } from 'api/ColumnsA
 import { useGetTasksByBoardIdQuery } from 'api/TasksApi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import Page404 from 'pages/Page404';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
@@ -57,9 +56,7 @@ function BoardPage() {
     setIsModalOpen(false);
   };
 
-  return !boardId ? (
-    <Page404 />
-  ) : (
+  return (
     <Container maxWidth="xl">
       <Stack direction="row" spacing={3}>
         <Button variant="contained" startIcon={<ArrowLeftIcon />} onClick={() => navigate(-1)}>

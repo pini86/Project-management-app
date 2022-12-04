@@ -10,6 +10,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
 import './style.scss';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   columnTitle: string;
@@ -56,6 +57,7 @@ function BoardColumn({ columnTitle }: IProps) {
       <DeleteForeverIcon className="board-column__delete" />
     </>
   );
+  const { t } = useTranslation();
 
   return (
     <Box className="board-column">
@@ -73,7 +75,7 @@ function BoardColumn({ columnTitle }: IProps) {
         </Card>
       </Box>
       <Button className="btn-create_task" variant="contained" startIcon={<AddIcon />}>
-        добавить задачу
+        {t('BoardPage.BoardColumn.btn-add')}
       </Button>
     </Box>
   );

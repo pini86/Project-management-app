@@ -74,7 +74,11 @@ export default function Header() {
                 <Paper elevation={0}>
                   <FormControl>
                     <InputLabel id="label-language"></InputLabel>
-                    <Select labelId="label-language" defaultValue={'ru'} onChange={handleChange}>
+                    <Select
+                      labelId="label-language"
+                      defaultValue={i18n.resolvedLanguage}
+                      onChange={handleChange}
+                    >
                       <MenuItem value={'ru'}>ru</MenuItem>
                       <MenuItem value={'en'}>en</MenuItem>
                     </Select>

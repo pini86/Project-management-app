@@ -1,9 +1,4 @@
 {
-  "title": "Welcome to react using react-i18next",
-  "description": {
-    "part1": "To get started, edit <1>src/App.js</1> and save to reload.",
-    "part2": "Switch language between english and german using buttons above."
-  },
   "header": {
     "main": "Boards",
     "profile": "Profile",
@@ -62,6 +57,15 @@
     "additionalText": {
       "mainText": "Don't have an account? ",
       "linkText": "Sign up"
+    }
+  },
+  "BoardPage": {
+    "btn-back": "back",
+    "board-title": "Board Title",
+    "column-title": "Column Title",
+    "column-add": "add column",
+    "BoardColumn":{
+      "btn-add": "add task"
     }
   }
 }

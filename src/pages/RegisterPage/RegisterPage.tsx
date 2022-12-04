@@ -89,7 +89,7 @@ function RegisterPage() {
             ((error as FetchBaseQueryError).data as IErrorResponse).message
           }
           ${t('errorMessages.userExists')}`}
-          buttonText={t('buttonTexts.close') || undefined}
+          buttonText={t('buttonTexts.close')}
         />
       )}
     </Box>

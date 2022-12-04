@@ -7,33 +7,21 @@ import MainPage from 'pages/MainPage';
 import BoardPage from 'pages/BoardPage';
 import Page404 from 'pages/Page404';
 import Layout from 'components/Layout';
-import { extractUserIdFromToken } from 'utils/authUtils';
-import { useGetUserByIdQuery } from 'api/UsersApi';
-import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from './store/hooks/redux';
-import { userSlice } from 'store/reducers/userSlice';
+import { userSlice } from './store/reducers/userSlice';
+import { useEffect } from 'react';
+import { extractUserIdFromToken } from 'utils/authUtils';
 
 function App() {
-  const { isLoggedIn, token } = useAppSelector((state) => state.userReducer);
-
-  const [userId, setUserId] = useState('');
+  const { isLoggedIn, token, user } = useAppSelector((state) => state.userReducer);
   const dispatch = useAppDispatch();
   const { updateUser } = userSlice.actions;
 
-  const { data: userData } = useGetUserByIdQuery(
-    { userId },
-    {
-      skip: !userId,
+  useEffect(() => {
+    if (token) {
+      dispatch(updateUser({ ...user, _id: extractUserIdFromToken(token) }));
     }
-  );
-
-  if (userData) {
-    dispatch(updateUser(userData));
-  }
-
-  if (isLoggedIn && token && userId === '') {
-    setUserId(extractUserIdFromToken(token));
-  }
+  }, []);
 
   return (
     <BrowserRouter>

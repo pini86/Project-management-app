@@ -76,7 +76,7 @@ export default function Header() {
                     <InputLabel id="label-language"></InputLabel>
                     <Select
                       labelId="label-language"
-                      defaultValue={i18n.resolvedLanguage}
+                      value={i18n.resolvedLanguage}
                       onChange={handleChange}
                     >
                       <MenuItem value={'ru'}>ru</MenuItem>

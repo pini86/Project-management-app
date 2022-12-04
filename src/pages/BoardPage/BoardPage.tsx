@@ -21,10 +21,22 @@ import DialogActions from '@mui/material/DialogActions';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import './style.scss';
+import {
+  DragDropContext,
+  Droppable,
+  DropResult,
+  DraggableLocation,
+  DroppableProvided,
+} from '@hello-pangea/dnd';
+import reorder, { reorderQuoteMap } from './reorder';
 
 type FormValues = {
   title: string;
 };
+
+interface QuoteMap {
+  [key: string]: ITask[];
+}
 
 function BoardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -44,15 +56,69 @@ function BoardPage() {
     isLoading: isColumnLoading,
   } = useGetColumnsInBoardQuery({ boardId: boardId! });
 
+  const [columnsDnD, setColumnsDnD] = useState(
+    columns
+      ? (columns.reduce((acc, curr) => ({ ...acc, [curr.order]: curr.tasks }), {}) as QuoteMap)
+      : {}
+  );
+  const [ordered, setOrdered] = useState(Object.keys(columnsDnD!));
+
   const onSubmit = async (data: FormValues) => {
     const newColumn: INewColumn = {
       title: data.title,
       order: 1,
     };
-    await createColumn({ boardId: boardId!, data: newColumn });
+    await createColumn({ boardId: boardId!, data: newColumn }).unwrap();
     refetchGetColumns();
     reset();
     setIsModalOpen(false);
+  };
+
+  const onDragEnd = (result: DropResult): void => {
+    if (result.combine) {
+      if (result.type === 'COLUMN') {
+        const shallow: string[] = [...ordered];
+        shallow.splice(result.source.index, 1);
+        setOrdered(shallow);
+        return;
+      }
+
+      const column: ITask[] = columnsDnD![result.source.droppableId];
+      const withQuoteRemoved: ITask[] = [...column];
+      withQuoteRemoved.splice(result.source.index, 1);
+      setColumnsDnD({
+        ...columnsDnD,
+        [result.source.droppableId]: withQuoteRemoved,
+      });
+      return;
+    }
+
+    // dropped nowhere
+    if (!result.destination) {
+      return;
+    }
+
+    const source: DraggableLocation = result.source;
+    const destination: DraggableLocation = result.destination;
+
+    // did not move anywhere - can bail early
+    if (source.droppableId === destination.droppableId && source.index === destination.index) {
+      return;
+    }
+
+    // reordering column
+    if (result.type === 'COLUMN') {
+      setOrdered(reorder(ordered, source.index, destination.index));
+      return;
+    }
+
+    const data = reorderQuoteMap({
+      quoteMap: columnsDnD,
+      source,
+      destination,
+    });
+
+    setColumnsDnD(data.quoteMap);
   };
 
   return !boardId ? (
@@ -68,21 +134,32 @@ function BoardPage() {
         </Typography>
       </Stack>
       <Stack className="columns-wrapper" direction="row" spacing={3}>
-        {isColumnLoading ? (
-          <Box sx={{ display: 'flex' }}>
-            <CircularProgress />
-          </Box>
-        ) : (
-          columns &&
-          tasksInBoard &&
-          columns.map((column: IColumn) => (
-            <BoardColumn
-              {...column}
-              tasks={tasksInBoard!.filter((task: ITask) => task.columnId === column._id)}
-              key={column._id}
-            />
-          ))
-        )}
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable
+            droppableId="board"
+            type="COLUMN"
+            direction="horizontal"
+            ignoreContainerClipping={true}
+            isCombineEnabled={true}
+          >
+            {(provided) => (
+              <Container ref={provided.innerRef} {...provided.droppableProps}>
+                {!isColumnLoading &&
+                  columns &&
+                  tasksInBoard &&
+                  columns.map((column: IColumn) => (
+                    <BoardColumn
+                      {...column}
+                      tasks={tasksInBoard!.filter((task: ITask) => task.columnId === column._id)}
+                      key={column._id}
+                    />
+                  ))}
+                {provided.placeholder}
+              </Container>
+            )}
+          </Droppable>
+        </DragDropContext>
+
         <Button
           className="btn-create-column"
           variant="contained"
@@ -126,3 +203,48 @@ function BoardPage() {
 }
 
 export default BoardPage;
+
+/* {isColumnLoading ? (
+            <Box sx={{ display: 'flex' }}>
+              <CircularProgress />
+            </Box>
+          ) : (
+            columns &&
+            tasksInBoard &&
+            columns.map((column: IColumn) => (
+              <BoardColumn
+                {...column}
+                tasks={tasksInBoard!.filter((task: ITask) => task.columnId === column._id)}
+                key={column._id}
+              />
+            ))
+          )} */
+
+/*    {ordered.map((key: string, index: number) => (
+            <BoardColumn
+              key={key}
+              tasks={columnsDnD![key]}
+              {...columns?.filter((col) => {
+                col.order.toString() === key;
+              })}
+            />
+          ))} */
+/*    {!isColumnLoading &&
+            columns &&
+            tasksInBoard &&
+            columns.map((column: IColumn) => (
+              <BoardColumn
+                {...column}
+                tasks={tasksInBoard!.filter((task: ITask) => task.columnId === column._id)}
+                key={column._id}
+              />
+            ))} */
+
+/*      {ordered.map((key: string, index: number) => (
+              <BoardColumn
+                key={index}
+                {...columns!.filter((col) => {
+                  col.order.toString() === key;
+                })[0]}
+              />
+            ))} */

@@ -64,7 +64,7 @@ function MainPage() {
 
   return (
     <div className="boards__wrapper">
-      <Typography variant="h2" component="h2">
+      <Typography className="main-page__title" variant="h3" component="h1">
         Доски :
       </Typography>
       {isBoardsLoading ? (
@@ -74,7 +74,12 @@ function MainPage() {
       ) : (
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
+            <Grid
+              className="board-list__container"
+              container
+              spacing={2}
+              sx={{ justifyContent: 'center' }}
+            >
               {boards
                 ? boards.map((board) => (
                     <Grid key={board._id} item>

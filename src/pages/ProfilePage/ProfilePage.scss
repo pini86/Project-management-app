@@ -6,6 +6,11 @@
   align-items: center;
 }
 
+.profile-page__wrapper {
+  background-color: #ffffff;
+  height: calc(100vh - 120px);
+}
+
 .editing-section {
   display: flex;
   justify-content: center;

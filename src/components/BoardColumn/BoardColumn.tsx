@@ -1,6 +1,19 @@
 import { useState } from 'react';
+import { IColumn } from 'models/Column';
+import { INewTask, ITask } from 'models/Task';
+import { useForm } from 'react-hook-form';
+import { useAppSelector } from '../../store/hooks/redux';
+import {
+  useDeleletColumnByIdMutation,
+  useGetColumnsInBoardQuery,
+  useUpdateColumnByIdMutation,
+} from 'api/ColumnsApi';
+import { useCreateTaskMutation, useGetTasksByBoardIdQuery } from 'api/TasksApi';
+import { useGetAllUsersQuery } from 'api/UsersApi';
+import DialogContent from '@mui/material/DialogContent';
+import TextField from '@mui/material/TextField';
+import BoardTask from 'components/BoardTask';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -9,17 +22,64 @@ import AddIcon from '@mui/icons-material/Add';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
 import EditIcon from '@mui/icons-material/Edit';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import Dialog from '@mui/material/Dialog';
 import './style.scss';
 import { useTranslation } from 'react-i18next';
 
-interface IProps {
-  columnTitle: string;
-}
+type FormValues = {
+  title: string;
+  description: string;
+};
 
-function BoardColumn({ columnTitle }: IProps) {
-  const [columnName, setColumnName] = useState(columnTitle);
-  const [editColumnName, setEditColumnName] = useState(columnTitle);
+function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
+  const [columnName, setColumnName] = useState(title);
+  const [editColumnName, setEditColumnName] = useState(title);
   const [isEditing, setIsEditing] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isCreateTaskModalOpen, setIsCreateTaskModalOpen] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>();
+  const userId = useAppSelector((state) => state.userReducer.user?._id);
+  const [deleteColumn] = useDeleletColumnByIdMutation();
+  const [updateColumn] = useUpdateColumnByIdMutation();
+  const [createTask] = useCreateTaskMutation();
+  const userIds = useGetAllUsersQuery().data?.map((user) => user._id);
+  const { refetch: refetchGetColumns } = useGetColumnsInBoardQuery({ boardId });
+  const { refetch: refetchGetTasks } = useGetTasksByBoardIdQuery({ boardId });
+
+  const onCreateTask = async (data: FormValues) => {
+    const newTask: INewTask = {
+      title: data.title,
+      order: 1,
+      description: data.description,
+      userId,
+      users: userIds!,
+    };
+    await createTask({ boardId, columnId: _id, data: newTask });
+    refetchGetTasks();
+    reset();
+    setIsCreateTaskModalOpen(false);
+  };
+
+  const handleClickOpen = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const onDeleteColumn = async () => {
+    await deleteColumn({ boardId, columnId: _id });
+    refetchGetColumns();
+    setIsDeleteModalOpen(false);
+  };
 
   const ColumnTitleInput = (
     <form
@@ -28,6 +88,7 @@ function BoardColumn({ columnTitle }: IProps) {
         e.preventDefault();
         setIsEditing(false);
         editColumnName.length && setColumnName(editColumnName);
+        updateColumn({ boardId, columnId: _id, data: { title: editColumnName, order } });
       }}
     >
       <input
@@ -54,7 +115,7 @@ function BoardColumn({ columnTitle }: IProps) {
         </Typography>
         <EditIcon />
       </Stack>
-      <DeleteForeverIcon className="board-column__delete" />
+      <DeleteForeverIcon className="board-column__delete" onClick={handleClickOpen} />
     </>
   );
   const { t } = useTranslation();
@@ -64,19 +125,74 @@ function BoardColumn({ columnTitle }: IProps) {
       <Stack className="board-column__title-wrapper">
         {isEditing ? ColumnTitleInput : ColumnTitleText}
       </Stack>
+      <Dialog
+        open={isDeleteModalOpen}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title" color="error">
+          {t('BoardColumn.delete-column-modal')}
+        </DialogTitle>
+        <DialogActions>
+          <Button variant="contained" color="error" onClick={onDeleteColumn}>
+            {t('buttonTexts.yes')}
+          </Button>
+          <Button color="error" onClick={handleClose}>
+            {t('buttonTexts.no')}
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Box className="task-list">
-        <Card className="task-list__item">
-          <Box>
-            Lorem ipsum dolor sit, amet cons e c t etur adipisicing elit. Adipisci quam quae ducimus
-            corrupti sequi libero incidunt esse quod voluptatibus magnam eius temporibus alias,
-            explicabo sunt provident ea nobis expedita odio!
-          </Box>
-          <DeleteForeverIcon className="task-delete" />
-        </Card>
+        {tasks.map((task: ITask) => (
+          <BoardTask {...task} key={task._id} />
+        ))}
       </Box>
-      <Button className="btn-create_task" variant="contained" startIcon={<AddIcon />}>
-        {t('BoardPage.BoardColumn.btn-add')}
+      <Button
+        className="btn-create_task"
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={() => setIsCreateTaskModalOpen(true)}
+      >
+        {t('BoardColumn.btn-add-task')}
       </Button>
+      <Dialog open={isCreateTaskModalOpen} onClose={() => setIsCreateTaskModalOpen(false)}>
+        <DialogTitle id="create-task">{t('BoardColumn.btn-add-task')}</DialogTitle>
+        <form onSubmit={handleSubmit(onCreateTask)}>
+          <DialogContent>
+            <TextField
+              margin="dense"
+              id="new_title"
+              label={t('BoardColumn.task-title')}
+              type="text"
+              fullWidth
+              {...register('title', { required: true })}
+            />
+            {errors.title && (
+              <Typography variant="caption" color="error">
+                {t('ProfilePage.requiredMsg')}
+              </Typography>
+            )}
+            <TextField
+              margin="dense"
+              id="new_description"
+              label={t('BoardColumn.description-optional')}
+              type="text"
+              defaultValue=" "
+              fullWidth
+              {...register('description')}
+            />
+          </DialogContent>
+          <DialogActions sx={{ justifyContent: 'space-between' }}>
+            <Button type="submit" variant="contained">
+              {t('buttonTexts.save')}
+            </Button>
+            <Button onClick={() => setIsCreateTaskModalOpen(false)} color="primary" autoFocus>
+              {t('buttonTexts.cancel')}
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
     </Box>
   );
 }

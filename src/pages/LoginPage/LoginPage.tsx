@@ -87,7 +87,6 @@ function LoginPage() {
             ((error as FetchBaseQueryError).data as IErrorResponse).message
           }
           ${t('errorMessages.badRequest')}`}
-          buttonText={t('buttonTexts.close')}
         />
       )}
     </Box>

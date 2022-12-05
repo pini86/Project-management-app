@@ -7,10 +7,9 @@ import CloseIcon from '@mui/icons-material/Close';
 interface ISnackBarProps {
   open: boolean;
   message: string;
-  buttonText?: string;
 }
 
-export default function SnackBar({ open, message, buttonText }: ISnackBarProps) {
+export default function SnackBar({ open, message }: ISnackBarProps) {
   const [isOpen, setIsOpen] = useState(open);
 
   const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
@@ -22,9 +21,6 @@ export default function SnackBar({ open, message, buttonText }: ISnackBarProps) 
 
   const action = (
     <>
-      <Button color="secondary" size="small" onClick={handleClose}>
-        {buttonText || 'CLOSE'}
-      </Button>
       <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
         <CloseIcon fontSize="small" />
       </IconButton>

@@ -59,17 +59,21 @@ export default function TextInputForm({
       <Button type="submit" variant="contained">
         {submitBtnText}
       </Button>
-      <Typography variant="body2" sx={{ display: 'block' }}>
-        {additionalText.mainText}
-        <Button
-          onClick={() => redirect(additionalText.linkHref)}
-          variant="text"
-          color="primary"
-          size="small"
-        >
-          {additionalText.linkText}
-        </Button>
-      </Typography>
+      {additionalText ? (
+        <Typography variant="body2" sx={{ display: 'block' }}>
+          {additionalText.mainText}
+          <Button
+            onClick={() => redirect(additionalText.linkHref)}
+            variant="text"
+            color="primary"
+            size="small"
+          >
+            {additionalText.linkText}
+          </Button>
+        </Typography>
+      ) : (
+        ''
+      )}
     </Box>
   );
 }

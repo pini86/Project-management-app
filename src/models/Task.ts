@@ -2,7 +2,7 @@ export interface INewTask {
   title: string;
   order: number;
   description: string;
-  userId: number;
+  userId: string;
   users: string[];
 }
 
@@ -11,12 +11,12 @@ export interface IUpdateTask extends INewTask {
 }
 
 export interface ITask extends IUpdateTask {
-  id: string;
+  _id: string;
   boardId: string;
 }
 
 export interface INewSetTask {
-  id: string;
+  _id: string;
   order: number;
   columnId: string;
 }

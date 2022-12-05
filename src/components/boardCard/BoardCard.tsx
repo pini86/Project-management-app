@@ -23,6 +23,7 @@ import { IBoard, INewBoard } from '../../models/Board';
 import { Controller, useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import ConfirmationModal from '../modals/ConfirmationModal';
+import { useTranslation } from 'react-i18next';
 
 interface IProps {
   board: IBoard;
@@ -43,6 +44,7 @@ export default function BoardCard(props: IProps) {
   const { control, handleSubmit, reset } = useForm<FormValues>();
   const [updateBoardById] = useUpdateBoardByIdMutation();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleOpenBoard = (event: React.SyntheticEvent) => {
     event.stopPropagation();
@@ -96,7 +98,7 @@ export default function BoardCard(props: IProps) {
         <Typography variant="body2">{description}</Typography>
       </CardContent>
       <CardActions className="card-actions">
-        <Tooltip title="Редактировать доску">
+        <Tooltip title={t('BoardCard.title-edit')}>
           <IconButton aria-label="edit" onClick={handleOpenModalEdit}>
             <EditIcon />
           </IconButton>
@@ -107,7 +109,7 @@ export default function BoardCard(props: IProps) {
           aria-labelledby="edit-dialog-title"
           aria-describedby="edit-dialog-description"
         >
-          <DialogTitle id="edit-dialog-title">{'Редактировать доску '}</DialogTitle>
+          <DialogTitle id="edit-dialog-title">{t('BoardCard.title-edit')}</DialogTitle>
           <form onSubmit={handleSubmit(onSubmitEdit)}>
             <DialogContent>
               <Controller
@@ -120,7 +122,7 @@ export default function BoardCard(props: IProps) {
                     required
                     margin="dense"
                     id="edit_title"
-                    label="Название доски"
+                    label={t('BoardCard.board-title')}
                     type="text"
                     fullWidth
                     {...field}
@@ -135,7 +137,7 @@ export default function BoardCard(props: IProps) {
                   <TextField
                     margin="dense"
                     id="edit_desc"
-                    label="Описание доски"
+                    label={t('BoardCard.board-description')}
                     type="text"
                     fullWidth
                     {...field}
@@ -145,15 +147,15 @@ export default function BoardCard(props: IProps) {
             </DialogContent>
             <DialogActions sx={{ justifyContent: 'space-between' }}>
               <Button type="submit" color="primary">
-                Сохранить
+                {t('buttonTexts.save')}
               </Button>
               <Button onClick={handleCancelEdit} color="primary" autoFocus>
-                Отмена
+                {t('buttonTexts.cancel')}
               </Button>
             </DialogActions>
           </form>
         </Dialog>
-        <Tooltip title="Удалить доску">
+        <Tooltip title={t('BoardCard.title-delete')}>
           <IconButton aria-label="delete" onClick={handleOpenModalDel}>
             <DeleteForeverIcon />
           </IconButton>
@@ -161,10 +163,10 @@ export default function BoardCard(props: IProps) {
         <ConfirmationModal
           isOpen={openDel}
           setIsOpen={setOpenDel}
-          title={'Удалить доску ?'}
+          title={t('BoardCard.title-delete')}
           contentText={''}
-          confirmText={'Да'}
-          notConfirmText={'Нет'}
+          confirmText={t('buttonTexts.yes')}
+          notConfirmText={t('buttonTexts.no')}
           onConfirmation={handleModalDelConfirmaton}
         />
       </CardActions>

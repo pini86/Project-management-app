@@ -9,7 +9,7 @@ const tasksApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
-    createTask: builder.query<ITask, { boardId: string; columnId: string; data: INewTask }>({
+    createTask: builder.mutation<ITask, { boardId: string; columnId: string; data: INewTask }>({
       query: ({ boardId, columnId, data }) => ({
         url: `boards/${boardId}/columns/${columnId}/tasks`,
         method: 'POST',
@@ -22,7 +22,7 @@ const tasksApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
-    updateTaskById: builder.query<
+    updateTaskById: builder.mutation<
       ITask,
       { boardId: string; columnId: string; taskId: string; data: IUpdateTask }
     >({
@@ -32,12 +32,14 @@ const tasksApi = api.injectEndpoints({
         body: data,
       }),
     }),
-    deleletTaskById: builder.query<ITask, { boardId: string; columnId: string; taskId: string }>({
-      query: ({ boardId, columnId, taskId }) => ({
-        url: `boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
-        method: 'DELETE',
-      }),
-    }),
+    deleletTaskById: builder.mutation<ITask, { boardId: string; columnId: string; taskId: string }>(
+      {
+        query: ({ boardId, columnId, taskId }) => ({
+          url: `boards/${boardId}/columns/${columnId}/tasks/${taskId}`,
+          method: 'DELETE',
+        }),
+      }
+    ),
     getTasksByIdsListOrUserIdOrSearch: builder.query<
       ITask[],
       { columnIds?: string[]; userId?: string; search?: string[] }
@@ -52,7 +54,7 @@ const tasksApi = api.injectEndpoints({
         method: 'GET',
       }),
     }),
-    updateSetOfTasks: builder.query<ITask[], { data: INewSetTask[] }>({
+    updateSetOfTasks: builder.mutation<ITask[], { data: INewSetTask[] }>({
       query: ({ data }) => ({
         url: `tasksSet`,
         method: 'PATCH',
@@ -70,11 +72,11 @@ const tasksApi = api.injectEndpoints({
 
 export const {
   useGetTasksInColumnQuery,
-  useCreateTaskQuery,
+  useCreateTaskMutation,
   useGetTaskByIdQuery,
-  useUpdateTaskByIdQuery,
-  useDeleletTaskByIdQuery,
+  useUpdateTaskByIdMutation,
+  useDeleletTaskByIdMutation,
   useGetTasksByIdsListOrUserIdOrSearchQuery,
-  useUpdateSetOfTasksQuery,
+  useUpdateSetOfTasksMutation,
   useGetTasksByBoardIdQuery,
 } = tasksApi;

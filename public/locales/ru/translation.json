@@ -1,9 +1,4 @@
 {
-  "title": "Willkommen zu react und react-i18next",
-  "description": {
-    "part1": "Um loszulegen, ändere <1>src/App(DE).js</1> und speichere um neuzuladen.",
-    "part2": "Wechsle die Sprache zwischen deutsch und englisch mit Hilfe der beiden Schalter."
-  },
   "header": {
     "main": "Доски",
     "profile": "Профиль",
@@ -11,12 +6,20 @@
     "registration": "Регистрация",
     "login": "Войти"
   },
-  "errorMessages":{
+  "errorMessages": {
     "userExists": "Пользователь с данным логином уже существует",
-    "badRequest": "Проверьте правильность написания логина и пароля"
+    "badRequest": "Проверьте правильность написания логина и пароля",
+    "updating": "Данные не удалось изменить. Ошибка: "
   },
-  "buttonTexts":{
-    "close": "закрыть"
+  "SuccessMessages": {
+    "updating": "Данные успешно изменены."
+  },
+  "buttonTexts": {
+    "close": "закрыть",
+    "save": "сохранить",
+    "cancel": "отменить",
+    "yes": "да",
+    "no": "нет"
   },
   "WelcomePage": {
     "main-heading": "Приложение для управления проектами",
@@ -64,13 +67,51 @@
       "linkText": "Зарегистрироваться"
     }
   },
+  "ProfilePage": {
+    "heading": "Редактирование профиля",
+    "btn-delete": "Удалить мой аккаунт",
+    "inputLabels": {
+      "name": "Ваше имя",
+      "login": "Логин",
+      "password": "Пароль"
+    },
+    "requiredMsg": "Поле обязательно к заполнению",
+    "passwordMsg": "Ваш пароль должен содержать не менее 6 символов",
+    "submitBtnText": "Сохранить изменения",
+    "delete-account-modal": "Вы действительно хотите удалить аккаунт?"
+  },
+  "MainPage": {
+    "main-heading": "Мои доски",
+    "add": "добавить",
+    "title-add-board": "Добавить новую доску",
+    "board-title": "Название доски",
+    "board-description": "Описание доски"
+  },
+  "BoardColumn": {
+    "delete-column-modal": "Вы действительно хотите удалить колонку?",
+    "btn-add-task": "добавить задачу",
+    "task-title": "Название задачи",
+    "description-optional": "Описание (необязательно)"
+  },
+  "BoardTask": {
+    "delete-task-modal": "Вы действительно хотите удалить задачу?",
+    "btn-edit-task": "редактировать задачу",
+    "task-title": "Название задачи",
+    "description-optional": "Описание (необязательно)"
+  },
   "BoardPage": {
     "btn-back": "назад",
-    "board-title": "Название борда",
+    "board-title": "Название доски",
     "column-title": "Название колонки",
     "column-add": "добавить колонку",
-    "BoardColumn":{
+    "BoardColumn": {
       "add": "добавить задачу"
     }
+  },
+  "BoardCard": {
+    "title-edit": "Редактировать доску",
+    "board-title": "Название доски",
+    "column-title": "Название колонки",
+    "title-delete": "Удалить доску"
   }
 }

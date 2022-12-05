@@ -6,8 +6,12 @@
   &__logo {
     width: 50px;
   }
-}
 
-.footer a {
-  color: inherit;
+  &__year {
+    margin: 0;
+  }
+
+  a {
+    color: inherit;
+  }
 }

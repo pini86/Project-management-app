@@ -1,0 +1,10 @@
+.header-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (max-width: 640px) {
+  .header-link__text {
+    display: none;
+  }
+}

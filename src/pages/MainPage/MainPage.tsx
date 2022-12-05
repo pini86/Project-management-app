@@ -66,95 +66,94 @@ function MainPage() {
 
   return (
     <div className="boards__wrapper">
+      <Typography className="main-page__title" variant="h3" component="h1">
+        {t('MainPage.main-heading')}
+      </Typography>
       {isBoardsLoading ? (
         <Box sx={{ display: 'flex' }}>
           <CircularProgress />
         </Box>
       ) : (
-        <>
-          <Typography variant="h2" component="h2">
-            {t('MainPage.main-heading')}
-          </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Grid container spacing={2} sx={{ justifyContent: 'center' }}>
-                {boards
-                  ? boards.map((board) => (
-                      <Grid key={board._id} item>
-                        <BoardCard board={board} />
-                      </Grid>
-                    ))
-                  : null}
-
-                <Card
-                  className="new-board-card__wrapper"
-                  variant="elevation"
-                  onClick={handleOpenModalEdit}
-                  aria-label="edit"
-                  key={'new-board'}
-                >
-                  <CardContent>
-                    <Typography variant="h4" component="div">
-                      {t('MainPage.add')}
-                    </Typography>
-                  </CardContent>
-                  <Dialog open={openEdit} onClose={handleCancelEdit}>
-                    <DialogTitle id="edit-dialog-title">
-                      {t('MainPage.title-add-board')}
-                    </DialogTitle>
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                      <DialogContent>
-                        <Controller
-                          name="title"
-                          control={control}
-                          defaultValue={defaultValuesEditForm.title}
-                          render={({ field }) => (
-                            <TextField
-                              autoFocus
-                              required
-                              margin="dense"
-                              id="new_title"
-                              label={t('MainPage.board-title')}
-                              type="text"
-                              fullWidth
-                              {...field}
-                            />
-                          )}
-                        />
-                        <Controller
-                          name="description"
-                          control={control}
-                          defaultValue={defaultValuesEditForm.description}
-                          render={({ field }) => (
-                            <TextField
-                              margin="dense"
-                              id="new_desc"
-                              label={t('MainPage.board-description')}
-                              type="text"
-                              fullWidth
-                              {...field}
-                            />
-                          )}
-                        />
-                      </DialogContent>
-                      <DialogActions sx={{ justifyContent: 'space-between' }}>
-                        <Button type="submit" color="primary">
-                          {t('buttonTexts.save')}
-                        </Button>
-                        <Button onClick={handleCancelEdit} color="primary" autoFocus>
-                          {t('buttonTexts.cancel')}
-                        </Button>
-                      </DialogActions>
-                    </form>
-                  </Dialog>
-                </Card>
-              </Grid>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Grid
+              className="board-list__container"
+              container
+              spacing={2}
+              sx={{ justifyContent: 'center' }}
+            >
+              {boards
+                ? boards.map((board) => (
+                    <Grid key={board._id} item>
+                      <BoardCard board={board} />
+                    </Grid>
+                  ))
+                : null}
+              <Card
+                className="new-board-card__wrapper"
+                variant="elevation"
+                onClick={handleOpenModalEdit}
+                aria-label="edit"
+                key={'new-board'}
+              >
+                <CardContent>
+                  <Typography variant="h4" component="div">
+                    {t('MainPage.add')}
+                  </Typography>
+                </CardContent>
+                <Dialog open={openEdit} onClose={handleCancelEdit}>
+                  <DialogTitle id="edit-dialog-title">{t('MainPage.title-add-board')}</DialogTitle>
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <DialogContent>
+                      <Controller
+                        name="title"
+                        control={control}
+                        defaultValue={defaultValuesEditForm.title}
+                        render={({ field }) => (
+                          <TextField
+                            autoFocus
+                            required
+                            margin="dense"
+                            id="new_title"
+                            label={t('MainPage.board-title')}
+                            type="text"
+                            fullWidth
+                            {...field}
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="description"
+                        control={control}
+                        defaultValue={defaultValuesEditForm.description}
+                        render={({ field }) => (
+                          <TextField
+                            margin="dense"
+                            id="new_desc"
+                            label={t('MainPage.board-description')}
+                            type="text"
+                            fullWidth
+                            {...field}
+                          />
+                        )}
+                      />
+                    </DialogContent>
+                    <DialogActions sx={{ justifyContent: 'space-between' }}>
+                      <Button type="submit" color="primary">
+                        {t('buttonTexts.save')}
+                      </Button>
+                      <Button onClick={handleCancelEdit} color="primary" autoFocus>
+                        {t('buttonTexts.cancel')}
+                      </Button>
+                    </DialogActions>
+                  </form>
+                </Dialog>
+              </Card>
             </Grid>
           </Grid>
-        </>
+        </Grid>
       )}
     </div>
   );
 }
-
 export default MainPage;

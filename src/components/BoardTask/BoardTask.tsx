@@ -18,6 +18,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import './style.scss';
 import { useTranslation } from 'react-i18next';
 
@@ -44,16 +45,12 @@ function BoardTask({ boardId, columnId, _id, title, description, userId, users }
     setIsDeleteModalOpen(true);
   };
 
-  const handleClose = () => {
-    setIsDeleteModalOpen(false);
-  };
-
   const onCloseEdit = () => {
     reset({ title, description });
     setIsEditModalOpen(false);
   };
 
-  const onDeleteTask = async () => {
+  const onConfirmDelete = async () => {
     await deleteTask({ boardId, columnId, taskId: _id });
     refetchGetTasks();
     setIsDeleteModalOpen(false);
@@ -82,24 +79,16 @@ function BoardTask({ boardId, columnId, _id, title, description, userId, users }
           <MoreVertIcon className="task-modify" onClick={() => setIsEditModalOpen(true)} />
         </Stack>
       </Card>
-      <Dialog
-        open={isDeleteModalOpen}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title" color="error">
-          {t('BoardColumn.delete-task-modal')}
-        </DialogTitle>
-        <DialogActions>
-          <Button variant="contained" color="error" onClick={onDeleteTask}>
-            {t('buttonTexts.yes')}
-          </Button>
-          <Button color="error" onClick={handleClose}>
-            {t('buttonTexts.no')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {isDeleteModalOpen && (
+        <ConfirmationModal
+          isOpen={isDeleteModalOpen}
+          contentText={t('BoardColumn.delete-task-modal')}
+          notConfirmText={t('buttonTexts.no')}
+          confirmText={t('buttonTexts.yes')}
+          onConfirm={onConfirmDelete}
+          onCancel={() => setIsDeleteModalOpen(false)}
+        />
+      )}
       <Dialog
         open={isEditModalOpen}
         onClose={onCloseEdit}

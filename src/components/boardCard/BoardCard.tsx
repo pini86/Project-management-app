@@ -58,11 +58,9 @@ export default function BoardCard(props: IProps) {
     setOpenDel(true);
   };
 
-  const handleModalDelConfirmaton = async (answer: boolean) => {
-    if (answer) {
-      await deleteBoardById({ boardId });
-      refetchGetBoards();
-    }
+  const onConfirmDelete = async () => {
+    await deleteBoardById({ boardId });
+    refetchGetBoards();
   };
 
   const onSubmitEdit = async (data: FormValues) => {
@@ -162,12 +160,12 @@ export default function BoardCard(props: IProps) {
         </Tooltip>
         <ConfirmationModal
           isOpen={openDel}
-          setIsOpen={setOpenDel}
           title={t('BoardCard.title-delete')}
           contentText={''}
           confirmText={t('buttonTexts.yes')}
           notConfirmText={t('buttonTexts.no')}
-          onConfirmation={handleModalDelConfirmaton}
+          onConfirm={onConfirmDelete}
+          onCancel={() => setOpenDel(false)}
         />
       </CardActions>
     </Card>

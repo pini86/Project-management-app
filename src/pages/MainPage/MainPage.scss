@@ -16,6 +16,21 @@
   }
 }
 
+.main-page__title {
+  position: fixed;
+  top: 60px;
+  padding: 20px;
+  background-color: #abcaff;
+  width: 100vw;
+  text-align: center;
+  z-index: 999;
+}
+
+.board-list__container {
+  position: relative;
+  padding-top: 75px;
+}
+
 .boards__wrapper {
   display: flex;
   flex-direction: column;

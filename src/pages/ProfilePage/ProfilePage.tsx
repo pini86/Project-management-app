@@ -47,12 +47,10 @@ function ProfilePage() {
     await updateUserById({ userId, data: userData });
   };
 
-  const getConfirm = async (value: boolean) => {
-    if (value) {
-      await deleteUserById({ userId });
-      dispatch(resetUser());
-      navigate('/');
-    }
+  const onConfirmDelete = async () => {
+    await deleteUserById({ userId });
+    dispatch(resetUser());
+    navigate('/');
   };
 
   const { t } = useTranslation();
@@ -73,11 +71,11 @@ function ProfilePage() {
           {isModalOpen && (
             <ConfirmationModal
               isOpen={isModalOpen}
-              setIsOpen={setIsModalOpen}
               contentText={t('ProfilePage.delete-account-modal')}
-              notConfirmText={t('buttonTexts.no')}
               confirmText={t('buttonTexts.yes')}
-              onConfirmation={getConfirm}
+              notConfirmText={t('buttonTexts.no')}
+              onConfirm={onConfirmDelete}
+              onCancel={() => setIsModalOpen(false)}
             />
           )}
         </Box>

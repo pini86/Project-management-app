@@ -25,6 +25,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import Dialog from '@mui/material/Dialog';
+import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import './style.scss';
 import { useTranslation } from 'react-i18next';
 
@@ -71,11 +72,7 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
     setIsDeleteModalOpen(true);
   };
 
-  const handleClose = () => {
-    setIsDeleteModalOpen(false);
-  };
-
-  const onDeleteColumn = async () => {
+  const onConfirmDelete = async () => {
     await deleteColumn({ boardId, columnId: _id });
     refetchGetColumns();
     setIsDeleteModalOpen(false);
@@ -125,24 +122,16 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
       <Stack className="board-column__title-wrapper">
         {isEditing ? ColumnTitleInput : ColumnTitleText}
       </Stack>
-      <Dialog
-        open={isDeleteModalOpen}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title" color="error">
-          {t('BoardColumn.delete-column-modal')}
-        </DialogTitle>
-        <DialogActions>
-          <Button variant="contained" color="error" onClick={onDeleteColumn}>
-            {t('buttonTexts.yes')}
-          </Button>
-          <Button color="error" onClick={handleClose}>
-            {t('buttonTexts.no')}
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {isDeleteModalOpen && (
+        <ConfirmationModal
+          isOpen={isDeleteModalOpen}
+          contentText={t('BoardColumn.delete-column-modal')}
+          notConfirmText={t('buttonTexts.no')}
+          confirmText={t('buttonTexts.yes')}
+          onConfirm={onConfirmDelete}
+          onCancel={() => setIsDeleteModalOpen(false)}
+        />
+      )}
       <Box className="task-list">
         {tasks.map((task: ITask) => (
           <BoardTask {...task} key={task._id} />

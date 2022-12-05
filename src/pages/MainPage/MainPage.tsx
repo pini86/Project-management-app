@@ -2,8 +2,6 @@ import { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import BoardCard from 'components/boardCard/BoardCard';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -18,6 +16,8 @@ import { Box, CircularProgress } from '@mui/material';
 import { extractUserIdFromToken } from '../../utils/authUtils';
 import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import Stack from '@mui/system/Stack';
+import AddIcon from '@mui/icons-material/Add';
 
 type FormValues = {
   title: string;
@@ -66,9 +66,19 @@ function MainPage() {
 
   return (
     <div className="boards__wrapper">
-      <Typography className="main-page__title" variant="h3" component="h1">
-        {t('MainPage.main-heading')}
-      </Typography>
+      <Stack className="main-page__header">
+        <Typography variant="h3" component="h1">
+          {t('MainPage.main-heading')}
+        </Typography>
+        <Button
+          className="add-board"
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleOpenModalEdit}
+        >
+          {t('MainPage.add')}
+        </Button>
+      </Stack>
       {isBoardsLoading ? (
         <Box sx={{ display: 'flex' }}>
           <CircularProgress />
@@ -89,66 +99,53 @@ function MainPage() {
                     </Grid>
                   ))
                 : null}
-              <Card
-                className="new-board-card__wrapper"
-                variant="elevation"
-                onClick={handleOpenModalEdit}
-                aria-label="edit"
-                key={'new-board'}
-              >
-                <CardContent>
-                  <Typography variant="h4" component="div">
-                    {t('MainPage.add')}
-                  </Typography>
-                </CardContent>
-                <Dialog open={openEdit} onClose={handleCancelEdit}>
-                  <DialogTitle id="edit-dialog-title">{t('MainPage.title-add-board')}</DialogTitle>
-                  <form onSubmit={handleSubmit(onSubmit)}>
-                    <DialogContent>
-                      <Controller
-                        name="title"
-                        control={control}
-                        defaultValue={defaultValuesEditForm.title}
-                        render={({ field }) => (
-                          <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            id="new_title"
-                            label={t('MainPage.board-title')}
-                            type="text"
-                            fullWidth
-                            {...field}
-                          />
-                        )}
-                      />
-                      <Controller
-                        name="description"
-                        control={control}
-                        defaultValue={defaultValuesEditForm.description}
-                        render={({ field }) => (
-                          <TextField
-                            margin="dense"
-                            id="new_desc"
-                            label={t('MainPage.board-description')}
-                            type="text"
-                            fullWidth
-                            {...field}
-                          />
-                        )}
-                      />
-                    </DialogContent>
-                    <DialogActions sx={{ justifyContent: 'space-between' }}>
-                      <Button type="submit" color="primary">
-                        {t('buttonTexts.save')}
-                      </Button>
-                      <Button onClick={handleCancelEdit} color="primary" autoFocus>
-                        {t('buttonTexts.cancel')}
-                      </Button>
-                    </DialogActions>
-                  </form>
-                </Dialog>
-              </Card>
+              <Dialog open={openEdit} onClose={handleCancelEdit}>
+                <DialogTitle id="edit-dialog-title">{t('MainPage.title-add-board')}</DialogTitle>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <DialogContent>
+                    <Controller
+                      name="title"
+                      control={control}
+                      defaultValue={defaultValuesEditForm.title}
+                      render={({ field }) => (
+                        <TextField
+                          autoFocus
+                          required
+                          margin="dense"
+                          id="new_title"
+                          label={t('MainPage.board-title')}
+                          type="text"
+                          fullWidth
+                          {...field}
+                        />
+                      )}
+                    />
+                    <Controller
+                      name="description"
+                      control={control}
+                      defaultValue={defaultValuesEditForm.description}
+                      render={({ field }) => (
+                        <TextField
+                          margin="dense"
+                          id="new_desc"
+                          label={t('MainPage.board-description')}
+                          type="text"
+                          fullWidth
+                          {...field}
+                        />
+                      )}
+                    />
+                  </DialogContent>
+                  <DialogActions sx={{ justifyContent: 'space-between' }}>
+                    <Button type="submit" color="primary">
+                      {t('buttonTexts.save')}
+                    </Button>
+                    <Button onClick={handleCancelEdit} color="primary" autoFocus>
+                      {t('buttonTexts.cancel')}
+                    </Button>
+                  </DialogActions>
+                </form>
+              </Dialog>
             </Grid>
           </Grid>
         </Grid>

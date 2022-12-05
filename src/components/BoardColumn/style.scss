@@ -1,0 +1,98 @@
+.board-column, .btn-create_task.MuiButtonBase-root {
+  width: 100%;
+  background-color: #dcebff;
+  color: rgb(24, 43, 77);
+}
+
+.board-column {
+  width: 280px;
+  height: fit-content;
+  border-radius: 4px;
+  padding: 8px;
+
+  &__delete {
+    cursor: pointer;
+  }
+
+  &__title {
+    &-wrapper.css-nen11g-MuiStack-root {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      min-width: 265px;
+      background-color: #dcebff;
+    }
+
+    &-input {
+      width: 215px;
+      padding-left: 8px;
+      font-size: 16px;
+      border: 1px solid #8ebcff;
+    }
+
+    &-confitm.MuiButtonBase-root, &-cancel.MuiButtonBase-root {
+      padding: 0;
+      min-width: auto;
+    }
+
+    &-confitm svg {
+      fill: green;
+    }
+
+    &-cancel svg {
+      fill: red;
+    }
+  }
+
+  &__delete:hover {
+    fill: rgb(194, 0, 0);
+    transition: all .5s;
+  }
+}
+
+.column-title__inner-wrapper.css-nen11g-MuiStack-root {
+  flex-direction: row;
+  justify-content: space-between;
+  width: 91%;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    color: #303f9f;
+  }
+}
+
+.btn-create_task.MuiButtonBase-root {
+  justify-content: start;
+  min-width: max-content;
+  margin-top: 5px;
+  transition: all .5s;
+
+  &:hover {
+    background-color: #c4d5ee;
+  }
+}
+
+.task-list {
+  max-height: 60vh;
+  padding: 0;
+  overflow-y: auto;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(85, 150, 216);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(55, 133, 211);
+}

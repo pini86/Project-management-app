@@ -1,0 +1,124 @@
+{
+  "header": {
+    "main": "Boards",
+    "profile": "Profile",
+    "logout": "Log out",
+    "registration": "Sign up",
+    "login": "Sign in",
+    "home": "Home"
+  },
+  "errorMessages": {
+    "userExists": "User with such login already exists",
+    "badRequest": "You have entered an invalid login or password",
+    "updating": "Your changes could not be saved. Error: "
+  },
+  "SuccessMessages": {
+    "updating": "Your changes are updated successfully."
+  },
+  "buttonTexts": {
+    "close": "close",
+    "save": "save",
+    "cancel": "cancel",
+    "yes": "yes",
+    "no": "no"
+  },
+  "WelcomePage": {
+    "main-heading": "Project Management Application",
+    "sub-heading": "Our app's aim is to help you with workflow management. Increase productivity, become more efficient and focused on tasks.",
+    "team-heading": "Our team",
+    "team-members": {
+      "misha": {
+        "name": "Misha",
+        "work": "Our team lead. Responsible for basic project setup, deploying backend, requests to api with RTK Query. Worked on boards and columns pages"
+      },
+      "pasha": {
+        "name": "Pasha",
+        "work": "Team member who configured routing and made basic project structure, made header and worked on boards and columns pages"
+      },
+      "natasha": {
+        "name": "Natasha",
+        "work": "Team member who implemented authorization, made welcome and profile page"
+      }
+    }
+  },
+  "RegisterPage": {
+    "inputLabels": {
+      "name": "Your name",
+      "login": "Login",
+      "password": "Password"
+    },
+    "requiredMsg": "You should provide a value",
+    "passwordMsg": "The password length should be at least 6 characters",
+    "submitBtnText": "Sign up",
+    "additionalText": {
+      "mainText": "Already have an account? ",
+      "linkText": "Sign in"
+    }
+  },
+  "LoginPage": {
+    "inputLabels": {
+      "login": "Login",
+      "password": "Password"
+    },
+    "requiredMsg": "You should provide a value",
+    "passwordMsg": "The password length should be at least 6 characters",
+    "submitBtnText": "Sign in",
+    "additionalText": {
+      "mainText": "Don't have an account? ",
+      "linkText": "Sign up"
+    }
+  },
+  "ProfilePage": {
+    "heading": "Profile editing",
+    "btn-delete": "Delete my account",
+    "inputLabels": {
+      "name": "Your name",
+      "login": "Login",
+      "password": "Password"
+    },
+    "requiredMsg": "You should provide a value",
+    "passwordMsg": "The password length should be at least 6 characters",
+    "submitBtnText": "Save changes",
+    "delete-account-modal": "Are you sure you want to delete your account?"
+  },
+  "MainPage": {
+    "main-heading": "My boards",
+    "add": "add one",
+    "title-add-board": "Add a new board",
+    "board-title": "Board title",
+    "board-description": "Board description"
+  },
+  "BoardColumn": {
+    "delete-column-modal": "Are you sure you want to delete this column?",
+    "btn-add-task": "add task",
+    "task-title": "Task title",
+    "description-optional": "Description (optional)"
+  },
+  "BoardTask": {
+    "delete-task-modal": "Are you sure you want to delete this task?",
+    "btn-edit-task": "edit task",
+    "task-title": "Task title",
+    "description-optional": "Description (optional)"
+  },
+  "BoardPage": {
+    "btn-back": "back",
+    "board-title": "Board title",
+    "column-title": "Column title",
+    "column-add": "add column",
+    "BoardColumn": {
+      "btn-add": "add task"
+    }
+  },
+  "BoardCard": {
+    "title-edit": "Edit board",
+    "board-title": "Board title",
+    "board-description": "Board description",
+    "title-delete": "Delete board"
+  },
+  "Page404": {
+    "sub-header": "Page not found",
+    "messagePart1": "Write correct url or go to ",
+    "messagePart2": "welcome ",
+    "messagePart3": "page"
+  }
+}

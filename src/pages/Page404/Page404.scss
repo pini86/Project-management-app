@@ -1,0 +1,35 @@
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: calc(100vh - 124px);
+  background-color: #fff;
+  text-align: center;
+  color: rgb(150, 0, 0);
+
+  .header {
+    font-size: 10rem;
+    line-height: 120px;
+    padding-bottom: 36px;
+  }
+
+  .page-url {
+    color: rgb(150, 0, 0);
+    font-weight: bold;
+    text-decoration: none;
+  }
+}
+
+
+@media (max-width: 640px) {
+  .page-wrapper {
+    .header {
+      font-size: 6rem;
+      padding-bottom: 20px;
+    }
+
+    .sub-header {
+      font-size: 2rem;
+    }
+  }
+}

@@ -1,0 +1,47 @@
+.new-board-card__wrapper {
+  width: 275px;
+  height: 180px;
+  border: 1px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 16px;
+  margin-top: 16px;
+  text-align: center;
+  &:hover {
+    box-shadow: rgb(0 0 0 / 20%) 0px 2px 4px -1px, rgb(0 0 0 / 14%) 0px 4px 5px 0px,
+      rgb(0 0 0 / 12%) 0px 1px 10px 0px;
+  }
+}
+
+.main-page__header.MuiStack-root {
+  position: fixed;
+  top: 55px;
+  padding: 20px;
+  background-color: #abcaff;
+  width: 100vw;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+  z-index: 999;
+}
+
+.board-list__container {
+  position: relative;
+  padding-top: 75px;
+}
+
+.boards__wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: space-between;
+  -webkit-justify-content: space-between;
+}

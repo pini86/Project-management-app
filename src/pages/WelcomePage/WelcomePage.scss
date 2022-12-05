@@ -1,0 +1,113 @@
+.main-image {
+  display: inline-block;
+  height: 80%;
+}
+
+.image-wrapper {
+  max-height: 500px;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.welcome-page {
+  &__section {
+    display: flex;
+    justify-content: space-around;
+    background-color: white;
+    margin: 5vw auto;
+    border-radius: 10px;
+    max-width: 1200px;
+  }
+
+  &__main-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #1a237e;
+    text-align: center;
+  }
+}
+
+.team-section {
+  align-items: center;
+  flex-direction: column;
+  max-width: 700px;
+  margin: 3rem auto;
+  padding: 1rem;
+}
+
+.main-heading {
+  color: inherit;
+  max-width: 350px;
+  margin: 3rem 0;
+}
+
+.sub-heading {
+  color: inherit;
+  max-width: 450px;
+}
+
+.team {
+  &__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem;
+  }
+
+  &__img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+  }
+
+  &__tasks {
+    max-width: 400px;
+  }
+
+  &__name {
+    color: black;
+    text-decoration: none;
+  }
+}
+
+@media (max-width: 1024px) {
+  .welcome-page__section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .main-image {
+    width: 300px;
+    height: auto;
+  }
+
+  .main-heading {
+    margin: 1rem 0;
+  }
+
+  .image-wrapper {
+    margin: 1rem;
+
+  }
+}
+
+@media (max-width: 560px) {
+  .main-heading {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .main-heading {
+    font-size: 1.5rem;
+  }
+
+  .sub-heading {
+    font-size: 1rem;
+  }
+}

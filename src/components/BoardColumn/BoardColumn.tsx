@@ -136,7 +136,7 @@ function BoardColumn(dataColumn: IColumn, index: number) {
 
   return (
     <>
-      <Draggable draggableId={title} index={index!}>
+      <Draggable draggableId={order.toString()} index={index}>
         {(provided, snapshot) => (
           <Box className="board-column" {...provided.draggableProps} ref={provided.innerRef}>
             <div {...provided.dragHandleProps}>

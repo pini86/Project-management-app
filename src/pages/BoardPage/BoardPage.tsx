@@ -196,14 +196,24 @@ function BoardPage() {
                   columns &&
                   tasksInBoard &&
                   ordered &&
-                  ordered.map((key: string, index: number) => (
-                    <BoardColumn
-                      key={index}
-                      {...columns.find((col) => col['order'].toString() === key)}
-                      index={index}
-                      tasks={columnsDnD[key]}
-                    />
-                  ))}
+                  ordered.map((key: string, index: number) => {
+                    if (columns.find((col) => col['order'].toString() === key)) {
+                      const { _id, title, boardId, order } = {
+                        ...columns!.find((col) => col['order'].toString() === key),
+                      };
+                      return (
+                        <BoardColumn
+                          key={index}
+                          index={index}
+                          _id={_id as string}
+                          title={title as string}
+                          boardId={boardId as string}
+                          order={order as number}
+                          tasks={columnsDnD![key]}
+                        />
+                      );
+                    }
+                  })}
 
                 {provided.placeholder}
               </div>

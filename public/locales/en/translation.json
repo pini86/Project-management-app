@@ -4,7 +4,8 @@
     "profile": "Profile",
     "logout": "Log out",
     "registration": "Sign up",
-    "login": "Sign in"
+    "login": "Sign in",
+    "home": "Home"
   },
   "errorMessages": {
     "userExists": "User with such login already exists",
@@ -28,15 +29,15 @@
     "team-members": {
       "misha": {
         "name": "Misha",
-        "work": "Worked on ..."
+        "work": "Our team lead. Responsible for basic project setup, deploying backend, requests to api with RTK Query. Worked on boards and columns pages"
       },
       "pasha": {
         "name": "Pasha",
-        "work": "Worked on ..."
+        "work": "Team member who configured routing and made basic project structure, made header and worked on boards and columns pages"
       },
       "natasha": {
         "name": "Natasha",
-        "work": "Worked on ..."
+        "work": "Team member who implemented authorization, made welcome and profile page"
       }
     }
   },
@@ -113,5 +114,11 @@
     "board-title": "Board title",
     "board-description": "Board description",
     "title-delete": "Delete board"
+  },
+  "Page404": {
+    "sub-header": "Page not found",
+    "messagePart1": "Write correct url or go to ",
+    "messagePart2": "welcome ",
+    "messagePart3": "page"
   }
 }

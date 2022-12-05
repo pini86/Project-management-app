@@ -18,6 +18,7 @@
     background-color: white;
     margin: 5vw;
     border-radius: 10px;
+    max-width: 1400px;
   }
 
   &__main-text {
@@ -33,6 +34,9 @@
 .team-section {
   align-items: center;
   flex-direction: column;
+  max-width: 700px;
+  margin: 3rem auto;
+  padding: 1rem;
 }
 
 .main-heading {
@@ -62,7 +66,7 @@
   }
 
   &__tasks {
-    max-width: 700px;
+    max-width: 400px;
   }
 
   &__name {
@@ -102,6 +106,7 @@
   .main-heading {
     font-size: 1.5rem;
   }
+
   .sub-heading {
     font-size: 1rem;
   }

@@ -82,7 +82,7 @@ function BoardTask({ boardId, columnId, _id, title, description, userId, users }
       {isDeleteModalOpen && (
         <ConfirmationModal
           isOpen={isDeleteModalOpen}
-          contentText={t('BoardColumn.delete-task-modal')}
+          contentText={t('BoardTask.delete-task-modal')}
           notConfirmText={t('buttonTexts.no')}
           confirmText={t('buttonTexts.yes')}
           onConfirm={onConfirmDelete}
@@ -95,14 +95,14 @@ function BoardTask({ boardId, columnId, _id, title, description, userId, users }
         aria-labelledby="edit-task-title"
         aria-describedby="edit-task-description"
       >
-        <DialogTitle id="edit-task-title">{t('BoardColumn.btn-edit-task')}</DialogTitle>
+        <DialogTitle id="edit-task-title">{t('BoardTask.btn-edit-task')}</DialogTitle>
         <form onSubmit={handleSubmit(onUpdateTask)}>
           <DialogContent>
             <TextField
               defaultValue={title}
               margin="dense"
               id="new_title"
-              label={t('BoardColumn.task-title')}
+              label={t('BoardTask.task-title')}
               type="text"
               fullWidth
               {...register('title', { required: true })}
@@ -116,7 +116,7 @@ function BoardTask({ boardId, columnId, _id, title, description, userId, users }
               defaultValue={description}
               margin="dense"
               id="new_description"
-              label={t('BoardColumn.description-optional')}
+              label={t('BoardTask.description-optional')}
               type="text"
               fullWidth
               {...register('description')}

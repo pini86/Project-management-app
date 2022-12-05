@@ -1,7 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IColumn, INewColumn } from 'models/Column';
 import { ITask } from 'models/Task';
-import { useCreateColumnMutation, useGetColumnsInBoardQuery } from 'api/ColumnsApi';
+import {
+  useCreateColumnMutation,
+  useGetColumnsInBoardQuery,
+  useUpdateColumnByIdMutation,
+} from 'api/ColumnsApi';
 import { useGetTasksByBoardIdQuery } from 'api/TasksApi';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -49,18 +53,53 @@ function BoardPage() {
   const navigate = useNavigate();
   const { boardId } = useParams();
   const [createColumn] = useCreateColumnMutation();
-  const { data: tasksInBoard } = useGetTasksByBoardIdQuery({ boardId: boardId! });
+  const { data: tasksInBoard, isSuccess: isSuccessTasks } = useGetTasksByBoardIdQuery({
+    boardId: boardId!,
+  });
   const {
     data: columns,
     refetch: refetchGetColumns,
     isLoading: isColumnLoading,
+    isSuccess: isSuccessColumn,
   } = useGetColumnsInBoardQuery({ boardId: boardId! });
 
-  const [columnsDnD, setColumnsDnD] = useState(
-    columns
-      ? (columns.reduce((acc, curr) => ({ ...acc, [curr.order]: curr.tasks }), {}) as QuoteMap)
-      : {}
-  );
+  const [columnsDnD, setColumnsDnD] = useState({} as QuoteMap);
+  const [updateColumnById] = useUpdateColumnByIdMutation();
+
+  const changeOrder = async () => {
+    if (columns) {
+      for (let i = 0; i < columns.length; i++) {
+        const newData: INewColumn = { title: columns[i]['title'], order: i };
+        await updateColumnById({
+          boardId: boardId!,
+          columnId: columns![i]['_id'],
+          data: newData,
+        }).unwrap();
+      }
+    }
+  };
+  useEffect(() => {
+    const setOrder = new Set();
+    if (isSuccessTasks && isSuccessColumn && columns && tasksInBoard) {
+      columns.forEach((col) => {
+        setOrder.add(col['order']);
+      });
+
+      if (setOrder.size === columns.length) {
+        let setCol = {} as QuoteMap;
+        for (let i = 0; i < columns.length; i++) {
+          const tasks = tasksInBoard!.filter((task: ITask) => task.columnId === columns[i]._id);
+          setCol = { ...setCol, [i.toString()]: tasks };
+          console.log(setCol);
+          setColumnsDnD(setCol);
+        }
+      } else {
+        changeOrder();
+      }
+      console.log(columnsDnD);
+    }
+  }, [isSuccessColumn, isSuccessTasks]);
+
   const [ordered, setOrdered] = useState(Object.keys(columnsDnD!));
 
   const onSubmit = async (data: FormValues) => {

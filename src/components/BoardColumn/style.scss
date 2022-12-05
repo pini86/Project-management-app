@@ -1,4 +1,5 @@
-.board-column, .btn-create_task.MuiButtonBase-root {
+.board-column,
+.btn-create_task.MuiButtonBase-root {
   width: 100%;
   background-color: #dcebff;
   color: rgb(24, 43, 77);
@@ -9,7 +10,7 @@
   height: fit-content;
   border-radius: 4px;
   padding: 8px;
-
+  margin: 8px;
   &__delete {
     cursor: pointer;
   }
@@ -31,7 +32,8 @@
       border: 1px solid #8ebcff;
     }
 
-    &-confitm.MuiButtonBase-root, &-cancel.MuiButtonBase-root {
+    &-confitm.MuiButtonBase-root,
+    &-cancel.MuiButtonBase-root {
       padding: 0;
       min-width: auto;
     }
@@ -47,7 +49,7 @@
 
   &__delete:hover {
     fill: rgb(194, 0, 0);
-    transition: all .5s;
+    transition: all 0.5s;
   }
 }
 
@@ -67,7 +69,7 @@
   justify-content: start;
   min-width: max-content;
   margin-top: 5px;
-  transition: all .5s;
+  transition: all 0.5s;
 
   &:hover {
     background-color: #c4d5ee;

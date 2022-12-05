@@ -13,6 +13,7 @@ import { useAppDispatch } from '../../store/hooks/redux';
 import { extractUserIdFromToken } from '../../utils/authUtils';
 import { useGetUserByIdQuery } from '../../api/UsersApi';
 import SnackBar from '../../components/bars/SnackBar';
+import { useTranslation } from 'react-i18next';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -43,36 +44,38 @@ function LoginPage() {
     }
   }, [userData]);
 
+  const { t } = useTranslation();
+
   return (
     <Box className="login-page__wrapper">
       <TextInputForm
         inputAttributes={[
           {
             name: 'login',
-            label: 'Логин',
+            label: t('LoginPage.inputLabels.login'),
             rules: {
-              required: 'Поле обязательно к заполнению',
+              required: t('LoginPage.requiredMsg'),
             },
           },
           {
             name: 'password',
-            label: 'Пароль',
+            label: t('LoginPage.inputLabels.password'),
             type: 'password',
             rules: {
-              required: 'Поле обязательно к заполнению',
+              required: t('LoginPage.requiredMsg'),
               minLength: {
                 value: 6,
-                message: 'Ваш пароль должен содержать не менее 6 символов',
+                message: t('LoginPage.passwordMsg'),
               },
             },
           },
         ]}
         className="login-form"
         formData={{ name: '', login: '', password: '' }}
-        submitBtnText="Войти"
+        submitBtnText={t('LoginPage.submitBtnText')}
         additionalText={{
-          mainText: 'Еще нет аккаунта? ',
-          linkText: 'Зарегистрироваться',
+          mainText: t('LoginPage.additionalText.mainText'),
+          linkText: t('LoginPage.additionalText.linkText'),
           linkHref: '/registration',
         }}
         getUserFromForm={getUserFromForm}
@@ -83,8 +86,7 @@ function LoginPage() {
           message={`${(error as FetchBaseQueryError).status} error. ${
             ((error as FetchBaseQueryError).data as IErrorResponse).message
           }
-          Проверьте правильность написания логина и пароля`}
-          buttonText={'закрыть'}
+          ${t('errorMessages.badRequest')}`}
         />
       )}
     </Box>

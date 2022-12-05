@@ -22,6 +22,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import './style.scss';
+import { useTranslation } from 'react-i18next';
 
 type FormValues = {
   title: string;
@@ -57,13 +58,15 @@ function BoardPage() {
     setIsModalOpen(false);
   };
 
+  const { t } = useTranslation();
+
   return !boardId ? (
     <Page404 />
   ) : (
     <Container maxWidth="xl">
       <Stack direction="row" spacing={3}>
         <Button variant="contained" startIcon={<ArrowLeftIcon />} onClick={() => navigate(-1)}>
-          назад
+          {t('BoardPage.btn-back')}
         </Button>
         <Typography className="board-title" variant="h4">
           {boardTitle}
@@ -91,33 +94,33 @@ function BoardPage() {
           startIcon={<AddIcon />}
           onClick={() => setIsModalOpen(true)}
         >
-          добавить колонку
+          {t('BoardPage.column-add')}
         </Button>
         <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)}>
-          <DialogTitle id="create-column">{'Добавить новую колонку '}</DialogTitle>
+          <DialogTitle id="create-column">{t('BoardPage.column-add')}</DialogTitle>
           <form onSubmit={handleSubmit(onSubmit)}>
             <DialogContent className="column-dialog">
               <TextField
                 autoFocus
                 margin="dense"
                 id="new_title"
-                label="Название колонки"
+                label={t('BoardPage.column-title')}
                 type="text"
                 fullWidth
                 {...register('title', { required: true })}
               />
               {errors.title && (
                 <Typography variant="caption" color="error">
-                  * Обязательное поле
+                  {t('ProfilePage.requiredMsg')}formState
                 </Typography>
               )}
             </DialogContent>
             <DialogActions sx={{ justifyContent: 'space-between' }}>
               <Button type="submit" variant="contained">
-                Сохранить
+                {t('buttonTexts.save')}
               </Button>
               <Button onClick={() => setIsModalOpen(false)} color="primary" autoFocus>
-                Отмена
+                {t('buttonTexts.cancel')}
               </Button>
             </DialogActions>
           </form>

@@ -19,6 +19,7 @@ import Button from '@mui/material/Button';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import './style.scss';
+import { useTranslation } from 'react-i18next';
 
 type FormValues = {
   title: string;
@@ -26,6 +27,7 @@ type FormValues = {
 };
 
 function BoardTask({ boardId, columnId, _id, title, description, userId, users }: ITask) {
+  const { t } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const {
@@ -87,14 +89,14 @@ function BoardTask({ boardId, columnId, _id, title, description, userId, users }
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title" color="error">
-          {'Вы уверены, что хотите удалить задачу?'}
+          {t('BoardColumn.delete-task-modal')}
         </DialogTitle>
         <DialogActions>
           <Button variant="contained" color="error" onClick={onDeleteTask}>
-            Да
+            {t('buttonTexts.yes')}
           </Button>
           <Button color="error" onClick={handleClose}>
-            Нет
+            {t('buttonTexts.no')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -104,28 +106,28 @@ function BoardTask({ boardId, columnId, _id, title, description, userId, users }
         aria-labelledby="edit-task-title"
         aria-describedby="edit-task-description"
       >
-        <DialogTitle id="edit-task-title">{'Редактировать задачу '}</DialogTitle>
+        <DialogTitle id="edit-task-title">{t('BoardColumn.btn-edit-task')}</DialogTitle>
         <form onSubmit={handleSubmit(onUpdateTask)}>
           <DialogContent>
             <TextField
               defaultValue={title}
               margin="dense"
               id="new_title"
-              label="Название задачи"
+              label={t('BoardColumn.task-title')}
               type="text"
               fullWidth
               {...register('title', { required: true })}
             />
             {errors.title && (
               <Typography variant="caption" color="error">
-                * Обязательное поле
+                {t('ProfilePage.requiredMsg')}
               </Typography>
             )}
             <TextField
               defaultValue={description}
               margin="dense"
               id="new_description"
-              label="Описание (необязательно)"
+              label={t('BoardColumn.description-optional')}
               type="text"
               fullWidth
               {...register('description')}
@@ -133,10 +135,10 @@ function BoardTask({ boardId, columnId, _id, title, description, userId, users }
           </DialogContent>
           <DialogActions sx={{ justifyContent: 'space-between' }}>
             <Button type="submit" variant="contained">
-              Сохранить
+              {t('buttonTexts.save')}
             </Button>
             <Button onClick={onCloseEdit} color="primary" autoFocus>
-              Отмена
+              {t('buttonTexts.cancel')}
             </Button>
           </DialogActions>
         </form>

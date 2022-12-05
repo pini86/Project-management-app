@@ -27,7 +27,6 @@ export default function Header() {
   const { t, i18n } = useTranslation();
 
   const handleChange = (event: SelectChangeEvent) => {
-    console.log(event.target.value);
     i18n.changeLanguage(event.target.value as string);
   };
 

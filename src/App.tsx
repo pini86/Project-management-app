@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, HashRouter } from 'react-router-dom';
 import WelcomePage from 'pages/WelcomePage';
 import LoginPage from 'pages/LoginPage';
 import ProfilePage from 'pages/ProfilePage';
@@ -24,7 +24,7 @@ function App() {
   }, []);
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<WelcomePage />} />
@@ -39,7 +39,7 @@ function App() {
           <Route path="*" element={<Page404 />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

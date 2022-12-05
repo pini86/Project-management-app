@@ -79,40 +79,46 @@ function ProfilePage() {
             />
           )}
         </Box>
-        <TextInputForm
-          inputAttributes={[
-            {
-              name: 'name',
-              label: t('ProfilePage.inputLabels.name'),
-              rules: {
-                required: t('ProfilePage.requiredMsg'),
-              },
-            },
-            {
-              name: 'login',
-              label: t('ProfilePage.inputLabels.login'),
-              rules: {
-                required: t('ProfilePage.requiredMsg'),
-              },
-            },
-            {
-              name: 'password',
-              label: t('ProfilePage.inputLabels.password'),
-              type: 'password',
-              rules: {
-                required: t('ProfilePage.requiredMsg'),
-                minLength: {
-                  value: 6,
-                  message: t('ProfilePage.inputLabels.password'),
+        {user && (
+          <TextInputForm
+            inputAttributes={[
+              {
+                name: 'name',
+                label: t('ProfilePage.inputLabels.name'),
+                rules: {
+                  required: t('ProfilePage.requiredMsg'),
                 },
               },
-            },
-          ]}
-          className="login-form edit-profile-form"
-          formData={{ name: user ? user!.name : '', login: user ? user!.login : '', password: '' }}
-          submitBtnText={t('ProfilePage.submitBtnText')}
-          getUserFromForm={getUserFromForm}
-        />
+              {
+                name: 'login',
+                label: t('ProfilePage.inputLabels.login'),
+                rules: {
+                  required: t('ProfilePage.requiredMsg'),
+                },
+              },
+              {
+                name: 'password',
+                label: t('ProfilePage.inputLabels.password'),
+                type: 'password',
+                rules: {
+                  required: t('ProfilePage.requiredMsg'),
+                  minLength: {
+                    value: 6,
+                    message: t('ProfilePage.inputLabels.password'),
+                  },
+                },
+              },
+            ]}
+            className="login-form edit-profile-form"
+            formData={{
+              name: user ? user!.name : '',
+              login: user ? user!.login : '',
+              password: '',
+            }}
+            submitBtnText={t('ProfilePage.submitBtnText')}
+            getUserFromForm={getUserFromForm}
+          />
+        )}
       </Box>
       {isSuccess && <SnackBar open={true} message={t('SuccessMessages.updating')} />}
       {isError && (

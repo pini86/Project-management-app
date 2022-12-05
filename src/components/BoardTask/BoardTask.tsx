@@ -25,7 +25,7 @@ type FormValues = {
   description: string;
 };
 
-function BoardTask({ boardId, columnId, _id, title, userId, users }: ITask) {
+function BoardTask({ boardId, columnId, _id, title, description, userId, users }: ITask) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const {
@@ -46,6 +46,11 @@ function BoardTask({ boardId, columnId, _id, title, userId, users }: ITask) {
     setIsDeleteModalOpen(false);
   };
 
+  const onCloseEdit = () => {
+    reset({ title, description });
+    setIsEditModalOpen(false);
+  };
+
   const onDeleteTask = async () => {
     await deleteTask({ boardId, columnId, taskId: _id });
     refetchGetTasks();
@@ -63,7 +68,6 @@ function BoardTask({ boardId, columnId, _id, title, userId, users }: ITask) {
     };
     await updateTask({ boardId, columnId, taskId: _id, data: newTask });
     refetchGetTasks();
-    reset();
     setIsEditModalOpen(false);
   };
 
@@ -94,11 +98,17 @@ function BoardTask({ boardId, columnId, _id, title, userId, users }: ITask) {
           </Button>
         </DialogActions>
       </Dialog>
-      <Dialog open={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
-        <DialogTitle id="update-task">{'Редактировать задачу '}</DialogTitle>
+      <Dialog
+        open={isEditModalOpen}
+        onClose={onCloseEdit}
+        aria-labelledby="edit-task-title"
+        aria-describedby="edit-task-description"
+      >
+        <DialogTitle id="edit-task-title">{'Редактировать задачу '}</DialogTitle>
         <form onSubmit={handleSubmit(onUpdateTask)}>
           <DialogContent>
             <TextField
+              defaultValue={title}
               margin="dense"
               id="new_title"
               label="Название задачи"
@@ -112,11 +122,11 @@ function BoardTask({ boardId, columnId, _id, title, userId, users }: ITask) {
               </Typography>
             )}
             <TextField
+              defaultValue={description}
               margin="dense"
               id="new_description"
               label="Описание (необязательно)"
               type="text"
-              defaultValue=" "
               fullWidth
               {...register('description')}
             />
@@ -125,7 +135,7 @@ function BoardTask({ boardId, columnId, _id, title, userId, users }: ITask) {
             <Button type="submit" variant="contained">
               Сохранить
             </Button>
-            <Button onClick={() => setIsEditModalOpen(false)} color="primary" autoFocus>
+            <Button onClick={onCloseEdit} color="primary" autoFocus>
               Отмена
             </Button>
           </DialogActions>

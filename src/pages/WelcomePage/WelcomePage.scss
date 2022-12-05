@@ -70,3 +70,39 @@
     text-decoration: none;
   }
 }
+
+@media (max-width: 1024px) {
+  .welcome-page__section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .main-image {
+    width: 300px;
+    height: auto;
+  }
+
+  .main-heading {
+    margin: 1rem 0;
+  }
+
+  .image-wrapper {
+    margin: 1rem;
+
+  }
+}
+
+@media (max-width: 560px) {
+  .main-heading {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .main-heading {
+    font-size: 1.5rem;
+  }
+  .sub-heading {
+    font-size: 1rem;
+  }
+}

@@ -27,6 +27,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Dialog from '@mui/material/Dialog';
 import ConfirmationModal from '../../components/modals/ConfirmationModal';
 import './style.scss';
+import { useTranslation } from 'react-i18next';
 
 type FormValues = {
   title: string;
@@ -114,6 +115,7 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
       <DeleteForeverIcon className="board-column__delete" onClick={handleClickOpen} />
     </>
   );
+  const { t } = useTranslation();
 
   return (
     <Box className="board-column">
@@ -123,9 +125,9 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
       {isDeleteModalOpen && (
         <ConfirmationModal
           isOpen={isDeleteModalOpen}
-          contentText="Вы уверены, что хотите удалить колонку?"
-          notConfirmText="нет"
-          confirmText="да"
+          contentText={t('BoardColumn.delete-column-modal')}
+          notConfirmText={t('buttonTexts.no')}
+          confirmText={t('buttonTexts.yes')}
           onConfirm={onConfirmDelete}
           onCancel={() => setIsDeleteModalOpen(false)}
         />
@@ -141,29 +143,29 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
         startIcon={<AddIcon />}
         onClick={() => setIsCreateTaskModalOpen(true)}
       >
-        добавить задачу
+        {t('BoardColumn.btn-add-task')}
       </Button>
       <Dialog open={isCreateTaskModalOpen} onClose={() => setIsCreateTaskModalOpen(false)}>
-        <DialogTitle id="create-task">{'Добавить новую задачу '}</DialogTitle>
+        <DialogTitle id="create-task">{t('BoardColumn.btn-add-task')}</DialogTitle>
         <form onSubmit={handleSubmit(onCreateTask)}>
           <DialogContent>
             <TextField
               margin="dense"
               id="new_title"
-              label="Название задачи"
+              label={t('BoardColumn.task-title')}
               type="text"
               fullWidth
               {...register('title', { required: true })}
             />
             {errors.title && (
               <Typography variant="caption" color="error">
-                * Обязательное поле
+                {t('ProfilePage.requiredMsg')}
               </Typography>
             )}
             <TextField
               margin="dense"
               id="new_description"
-              label="Описание (необязательно)"
+              label={t('BoardColumn.description-optional')}
               type="text"
               defaultValue=" "
               fullWidth
@@ -172,10 +174,10 @@ function BoardColumn({ boardId, _id, title, order, tasks }: IColumn) {
           </DialogContent>
           <DialogActions sx={{ justifyContent: 'space-between' }}>
             <Button type="submit" variant="contained">
-              Сохранить
+              {t('buttonTexts.save')}
             </Button>
             <Button onClick={() => setIsCreateTaskModalOpen(false)} color="primary" autoFocus>
-              Отмена
+              {t('buttonTexts.cancel')}
             </Button>
           </DialogActions>
         </form>

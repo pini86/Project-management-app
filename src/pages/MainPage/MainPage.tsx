@@ -17,6 +17,7 @@ import { store } from '../../store/Store';
 import { Box, CircularProgress } from '@mui/material';
 import { extractUserIdFromToken } from '../../utils/authUtils';
 import { Controller, useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 type FormValues = {
   title: string;
@@ -24,6 +25,7 @@ type FormValues = {
 };
 
 function MainPage() {
+  const { t } = useTranslation();
   const { control, handleSubmit, reset } = useForm<FormValues>();
   const [createBoard] = useCreateBoardMutation();
   const token = store.getState().userReducer.token;
@@ -65,7 +67,7 @@ function MainPage() {
   return (
     <div className="boards__wrapper">
       <Typography className="main-page__title" variant="h3" component="h1">
-        Доски :
+        {t('MainPage.main-heading')}
       </Typography>
       {isBoardsLoading ? (
         <Box sx={{ display: 'flex' }}>
@@ -87,7 +89,6 @@ function MainPage() {
                     </Grid>
                   ))
                 : null}
-
               <Card
                 className="new-board-card__wrapper"
                 variant="elevation"
@@ -97,17 +98,11 @@ function MainPage() {
               >
                 <CardContent>
                   <Typography variant="h4" component="div">
-                    +
-                  </Typography>
-                  <Typography variant="h4" component="div">
-                    ДОБАВИТЬ
-                  </Typography>
-                  <Typography variant="h4" component="div">
-                    ДОСКУ
+                    {t('MainPage.add')}
                   </Typography>
                 </CardContent>
                 <Dialog open={openEdit} onClose={handleCancelEdit}>
-                  <DialogTitle id="edit-dialog-title">{'Добавить новую доску '}</DialogTitle>
+                  <DialogTitle id="edit-dialog-title">{t('MainPage.title-add-board')}</DialogTitle>
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <DialogContent>
                       <Controller
@@ -120,7 +115,7 @@ function MainPage() {
                             required
                             margin="dense"
                             id="new_title"
-                            label="Название доски"
+                            label={t('MainPage.board-title')}
                             type="text"
                             fullWidth
                             {...field}
@@ -135,7 +130,7 @@ function MainPage() {
                           <TextField
                             margin="dense"
                             id="new_desc"
-                            label="Описание доски"
+                            label={t('MainPage.board-description')}
                             type="text"
                             fullWidth
                             {...field}
@@ -145,10 +140,10 @@ function MainPage() {
                     </DialogContent>
                     <DialogActions sx={{ justifyContent: 'space-between' }}>
                       <Button type="submit" color="primary">
-                        Сохранить
+                        {t('buttonTexts.save')}
                       </Button>
                       <Button onClick={handleCancelEdit} color="primary" autoFocus>
-                        Отмена
+                        {t('buttonTexts.cancel')}
                       </Button>
                     </DialogActions>
                   </form>
@@ -161,5 +156,4 @@ function MainPage() {
     </div>
   );
 }
-
 export default MainPage;

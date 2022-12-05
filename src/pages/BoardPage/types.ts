@@ -15,11 +15,11 @@ export interface Author {
   colors: AuthorColors;
 }
 
-//IColumn по нашему, в комментах исходное
+//ITask по нашему, в комментах исходное
 export interface Quote {
   //id: Id;
   _id: Id;
-  order: number;
+  description: string;
   //content: string;
   title: string;
   //author: Author;
@@ -30,9 +30,9 @@ export interface Dragging {
   location: DraggableLocation;
 }
 
-export interface QuoteMap {
+/* export interface QuoteMap {
   [key: string]: Quote[];
-}
+} */
 
 export interface Task {
   id: Id;

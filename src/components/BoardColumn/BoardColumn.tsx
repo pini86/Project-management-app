@@ -46,7 +46,9 @@ interface HeaderProps {
   isDragging: boolean;
 }
 
-function BoardColumn({ boardId, _id, title, order, tasks, index }: IColumn) {
+function BoardColumn(dataColumn: IColumn, index: number) {
+  console.log('dataColumn=', dataColumn);
+  const { boardId, order, tasks, title, _id } = { ...dataColumn };
   const [columnName, setColumnName] = useState(title);
   const [editColumnName, setEditColumnName] = useState(title);
   const [isEditing, setIsEditing] = useState(false);

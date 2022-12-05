@@ -90,17 +90,21 @@ function BoardPage() {
         for (let i = 0; i < columns.length; i++) {
           const tasks = tasksInBoard!.filter((task: ITask) => task.columnId === columns[i]._id);
           setCol = { ...setCol, [i.toString()]: tasks };
-          console.log(setCol);
-          setColumnsDnD(setCol);
         }
+        setColumnsDnD(setCol);
       } else {
         changeOrder();
       }
-      console.log(columnsDnD);
     }
   }, [isSuccessColumn, isSuccessTasks]);
 
-  const [ordered, setOrdered] = useState(Object.keys(columnsDnD!));
+  const [ordered, setOrdered] = useState([] as string[]);
+
+  useEffect(() => {
+    if (columnsDnD) {
+      setOrdered(Object.keys(columnsDnD!));
+    }
+  }, [columnsDnD]);
 
   const onSubmit = async (data: FormValues) => {
     const newColumn: INewColumn = {
@@ -187,17 +191,20 @@ function BoardPage() {
                 {...provided.droppableProps}
                 style={{ display: 'inline-flex' }}
               >
-                {!isColumnLoading &&
+                {isSuccessColumn &&
+                  isSuccessTasks &&
                   columns &&
                   tasksInBoard &&
-                  columns.map((column: IColumn, index) => (
+                  ordered &&
+                  ordered.map((key: string, index: number) => (
                     <BoardColumn
-                      {...column}
-                      tasks={tasksInBoard!.filter((task: ITask) => task.columnId === column._id)}
-                      key={column._id}
+                      key={index}
+                      {...columns.find((col) => col['order'].toString() === key)}
                       index={index}
+                      tasks={columnsDnD[key]}
                     />
                   ))}
+
                 {provided.placeholder}
               </div>
             )}
